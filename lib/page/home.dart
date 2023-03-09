@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:foodie_ios/linkfile/Model/getItem_model.dart';
@@ -22,6 +23,7 @@ import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/linkfile/refresh.dart';
 import 'package:foodie_ios/onboarding.dart';
 import 'package:foodie_ios/page/addnewaddress.dart';
+import 'package:foodie_ios/page/addperaddress.dart';
 import 'package:foodie_ios/page/notifications.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:foodie_ios/page/review.dart';
@@ -117,7 +119,13 @@ class _homeState extends State<home> {
                               ? SizedBox(
                                   height: 25,
                                   child: Text(
-                                    'Hello ${context.watch<checkstate>().firstname.split(' ')[0]}',
+                                    context
+                                                .watch<checkstate>()
+                                                .firstname
+                                                .split(' ')[0] !=
+                                            ''
+                                        ? 'Hello ${context.watch<checkstate>().firstname.split(' ')[0].capitalize()}'
+                                        : '',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 21,
@@ -135,7 +143,7 @@ class _homeState extends State<home> {
                                   : SizedBox(
                                       height: 25,
                                       child: Text(
-                                        'Hello ${context.watch<checkstate>().notloggedname.split(' ')[0]}',
+                                        'Hello ${context.watch<checkstate>().notloggedname.split(' ')[0].capitalize()}',
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.white,
@@ -173,9 +181,7 @@ class _homeState extends State<home> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => addAddress(
-                                              save: true,
-                                            )));
+                                        builder: (context) => addAddressper()));
                               },
                               child: token != null
                                   ? context.watch<checkstate>().checkaddress()

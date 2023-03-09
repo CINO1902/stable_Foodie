@@ -5,6 +5,7 @@ import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/page/addnewaddress.dart';
+import 'package:foodie_ios/page/addperaddress.dart';
 import 'package:foodie_ios/page/otpverify.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _myaccountState extends State<myaccount> {
   bool network = false;
   @override
   Widget build(BuildContext context) {
-      if (Provider.of<ConnectivityStatus>(context) ==
+    if (Provider.of<ConnectivityStatus>(context) ==
         ConnectivityStatus.Offline) {
       showoverlay();
     } else {
@@ -256,12 +257,8 @@ class _myaccountState extends State<myaccount> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => addAddress(
-                              save: true,
-                            )));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => addAddressper()));
               },
               child: Center(
                 child: Container(

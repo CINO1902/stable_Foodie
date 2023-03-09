@@ -43,7 +43,13 @@ class _webpageState extends State<webpage> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            print(int);
+            SmartDialog.showLoading(
+              clickMaskDismiss: false,
+              backDismiss: false,
+            );
+            if (progress == 100) {
+              SmartDialog.dismiss();
+            }
           },
           onPageStarted: (String url) {},
           onPageFinished: (String url) {},
@@ -53,7 +59,6 @@ class _webpageState extends State<webpage> {
                 context, '/landingpage', (Route<dynamic> route) => false);
           },
           onNavigationRequest: (NavigationRequest request) {
-            //print(request.url);
             if (request.url.startsWith('https://m.youtube.com/')) {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/landingpage', (Route<dynamic> route) => false);
@@ -97,7 +102,7 @@ class _webpageState extends State<webpage> {
   Future<void> getnav() async {
     try {
       Requestotp send = Requestotp(email: widget.ID);
-      print(send.email);
+
       var response = await networkHandler.client.post(
           networkHandler.builderUrl('/verifyref'),
           body: requestotpToJson(send),

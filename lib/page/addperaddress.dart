@@ -14,14 +14,14 @@ import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class addAddress extends StatefulWidget {
-  const addAddress({super.key, required this.save});
-  final bool save;
+class addAddressper extends StatefulWidget {
+  addAddressper({super.key});
+
   @override
-  State<addAddress> createState() => _addAddressState();
+  State<addAddressper> createState() => _addAddressperState();
 }
 
-class _addAddressState extends State<addAddress> {
+class _addAddressperState extends State<addAddressper> {
   String? fullname;
   String? phone;
   String? email;
@@ -414,38 +414,7 @@ class _addAddressState extends State<addAddress> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            widget.save == false
-                                ? SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Theme.of(context)
-                                                    .primaryColor
-                                                    .withOpacity(.7)),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                        )),
-                                      ),
-                                      onPressed: () {
-                                        context
-                                            .read<checkcart>()
-                                            .usedefaultaddress();
-                                        context.read<checkcart>().locationa();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        'Use Defualt',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(),
+                            SizedBox(),
                             Consumer<checkstate>(
                                 builder: (context, value, child) {
                               return SizedBox(
@@ -467,8 +436,7 @@ class _addAddressState extends State<addAddress> {
                                     if (_key4.currentState!.validate()) {
                                       _key4.currentState!.save();
 
-                                      if (token != null &&
-                                          value.address == '') {
+                                      if (token != null) {
                                         SmartDialog.showLoading();
                                         await context
                                             .read<checkstate>()
@@ -514,8 +482,7 @@ class _addAddressState extends State<addAddress> {
                                                   const homelanding(),
                                             ),
                                             (Route<dynamic> route) => false);
-                                      } else if (token == null &&
-                                          value.notloggedaddress == '') {
+                                      } else if (token == null) {
                                         context.read<checkstate>().saveaddress(
                                             address,
                                             email,
@@ -543,13 +510,6 @@ class _addAddressState extends State<addAddress> {
                                                   const homelanding(),
                                             ),
                                             (Route<dynamic> route) => false);
-                                      } else {
-                                        context
-                                            .read<checkcart>()
-                                            .gettempaddress(fullname, phone,
-                                                address, items[index]);
-                                        context.read<checkcart>().locationa();
-                                        Navigator.pop(context);
                                       }
                                     }
                                   },

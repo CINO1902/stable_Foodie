@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:298174872699:android:d8cec90f2affe4fcf1b6de",
         "android_client_info": {
-          "package_name": "com.example.foodie_ios"
+          "package_name": "com.caleboruta.Foodie"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "298174872699-m8s06p7lljdgupb09qbe299ndoig7tph.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.foodie_ios",
+            "package_name": "com.caleboruta.Foodie",
             "certificate_hash": "301c1d00b64bf6fd0503c4e950f763c8d5c94951"
           }
         },

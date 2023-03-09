@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/ios.dart';
+import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
@@ -82,6 +83,7 @@ class _AccountState extends State<Account> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Container(
+                                            // color: Colors.red,
                                             margin: EdgeInsets.only(
                                               // horizontal: MediaQuery.of(context).size.height * 0.01,
                                               top: MediaQuery.of(context)
@@ -96,14 +98,14 @@ class _AccountState extends State<Account> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.2,
-                                            child: FittedBox(
-                                                child: Text(
-                                              '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}',
+                                                0.45,
+                                            child: Text(
+                                             context.watch<checkstate>().firstname != ''? '${context.watch<checkstate>().firstname.capitalize()} ${context.watch<checkstate>().lastname.capitalize()}' : '',
+                                              overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ))),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 17),
+                                            )),
                                         Container(
                                             height: MediaQuery.of(context)
                                                     .size
