@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:foodie_ios/invisible.dart';
+import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +26,17 @@ class _nonetworkState extends State<nonetwork> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     setState(() {
       loading = false;
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
   }
 
   @override
@@ -63,16 +73,18 @@ class _nonetworkState extends State<nonetwork> {
                   });
                   Future.delayed(const Duration(milliseconds: 4000), () {
 // Here you can write your code
-                    print(hasInternet);
-                    if (hasInternet == true) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => invisible(internet: value),
-                          ));
-                    } else {
-                      Navigator.pushNamed(context, '/nonetwork');
-                    }
+                    // print(hasInternet);
+                    checknet(value);
+                    // if (hasInternet == true) {
+                    //   Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => invisible(internet: value),
+                    //       ));
+                    // } else {
+                    //   Navigator.pushNamedAndRemoveUntil(context, '/nonetwork',
+                    //       (Route<dynamic> route) => false);
+                    // }
                   });
                 },
                 child: Container(
@@ -108,19 +120,17 @@ class _nonetworkState extends State<nonetwork> {
   }
 
   void checknet(value) {
-    InternetConnectionChecker().onStatusChange.listen((event) {
-      final hasInternet1 = event == InternetConnectionStatus.connected;
-      if (hasInternet1 == false) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/nonetwork', (Route<dynamic> route) => false);
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => invisible(internet: value),
-            ),
-            (Route<dynamic> route) => false);
-      }
-    });
+    print(hasInternet);
+    if (hasInternet == false) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/nonetwork', (Route<dynamic> route) => false);
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => invisible(internet: value),
+          ),
+          (Route<dynamic> route) => false);
+    }
   }
 }

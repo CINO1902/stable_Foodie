@@ -202,8 +202,9 @@ class _checkoutsubState extends State<checkoutsub> {
                                   child: Text(
                                     'Total: ${value.totalpriceeach[index].toString().replaceAllMapped(reg, mathFunc)}',
                                     style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w400),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 )
                               ],
@@ -382,102 +383,6 @@ class _checkoutsubState extends State<checkoutsub> {
                     ),
                   ],
                 ),
-                // Container(
-                //   margin: EdgeInsets.all(10),
-                //   child: Text(
-                //     'Your subcription amount cost: ',
-                //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                //   ),
-                // ),
-
-                // Container(
-                //   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                //   width: MediaQuery.of(context).size.width * 2,
-                //   height: 50,
-                //   child: context.watch<subscribed>().rolloverclick
-                //       ? ElevatedButton(
-                //           style: ElevatedButton.styleFrom(
-                //             backgroundColor: Theme.of(context).primaryColor,
-                //             shape: const RoundedRectangleBorder(
-                //               borderRadius: BorderRadius.all(Radius.circular(10)),
-                //             ),
-                //           ),
-                //           onPressed: () async {
-                //             SmartDialog.showLoading();
-                //             await context
-                //                 .read<sellectbucket>()
-                //                 .sendsubscriptionrollover();
-
-                //             SmartDialog.dismiss();
-                //             Navigator.pushNamedAndRemoveUntil(
-                //                 context, '/landingpage', (route) => false);
-                //           },
-                //           child: const Text('Next'))
-                //       : context.watch<subscribed>().upgradeclick
-                //           ? ElevatedButton(
-                //               style: ElevatedButton.styleFrom(
-                //                 backgroundColor: Theme.of(context).primaryColor,
-                //                 shape: const RoundedRectangleBorder(
-                //                   borderRadius:
-                //                       BorderRadius.all(Radius.circular(10)),
-                //                 ),
-                //               ),
-                //               onPressed: () async {
-                //                 SmartDialog.showLoading();
-                //                 await context.read<sellectbucket>().sendupgrade();
-                //                 if (value.success == true) {
-                //                   SmartDialog.dismiss();
-                //                   ScaffoldMessenger.of(context)
-                //                       .showSnackBar(SnackBar(
-                //                     content: CustomeSnackbar(
-                //                       topic: 'Great!',
-                //                       msg: value.msg,
-                //                       color1: Color.fromARGB(255, 25, 107, 52),
-                //                       color2: Color.fromARGB(255, 19, 95, 40),
-                //                     ),
-                //                     behavior: SnackBarBehavior.floating,
-                //                     backgroundColor: Colors.transparent,
-                //                     elevation: 0,
-                //                   ));
-                //                   Navigator.pushNamedAndRemoveUntil(
-                //                       context, '/landingpage', (route) => false);
-                //                 } else {
-                //                   SmartDialog.dismiss();
-                //                   ScaffoldMessenger.of(context)
-                //                       .showSnackBar(SnackBar(
-                //                     content: CustomeSnackbar(
-                //                       topic: 'Oh Snap!',
-                //                       msg: value.msg,
-                //                       color1: Color.fromARGB(255, 171, 51, 42),
-                //                       color2: Color.fromARGB(255, 127, 39, 33),
-                //                     ),
-                //                     behavior: SnackBarBehavior.floating,
-                //                     backgroundColor: Colors.transparent,
-                //                     elevation: 0,
-                //                   ));
-                //                 }
-                //               },
-                //               child: const Text('Next'))
-                //           : ElevatedButton(
-                //               style: ElevatedButton.styleFrom(
-                //                 backgroundColor: Theme.of(context).primaryColor,
-                //                 shape: const RoundedRectangleBorder(
-                //                   borderRadius:
-                //                       BorderRadius.all(Radius.circular(10)),
-                //                 ),
-                //               ),
-                //               onPressed: () async {
-                //                 SmartDialog.showLoading();
-                //                 await context
-                //                     .read<sellectbucket>()
-                //                     .sendsubscription();
-
-                //                 SmartDialog.dismiss();
-                //                 Navigator.pushNamedAndRemoveUntil(
-                //                     context, '/landingpage', (route) => false);
-                //               },
-                //               child: const Text('Next')),
-                // )
               ],
             ),
             Align(
@@ -500,7 +405,9 @@ class _checkoutsubState extends State<checkoutsub> {
                           const Text(
                             'Total:',
                             style: TextStyle(
-                                fontSize: 21, fontWeight: FontWeight.bold),
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                           context.watch<subscribed>().rolloverclick
                               ? int.parse(context
@@ -517,7 +424,8 @@ class _checkoutsubState extends State<checkoutsub> {
                                           'Rollover discount price: ₦ ${context.watch<sellectbucket>().stringmoney.replaceAllMapped(reg, mathFunc)}',
                                           style: TextStyle(
                                               fontSize: 15,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -537,10 +445,11 @@ class _checkoutsubState extends State<checkoutsub> {
                                                         text:
                                                             '${context.watch<sellectbucket>().rollover.replaceAllMapped(reg, mathFunc)}',
                                                         style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough,
-                                                        ),
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                     ],
                                                   ),
@@ -560,7 +469,8 @@ class _checkoutsubState extends State<checkoutsub> {
                                                   '-10%',
                                                   style: TextStyle(
                                                       fontWeight:
-                                                          FontWeight.bold),
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
@@ -576,12 +486,14 @@ class _checkoutsubState extends State<checkoutsub> {
                                   ? Text('₦ 0.00',
                                       style: TextStyle(
                                           fontSize: 21,
-                                          fontWeight: FontWeight.bold))
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white))
                                   : Text(
                                       '₦ ${context.watch<sellectbucket>().stringmoney.replaceAllMapped(reg, mathFunc)}',
                                       style: TextStyle(
                                           fontSize: 21,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
                                     ),
                         ],
                       ),

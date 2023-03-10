@@ -72,10 +72,10 @@ class _homeState extends State<home> {
     });
 
     if (token != null) {
-      await context.read<checkstate>().getregisterdID();
+      context.read<checkstate>().getregisterdID();
       context.read<getmostcommon>().getcommon();
       context.read<getsubhistory>().getordersub();
-      await context.read<subscribed>().getsubscribed();
+      context.read<subscribed>().getsubscribed();
     }
   }
 
@@ -198,7 +198,10 @@ class _homeState extends State<home> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         )
-                                      : Text('Set Location')
+                                      : Text(
+                                          'Set Location',
+                                          style: TextStyle(color: Colors.white),
+                                        )
                                   : context
                                               .watch<checkstate>()
                                               .notloggedaddress !=
@@ -218,7 +221,10 @@ class _homeState extends State<home> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         )
-                                      : Text('Set Location'))
+                                      : Text(
+                                          'Set Location',
+                                          style: TextStyle(color: Colors.white),
+                                        ))
                         ],
                       ),
                       InkWell(

@@ -39,6 +39,7 @@ class greetings extends ChangeNotifier {
           headers: {'content-Type': 'application/json; charset=UTF-8'});
       final time1 = jsonDecode(response.body);
       time = DateTime.parse(time1["date"]);
+      print(time);
       gettime();
     } catch (e) {}
 

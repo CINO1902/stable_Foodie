@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:foodie_ios/linkfile/Model/Extra_fetch_model.dart';
 import 'package:foodie_ios/linkfile/Model/Extra_model.dart';
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
+import 'package:dio/dio.dart';
 
 class getiItemExtra extends ChangeNotifier {
-  List<List<ItemExtra>> _items = [];
   List<List<ItemExtra>> souplist = [];
   bool _data = false;
   List<String> soupid = [];
@@ -18,7 +18,7 @@ class getiItemExtra extends ChangeNotifier {
   bool loading = false;
   bool get data => _data;
   String id = '';
-  List<List<ItemExtra>> get items => _items;
+  List<List<ItemExtra>> items = [];
 
   void getId(_id) {
     id = _id;
@@ -41,31 +41,37 @@ class getiItemExtra extends ChangeNotifier {
     return checksoupempty;
   }
 
+  CancelToken cancelToken = CancelToken();
   Future<void> getItemExtra(id) async {
+    cancelToken = CancelToken();
+
     try {
       error = false;
       _data = false;
       loading = true;
-      _items.clear();
+      items.clear();
       soupid.clear();
       souplist.clear();
-
+      itemsquote.clear();
+      final dio = Dio();
+      notifyListeners();
       ExtrasModelFetch fetch = ExtrasModelFetch(id: id);
-      var response = await networkHandler.client.post(
-          networkHandler.builderUrl('/getItemsExtra'),
-          body: extrasModelFetchToJson(fetch),
-          headers: {'content-Type': 'application/json; charset=UTF-8'});
-
-      final decodedresponse = extrasModelFromJson(response.body);
+      var response = await dio.post(
+          'https://faithful-beanie-lamb.cyclic.app/route/getItemsExtra',
+          data: extrasModelFetchToJson(fetch),
+          options: Options(
+              headers: {'content-Type': 'application/json; charset=UTF-8'}),
+          cancelToken: cancelToken);
+      final decodedresponse = extrasModelFromJson(response.toString());
       if (response.statusCode == 200) {
-        _items = decodedresponse.itemExtra ?? [];
+        items = decodedresponse.itemExtra ?? [];
 
         _data = true;
-        _items = _items
+        items = items
             .where((element) =>
                 element[0].availability == true || element[0].remaining == true)
             .toList();
-        for (var i = 0; i < _items.length; i++) {
+        for (var i = 0; i < items.length; i++) {
           var productMap = [
             items[i][0].itemExtraId,
             int.parse(items[i][0].mincost),
@@ -79,11 +85,11 @@ class getiItemExtra extends ChangeNotifier {
           itemsquote.add(productMap);
         }
         souplist =
-            _items.where((element) => element[0].segment == 'soup').toList();
+            items.where((element) => element[0].segment == 'soup').toList();
         for (var i = 0; i < souplist.length; i++) {
           soupid.add(souplist[i][0].itemExtraId);
         }
-      
+        print(items[0][0].item);
       } else {
         error = true;
         print('error');
@@ -95,5 +101,9 @@ class getiItemExtra extends ChangeNotifier {
       loading = false;
     }
     notifyListeners();
+  }
+
+  cancelresquest() {
+    cancelToken.cancel();
   }
 }

@@ -307,6 +307,12 @@ class _loginState extends State<login> {
           elevation: 0,
         ));
       } else if ((success == 'true')) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => const homelanding(),
+            ),
+            (Route<dynamic> route) => false);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: CustomeSnackbar(
             topic: 'Great!',
@@ -318,12 +324,6 @@ class _loginState extends State<login> {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ));
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => const homelanding(),
-            ),
-            (Route<dynamic> route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: CustomeSnackbar(

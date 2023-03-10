@@ -59,6 +59,7 @@ class _ReviewState extends State<Review> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    items.clear();
     // Provider.of<calculatemeal>(context, listen: false).total();
   }
 
@@ -94,7 +95,7 @@ class _ReviewState extends State<Review> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-
+    context.read<getiItemExtra>().cancelresquest();
     context.read<calculatemeal>().clearlist();
   }
 
@@ -272,6 +273,7 @@ class _ReviewState extends State<Review> {
                 margin: EdgeInsets.only(right: 20),
                 child:
                     Consumer<getiItemExtra>(builder: (context, value, child) {
+                  print(value.loading);
                   if (value.loading == true) {
                     return Center(
                       child: CircularProgressIndicator(
@@ -318,7 +320,7 @@ class _ReviewState extends State<Review> {
                     );
                   } else if (value.data == true) {
                     items = value.items;
-                    itemindex.clear();
+
                     soupindex.clear();
                     itemsquote = value.itemsquote;
                     soupid = value.soupid;
@@ -328,7 +330,7 @@ class _ReviewState extends State<Review> {
                     for (var i = 0; i < soupid.length; i++) {
                       soupindex.add(itemindex.indexOf(soupid[i]));
                     }
-                    print(itemindex);
+
                     context.read<calculatemeal>().total();
                     context.read<calculatemeal>().getExtras(itemsquote);
                     // print(value.soupid);
