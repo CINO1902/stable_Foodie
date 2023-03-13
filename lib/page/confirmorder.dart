@@ -176,113 +176,148 @@ class _confirmorderState extends State<confirmorder> {
                         width: 10,
                       ),
                       Container(
-                        // height: MediaQuery.of(context).size.height * 0.2,
-                        // width: MediaQuery.of(context).size.height * 0.6,
                         child: Expanded(
-                          child: ListView(
-                            shrinkWrap: true,
-                            //crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                token != null
-                                    ? Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}'
-                                        : context.watch<checkcart>().fullname
-                                    : Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? '${context.watch<checkstate>().notloggedname}'
-                                        : context.watch<checkcart>().fullname,
-                                style: TextStyle(
-                                    fontSize: 19, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                token != null
-                                    ? Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? context.watch<checkstate>().phone
-                                        : context.watch<checkcart>().number
-                                    : Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? '${context.watch<checkstate>().notloggednumber ?? ''}'
-                                        : context.watch<checkcart>().number,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                token != null
-                                    ? Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? context.watch<checkstate>().email
-                                        : context.watch<checkstate>().email
-                                    : Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? '${context.watch<checkstate>().notloggedemail ?? ''}'
-                                        : '${context.watch<checkstate>().notloggedemail ?? ''}',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              SizedBox(
-                                //color: Colors.white,
+                            child: context.watch<checkstate>().notloggedname ==
+                                        '' &&
+                                    token == null
+                                ? ListView(
+                                    shrinkWrap: true,
+                                    children: [
+                                      Text(
+                                        token != null
+                                            ? Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}'
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .fullname
+                                            : Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? '${context.watch<checkstate>().notloggedname}'
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .fullname,
+                                        style: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        token != null
+                                            ? Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? context
+                                                    .watch<checkstate>()
+                                                    .phone
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .number
+                                            : Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? '${context.watch<checkstate>().notloggednumber ?? ''}'
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .number,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        token != null
+                                            ? Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? context
+                                                    .watch<checkstate>()
+                                                    .email
+                                                : context
+                                                    .watch<checkstate>()
+                                                    .email
+                                            : Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? '${context.watch<checkstate>().notloggedemail ?? ''}'
+                                                : '${context.watch<checkstate>().notloggedemail ?? ''}',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      SizedBox(
+                                        //color: Colors.white,
 
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: Text(
-                                  token != null
-                                      ? Provider.of<checkcart>(context,
-                                                  listen: false)
-                                              .usedefault
-                                          ? context.watch<checkstate>().address
-                                          : context.watch<checkcart>().address
-                                      : Provider.of<checkcart>(context,
-                                                  listen: false)
-                                              .usedefault
-                                          ? '${context.watch<checkstate>().notloggedaddress}'
-                                          : context.watch<checkcart>().address,
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                token != null
-                                    ? Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? context.watch<checkstate>().location
-                                        : context.watch<checkcart>().location
-                                    : Provider.of<checkcart>(context,
-                                                listen: false)
-                                            .usedefault
-                                        ? '${context.watch<checkstate>().notloggedlocation ?? ''}'
-                                        : context.watch<checkcart>().location,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        child: Text(
+                                          token != null
+                                              ? Provider.of<checkcart>(context,
+                                                          listen: false)
+                                                      .usedefault
+                                                  ? context
+                                                      .watch<checkstate>()
+                                                      .address
+                                                  : context
+                                                      .watch<checkcart>()
+                                                      .address
+                                              : Provider.of<checkcart>(context,
+                                                          listen: false)
+                                                      .usedefault
+                                                  ? '${context.watch<checkstate>().notloggedaddress}'
+                                                  : context
+                                                      .watch<checkcart>()
+                                                      .address,
+                                          softWrap: true,
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        token != null
+                                            ? Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? context
+                                                    .watch<checkstate>()
+                                                    .location
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .location
+                                            : Provider.of<checkcart>(context,
+                                                        listen: false)
+                                                    .usedefault
+                                                ? '${context.watch<checkstate>().notloggedlocation ?? ''}'
+                                                : context
+                                                    .watch<checkcart>()
+                                                    .location,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : Center(
+                                    child: Text(
+                                      'Click to add Location',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
                       )
                     ],
                   ),

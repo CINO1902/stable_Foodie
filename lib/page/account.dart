@@ -44,288 +44,287 @@ class _AccountState extends State<Account> {
         ),
         body: context.watch<checkstate>().checkregisteredlogg()
             ? SingleChildScrollView(
-                child: Container(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                      const SizedBox(
-                        height: 20,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Card(
+                      elevation: 2.5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Card(
-                          elevation: 2.5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.09,
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
-                                Row(
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: CircleAvatar(
+                                    radius:
+                                        MediaQuery.of(context).size.height *
+                                            0.032,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: CircleAvatar(
-                                        radius:
-                                            MediaQuery.of(context).size.height *
-                                                0.032,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            // color: Colors.red,
-                                            margin: EdgeInsets.only(
-                                              // horizontal: MediaQuery.of(context).size.height * 0.01,
-                                              top: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.03,
-                                            ),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.029,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.45,
-                                            child: Text(
-                                             context.watch<checkstate>().firstname != ''? '${context.watch<checkstate>().firstname.capitalize()} ${context.watch<checkstate>().lastname.capitalize()}' : '',
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 17),
-                                            )),
-                                        Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.03,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.25,
-                                            child: context
-                                                    .watch<checkstate>()
-                                                    .verified
-                                                ? const Text('Verified',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.greenAccent))
-                                                : const Text('Not Verified',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.yellowAccent,
-                                                        shadows: [
-                                                          Shadow(
-                                                              // bottomLeft
-                                                              offset: Offset(
-                                                                  -0.5, -0.5),
-                                                              color:
-                                                                  Colors.black),
-                                                          Shadow(
-                                                              // bottomRight
-                                                              offset: Offset(
-                                                                  0.5, -0.5),
-                                                              color:
-                                                                  Colors.black),
-                                                          Shadow(
-                                                              // topRight
-                                                              offset: Offset(
-                                                                  0.5, 0.5),
-                                                              color:
-                                                                  Colors.black),
-                                                          Shadow(
-                                                              // topLeft
-                                                              offset: Offset(
-                                                                  -0.5, 0.5),
-                                                              color:
-                                                                  Colors.black),
-                                                        ])))
-                                      ],
-                                    ),
+                                        // color: Colors.red,
+                                        margin: EdgeInsets.only(
+                                          // horizontal: MediaQuery.of(context).size.height * 0.01,
+                                          top: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.03,
+                                        ),
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.029,
+                                        width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                            0.45,
+                                        child: Text(
+                                         context.watch<checkstate>().firstname != ''? '${context.watch<checkstate>().firstname.capitalize()} ${context.watch<checkstate>().lastname.capitalize()}' : '',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 17),
+                                        )),
+                                    Container(
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.03,
+                                        width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                            0.25,
+                                        child: context
+                                                .watch<checkstate>()
+                                                .verified
+                                            ? const Text('Verified',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    color:
+                                                        Colors.greenAccent))
+                                            : const Text('Not Verified',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    color:
+                                                        Colors.yellowAccent,
+                                                    shadows: [
+                                                      Shadow(
+                                                          // bottomLeft
+                                                          offset: Offset(
+                                                              -0.5, -0.5),
+                                                          color:
+                                                              Colors.black),
+                                                      Shadow(
+                                                          // bottomRight
+                                                          offset: Offset(
+                                                              0.5, -0.5),
+                                                          color:
+                                                              Colors.black),
+                                                      Shadow(
+                                                          // topRight
+                                                          offset: Offset(
+                                                              0.5, 0.5),
+                                                          color:
+                                                              Colors.black),
+                                                      Shadow(
+                                                          // topLeft
+                                                          offset: Offset(
+                                                              -0.5, 0.5),
+                                                          color:
+                                                              Colors.black),
+                                                    ])))
                                   ],
                                 ),
-                                Container(
-                                    margin: EdgeInsets.symmetric(
-                                      // horizontal: MediaQuery.of(context).size.height * 0.01,
-                                      vertical:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
-                                    ),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.023,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.25,
-                                    child: FittedBox(
-                                        child: Text(
-                                      '',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface),
-                                    ))),
                               ],
                             ),
-                          ),
+                            Container(
+                                margin: EdgeInsets.symmetric(
+                                  // horizontal: MediaQuery.of(context).size.height * 0.01,
+                                  vertical:
+                                      MediaQuery.of(context).size.width *
+                                          0.03,
+                                ),
+                                height: MediaQuery.of(context).size.height *
+                                    0.023,
+                                width: MediaQuery.of(context).size.width *
+                                    0.25,
+                                child: FittedBox(
+                                    child: Text(
+                                  '',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
+                                ))),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/myaccount');
-                          },
-                          child: buttonprofile(
-                            title: 'My Account',
-                            icon: Icon(
-                              Icons.person,
-                              size: 30,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.03,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/myaccount');
+                      },
+                      child: buttonprofile(
+                        title: 'My Account',
+                        icon: Icon(
+                          Icons.person,
+                          size: 30,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.015,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/notifications');
-                          },
-                          child: buttonprofile(
-                            title: 'Notifications',
-                            icon: Icon(
-                              Icons.notifications,
-                              size: 30,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.015,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/notifications');
+                      },
+                      child: buttonprofile(
+                        title: 'Notifications',
+                        icon: Icon(
+                          Icons.notifications,
+                          size: 30,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.015,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/theme');
-                          },
-                          child: buttonprofile(
-                            title: 'Theme',
-                            icon: Icon(
-                              Icons.settings,
-                              size: 30,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.015,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/theme');
+                      },
+                      child: buttonprofile(
+                        title: 'Theme',
+                        icon: Icon(
+                          Icons.settings,
+                          size: 30,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.015,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () => whatsapp(),
-                          child: buttonprofile(
-                            title: 'Help Center',
-                            icon: Icon(
-                              Icons.question_mark_outlined,
-                              size: 30,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.015,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () => whatsapp(),
+                      child: buttonprofile(
+                        title: 'Help Center',
+                        icon: Icon(
+                          Icons.question_mark_outlined,
+                          size: 30,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.015,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () async {
-                            SmartDialog.showLoading();
-                            context.read<checkstate>().logout();
-                            context.read<checkcart>().loggout();
-                            context.read<subscribed>().getsubscribed();
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.015,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () async {
+                        SmartDialog.showLoading();
+                        context.read<checkstate>().logout();
+                        context.read<checkcart>().loggout();
+                        context.read<subscribed>().getsubscribed();
 
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/landingpage', (route) => false);
-                            SmartDialog.dismiss();
-                          },
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/landingpage', (route) => false);
+                        SmartDialog.dismiss();
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.09,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.08,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.08,
-                                        child: Transform.rotate(
-                                            angle: 100 * math.pi / 100,
-                                            child: SvgPicture.asset(
-                                              'images/log-out.svg',
-                                              color: Colors.red,
-                                            )),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        child: const Text(
-                                          'Log Out',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.red),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                   SizedBox(
-                                      child: Icon(
-                                    Icons.forward,
-                                    size: 30,
-                                    color: Theme.of(context).primaryColor,
-                                  )),
-                                ]),
-                          ),
-                        ),
-                      )
-                    ])),
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                            0.08,
+                                    width:
+                                        MediaQuery.of(context).size.width *
+                                            0.08,
+                                    child: Transform.rotate(
+                                        angle: 100 * math.pi / 100,
+                                        child: SvgPicture.asset(
+                                          'images/log-out.svg',
+                                          color: Colors.red,
+                                        )),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    child: const Text(
+                                      'Log Out',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                  child: Icon(
+                                Icons.forward,
+                                size: 30,
+                                color: Theme.of(context).primaryColor,
+                              )),
+                            ]),
+                      ),
+                    ),
+                  )
+                ]),
               )
             : SingleChildScrollView(
                 child: Container(

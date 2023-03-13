@@ -122,6 +122,7 @@ class _addAddressState extends State<addAddress> {
                                 fullname = value;
                               });
                             },
+                            initialValue: context.watch<checkstate>().firstname,
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(

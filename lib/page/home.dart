@@ -101,7 +101,7 @@ class _homeState extends State<home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,19 +117,23 @@ class _homeState extends State<home> {
                           ),
                           context.watch<checkstate>().checkregisteredlogg()
                               ? SizedBox(
-                                  height: 25,
-                                  child: Text(
-                                    context
-                                                .watch<checkstate>()
-                                                .firstname
-                                                .split(' ')[0] !=
-                                            ''
-                                        ? 'Hello ${context.watch<checkstate>().firstname.split(' ')[0].capitalize()}'
-                                        : '',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 21,
-                                        fontWeight: FontWeight.bold),
+                                  height: 20,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      context
+                                                  .watch<checkstate>()
+                                                  .firstname
+                                                  .split(' ')[0] !=
+                                              ''
+                                          ? 'Hello ${context.watch<checkstate>().firstname.split(' ')[0].capitalize()}'
+                                          : '',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 )
                               : context.watch<checkstate>().notloggedname == ''
@@ -142,13 +146,18 @@ class _homeState extends State<home> {
                                     )
                                   : SizedBox(
                                       height: 25,
-                                      child: Text(
-                                        'Hello ${context.watch<checkstate>().notloggedname.split(' ')[0].capitalize()}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 21,
-                                            fontWeight: FontWeight.bold),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: FittedBox(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Hello ${context.watch<checkstate>().notloggedname.split(' ')[0].capitalize()}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 21,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                           SizedBox(
@@ -158,7 +167,7 @@ class _homeState extends State<home> {
                             height: MediaQuery.of(context).size.height * 0.047,
                             //width: MediaQuery.of(context).size.width * 0.025,
                             child: Text(
-                              'Find a service you like us to render',
+                              'Find a food you like us to deliver',
                               softWrap: true,
                               style: TextStyle(
                                   color: Colors.white.withOpacity(.8),
@@ -176,55 +185,58 @@ class _homeState extends State<home> {
                             Icons.location_on,
                             color: Colors.white,
                           ),
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => addAddressper()));
-                              },
-                              child: token != null
-                                  ? context.watch<checkstate>().checkaddress()
-                                      ? SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: Text(
-                                            context.watch<checkstate>().address,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        )
-                                      : Text(
-                                          'Set Location',
-                                          style: TextStyle(color: Colors.white),
-                                        )
-                                  : context
-                                              .watch<checkstate>()
-                                              .notloggedaddress !=
-                                          ''
-                                      ? SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: Text(
-                                            context
+                          Container(
+                            constraints: BoxConstraints(
+                                minWidth: 50,
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.4),
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              addAddressper()));
+                                },
+                                child: token != null
+                                    ? context.watch<checkstate>().checkaddress()
+                                        ? SizedBox(
+                                            child: Text(
+                                              context
+                                                  .watch<checkstate>()
+                                                  .address,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          )
+                                        : Text(
+                                            'Set Location',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )
+                                    : context
                                                 .watch<checkstate>()
-                                                .notloggedaddress,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        )
-                                      : Text(
-                                          'Set Location',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
+                                                .notloggedaddress !=
+                                            ''
+                                        ? SizedBox(
+                                            child: Text(
+                                              context
+                                                  .watch<checkstate>()
+                                                  .notloggedaddress,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          )
+                                        : Text(
+                                            'Set Location',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
+                          )
                         ],
                       ),
                       InkWell(
@@ -409,7 +421,6 @@ class _homeState extends State<home> {
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 2,
-                                        // childAspectRatio: 3 / 2,
                                         crossAxisSpacing: 10,
                                         mainAxisSpacing: 20),
                                 itemCount: items.length,
@@ -437,7 +448,6 @@ class _homeState extends State<home> {
                                     child: SizedBox(
                                       height: 70,
                                       width: 30,
-                                      //color: Colors.black,
                                       child: Column(
                                           //
                                           children: [
@@ -468,13 +478,18 @@ class _homeState extends State<home> {
                                                             0.35,
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
                                                 Text(
-                                                  items[index].item ??
-                                                      'Fried Rice',
+                                                  items[index].item ?? '',
                                                   style: const TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
                                                 ),
                                                 Text(
                                                     'Min: ${items[index].mincost}')
@@ -549,13 +564,18 @@ class _homeState extends State<home> {
                                                       0.35,
                                                 ),
                                               ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
                                               Text(
-                                                items[index].item ??
-                                                    'Fried Rice',
+                                                items[index].item ?? '',
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
                                               ),
                                               Text(
                                                   'Min: ${items[index].mincost}')

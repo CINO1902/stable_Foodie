@@ -100,7 +100,7 @@ class _newpasswordState extends State<newpassword> {
       new CountdownController(autoStart: true);
   @override
   Widget build(BuildContext context) {
-      if (Provider.of<ConnectivityStatus>(context) ==
+    if (Provider.of<ConnectivityStatus>(context) ==
         ConnectivityStatus.Offline) {
       showoverlay();
     } else {
@@ -109,7 +109,10 @@ class _newpasswordState extends State<newpassword> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
-        title: Text('Set New Password'),
+        title: Text(
+          'Set New Password',
+          style: TextStyle(color: Theme.of(context).primaryColorDark),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

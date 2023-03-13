@@ -23,9 +23,9 @@ class addAddressper extends StatefulWidget {
 
 class _addAddressperState extends State<addAddressper> {
   String? fullname;
-  String? phone;
+  String phone = '';
   String? email;
-  String? address;
+  String address = '';
   late FixedExtentScrollController _scrollController;
   late TextEditingController _controller;
   final items = [
@@ -41,7 +41,9 @@ class _addAddressperState extends State<addAddressper> {
     'Camp'
   ];
   String? token;
-
+  bool namechange = false;
+  bool phonechange = false;
+  bool addresschange = false;
   int index = 0;
   @override
   void initState() {
@@ -120,8 +122,11 @@ class _addAddressperState extends State<addAddressper> {
                             onChanged: (value) {
                               setState(() {
                                 fullname = value;
+                                namechange = true;
                               });
                             },
+                            initialValue:
+                                '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}',
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -163,8 +168,10 @@ class _addAddressperState extends State<addAddressper> {
                         onChanged: (value) {
                           setState(() {
                             phone = value;
+                            phonechange = true;
                           });
                         },
+                        initialValue: context.watch<checkstate>().phone,
                         keyboardType: TextInputType.number,
                         validator: _validatephone,
                         decoration: InputDecoration(
@@ -212,6 +219,8 @@ class _addAddressperState extends State<addAddressper> {
                                       email = value;
                                     });
                                   },
+                                  initialValue:
+                                      context.watch<checkstate>().email,
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _validateEmail,
                                   decoration: InputDecoration(
@@ -304,7 +313,7 @@ class _addAddressperState extends State<addAddressper> {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    'Choose Network',
+                                                    'Choose Location',
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -379,8 +388,10 @@ class _addAddressperState extends State<addAddressper> {
                         onChanged: (value) {
                           setState(() {
                             address = value;
+                            addresschange = true;
                           });
                         },
+                        initialValue: context.watch<checkstate>().address,
                         validator: _validateaddress,
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
@@ -434,14 +445,41 @@ class _addAddressperState extends State<addAddressper> {
                                   ),
                                   onPressed: () async {
                                     if (_key4.currentState!.validate()) {
-                                      _key4.currentState!.save();
-
                                       if (token != null) {
-                                        SmartDialog.showLoading();
+                                        SmartDialog.showLoading(
+                                          clickMaskDismiss: false,
+                                          backDismiss: false,
+                                        );
+                                        String phoneget() {
+                                          String value = '';
+                                          if (phonechange == true) {
+                                            value = phone;
+                                          } else {
+                                            value = Provider.of<checkstate>(
+                                                    context,
+                                                    listen: false)
+                                                .phone;
+                                          }
+                                          return value;
+                                        }
+
+                                        String addressget() {
+                                          String value = '';
+                                          if (addresschange == true) {
+                                            value = address;
+                                          } else {
+                                            value = Provider.of<checkstate>(
+                                                    context,
+                                                    listen: false)
+                                                .address;
+                                          }
+                                          return value;
+                                        }
+
                                         await context
                                             .read<checkstate>()
-                                            .changeadress(
-                                                phone, items[index], address);
+                                            .changeadress(phoneget(),
+                                                items[index], addressget());
 
                                         if (value.success == true) {
                                           ScaffoldMessenger.of(context)
@@ -458,6 +496,14 @@ class _addAddressperState extends State<addAddressper> {
                                             backgroundColor: Colors.transparent,
                                             elevation: 0,
                                           ));
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute<void>(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const homelanding(),
+                                              ),
+                                              (Route<dynamic> route) => false);
                                         } else if (value.success == false) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
@@ -474,14 +520,6 @@ class _addAddressperState extends State<addAddressper> {
                                             elevation: 0,
                                           ));
                                         }
-                                        SmartDialog.dismiss();
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute<void>(
-                                              builder: (BuildContext context) =>
-                                                  const homelanding(),
-                                            ),
-                                            (Route<dynamic> route) => false);
                                       } else if (token == null) {
                                         context.read<checkstate>().saveaddress(
                                             address,
@@ -511,6 +549,7 @@ class _addAddressperState extends State<addAddressper> {
                                             ),
                                             (Route<dynamic> route) => false);
                                       }
+                                      SmartDialog.dismiss();
                                     }
                                   },
                                   child: Text(

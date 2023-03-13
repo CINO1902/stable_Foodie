@@ -73,6 +73,10 @@ class myTheme {
       scaffoldBackgroundColor: const Color.fromARGB(255, 54, 54, 54),
       primaryColor: Colors.red,
       primaryColorLight: Colors.black,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: Colors.red,
+        selectionColor: Colors.red,
+      ),
       iconTheme: IconThemeData(
         color: Colors.red,
       ),
@@ -88,13 +92,17 @@ class myTheme {
         onInverseSurface: Color.fromARGB(255, 199, 199, 199),
         primaryContainer: Color.fromARGB(255, 28, 28, 28),
       ));
+
   static final lighttheme = ThemeData(
       scaffoldBackgroundColor: const Color.fromARGB(255, 224, 224, 224),
       primaryColor: Colors.red,
       iconTheme: IconThemeData(
         color: Colors.red,
       ),
-      textTheme: TextTheme( ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: Colors.red,
+        selectionColor: Colors.red,
+      ),
       primaryColorLight: Colors.white,
       appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
@@ -105,7 +113,7 @@ class myTheme {
       colorScheme: const ColorScheme.light(
         onBackground: Color.fromARGB(255, 114, 114, 114),
         onInverseSurface: Color.fromARGB(255, 224, 224, 224),
-        onTertiary: Color.fromARGB(255, 42, 101, 135),
+        onTertiary: Color.fromARGB(255, 255, 255, 255),
         primaryContainer: Colors.white,
       ));
 }

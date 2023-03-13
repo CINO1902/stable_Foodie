@@ -184,8 +184,14 @@ class _loginState extends State<login> {
                             });
                           },
                           child: passobscure
-                              ? Icon(Icons.visibility_off)
-                              : Icon(Icons.visibility),
+                              ? Icon(
+                                  Icons.visibility_off,
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              : Icon(
+                                  Icons.visibility,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                         ),
                         errorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 1.0),

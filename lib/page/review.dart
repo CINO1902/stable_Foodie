@@ -229,6 +229,10 @@ class _ReviewState extends State<Review> {
                                     .clickedfood[5]) {
                               multiplier = multiplier + 1;
                               context.read<calculatemeal>().addlist();
+                            } else {
+                              SmartDialog.showToast(
+                                "Cannot add more of this item",
+                              );
                             }
                           });
                           context.read<addTocart>().checkbuy();
@@ -522,6 +526,10 @@ class _ReviewState extends State<Review> {
                                                           thisquote[3]
                                                   : thisquote;
                                             });
+                                          } else {
+                                            SmartDialog.showToast(
+                                              "Cannot add more of this item",
+                                            );
                                           }
 
                                           context

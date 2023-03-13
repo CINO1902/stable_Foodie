@@ -77,11 +77,12 @@ class _myaccountState extends State<myaccount> {
                       Row(
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.04,
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                width: MediaQuery.of(context).size.width * 0.4,
                                 child: FittedBox(
                                   alignment: Alignment.centerLeft,
                                   child: Text(

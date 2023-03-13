@@ -219,7 +219,7 @@ class _onBoardingState extends State<onBoarding> {
         elevation: 0,
       ));
       context.read<checkstate>().gethome(token);
-      Navigator.pushNamed(context, '/landingpage');
+      Navigator.pushNamedAndRemoveUntil(context, '/landingpage', (Route<dynamic> route) => false);
     }
   }
 }

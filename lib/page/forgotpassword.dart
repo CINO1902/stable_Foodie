@@ -66,7 +66,10 @@ class _forgotpasswordState extends State<forgotpassword> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
-        title: Text('Forgot Password'),
+        title: Text(
+          'Forgot Password',
+          style: TextStyle(color: Theme.of(context).primaryColorDark),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

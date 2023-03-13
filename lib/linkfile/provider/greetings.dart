@@ -38,8 +38,7 @@ class greetings extends ChangeNotifier {
           networkHandler.builderUrl('/gettime'),
           headers: {'content-Type': 'application/json; charset=UTF-8'});
       final time1 = jsonDecode(response.body);
-      time = DateTime.parse(time1["date"]);
-      print(time);
+      time = DateTime.parse(time1["date"]).toLocal();
       gettime();
     } catch (e) {}
 
