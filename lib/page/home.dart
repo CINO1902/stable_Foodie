@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -80,6 +81,27 @@ class _homeState extends State<home> {
   }
 
   final ScrollController control = ScrollController();
+  List itemsslide = [
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1670513661/foodie/CHI-heralds-festive-season_pum9at.png',
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1670510774/foodie/SmartSelect_20181125-233844_Instagram_rntql1.jpg',
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1670509149/foodie/1028-Avila-Rice-004watermarked-scaled-1-scaled_p55ays.jpg',
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1668780604/foodie/jellof-rice_bmpdvh.webp',
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1668780600/foodie/EgusiSoup_mo9yii.jpg',
+    'https://res.cloudinary.com/dlsavisdq/image/upload/v1668780314/cld-sample-2.jpg'
+  ];
+
+  List<Widget> generateimage() {
+    return itemsslide
+        .map((e) => ClipRRect(
+              child: CachedNetworkImage(
+                imageUrl: e ?? '',
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,41 +325,59 @@ class _homeState extends State<home> {
               elevation: 2.7,
               color: Colors.black,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.17,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin:
-                          const EdgeInsets.only(left: 20, top: 20, right: 20),
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'New and Hot',
-                            style: TextStyle(color: Colors.yellow),
-                          ),
-                          Text(
-                            'Enjoy 2 meals per day for as low a ₦35,000',
-                            style: TextStyle(color: Colors.white, fontSize: 22),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
-                        child: Image.asset(
-                          'images/rice.jpg',
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                  height: MediaQuery.of(context).size.height * 0.17,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: CarouselSlider(
+                      items: generateimage(),
+                      options: CarouselOptions(
+                        height: 300,
+                        aspectRatio: 20 / 6,
+                        viewportFraction: 0.8,
+                        initialPage: 0,
+                        enableInfiniteScroll: true,
+                        reverse: false,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        enlargeFactor: 0.3,
+                        //onPageChanged: callbackFunction,
+                        scrollDirection: Axis.horizontal,
+                      ))
+                  // child: Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //       margin:
+                  //           const EdgeInsets.only(left: 20, top: 20, right: 20),
+                  //       width: MediaQuery.of(context).size.width * 0.4,
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: const [
+                  //           Text(
+                  //             'New and Hot',
+                  //             style: TextStyle(color: Colors.yellow),
+                  //           ),
+                  //           Text(
+                  //             'Enjoy 2 meals per day for as low a ₦35,000',
+                  //             style: TextStyle(color: Colors.white, fontSize: 22),
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     Container(
+                  //       width: MediaQuery.of(context).size.width * 0.3,
+                  //       child: ClipRRect(
+                  //         borderRadius: BorderRadius.circular(25),
+                  //         child: Image.asset(
+                  //           'images/rice.jpg',
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                  ),
             ),
           ),
           Container(

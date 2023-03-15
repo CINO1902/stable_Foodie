@@ -22,10 +22,10 @@ class addAddress extends StatefulWidget {
 }
 
 class _addAddressState extends State<addAddress> {
-  String? fullname;
-  String? phone;
+  String fullname = '';
+  String phone = '';
   String? email;
-  String? address;
+  String address = '';
   late FixedExtentScrollController _scrollController;
   late TextEditingController _controller;
   final items = [
@@ -61,6 +61,9 @@ class _addAddressState extends State<addAddress> {
     _scrollController.dispose();
   }
 
+  bool namechange = false;
+  bool phonechange = false;
+  bool addresschange = false;
   bool network = false;
   @override
   void deactivate() {
@@ -120,9 +123,10 @@ class _addAddressState extends State<addAddress> {
                             onChanged: (value) {
                               setState(() {
                                 fullname = value;
+                                namechange = true;
                               });
                             },
-                            initialValue: context.watch<checkstate>().firstname,
+                            initialValue: context.watch<checkcart>().fullname,
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -164,8 +168,10 @@ class _addAddressState extends State<addAddress> {
                         onChanged: (value) {
                           setState(() {
                             phone = value;
+                            phonechange = true;
                           });
                         },
+                        initialValue: context.watch<checkcart>().number,
                         keyboardType: TextInputType.number,
                         validator: _validatephone,
                         decoration: InputDecoration(
@@ -305,7 +311,7 @@ class _addAddressState extends State<addAddress> {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    'Choose Network',
+                                                    'Choose Location',
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -380,8 +386,10 @@ class _addAddressState extends State<addAddress> {
                         onChanged: (value) {
                           setState(() {
                             address = value;
+                            addresschange = true;
                           });
                         },
+                        initialValue: context.watch<checkcart>().address,
                         validator: _validateaddress,
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
@@ -545,10 +553,52 @@ class _addAddressState extends State<addAddress> {
                                             ),
                                             (Route<dynamic> route) => false);
                                       } else {
+                                        String phoneget() {
+                                          String value = '';
+                                          if (phonechange == true) {
+                                            value = phone;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .number;
+                                          }
+                                          return value;
+                                        }
+
+                                        String addressget() {
+                                          String value = '';
+                                          if (addresschange == true) {
+                                            value = address;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .address;
+                                          }
+                                          return value;
+                                        }
+
+                                        String nameget() {
+                                          String value = '';
+                                          if (addresschange == true) {
+                                            value = fullname;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .fullname;
+                                          }
+                                          return value;
+                                        }
+
                                         context
                                             .read<checkcart>()
-                                            .gettempaddress(fullname, phone,
-                                                address, items[index]);
+                                            .gettempaddress(
+                                                nameget(),
+                                                phoneget(),
+                                                addressget(),
+                                                items[index]);
                                         context.read<checkcart>().locationa();
                                         Navigator.pop(context);
                                       }

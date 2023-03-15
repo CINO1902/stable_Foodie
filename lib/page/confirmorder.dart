@@ -45,6 +45,7 @@ class _confirmorderState extends State<confirmorder> {
     setState(() {
       token = prefs.getString("tokenregistered");
     });
+    print(token);
   }
 
   collectdetails() {
@@ -180,7 +181,13 @@ class _confirmorderState extends State<confirmorder> {
                             child: context.watch<checkstate>().notloggedname ==
                                         '' &&
                                     token == null
-                                ? ListView(
+                                ? Center(
+                                    child: Text(
+                                    'Click to add Location',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ))
+                                : ListView(
                                     shrinkWrap: true,
                                     children: [
                                       Text(
@@ -310,13 +317,6 @@ class _confirmorderState extends State<confirmorder> {
                                         ),
                                       )
                                     ],
-                                  )
-                                : Center(
-                                    child: Text(
-                                      'Click to add Location',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
                                   )),
                       )
                     ],
@@ -375,7 +375,9 @@ class _confirmorderState extends State<confirmorder> {
                           style: TextStyle(fontSize: 19),
                         ),
                         context.watch<checkcart>().loading
-                            ? CircularProgressIndicator()
+                            ? CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor,
+                              )
                             : Text(
                                 '₦ ${context.watch<checkcart>().delivery.toString()}',
                                 style: TextStyle(fontSize: 19))

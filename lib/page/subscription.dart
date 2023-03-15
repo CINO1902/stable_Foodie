@@ -576,8 +576,10 @@ class _subscriptionState extends State<subscription>
                                 Consumer<getmostcommon>(
                                     builder: (context, value, child) {
                                   if (value.data == false) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     );
                                   } else if (value.error == true) {
                                     return Center(
@@ -884,8 +886,10 @@ class _subscriptionState extends State<subscription>
                                 Consumer<getmostcommon>(
                                     builder: (context, value, child) {
                                   if (value.data == false) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     );
                                   } else {
                                     notcommon = value.notcommon;
@@ -1090,8 +1094,10 @@ class _subscriptionState extends State<subscription>
                                 Consumer<getmostcommon>(
                                     builder: (context, value, child) {
                                   if (value.data == false) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                     );
                                   } else if (value.drinks.isEmpty) {
                                     return const Center(
@@ -1385,8 +1391,10 @@ class _subscriptionState extends State<subscription>
                             child: Consumer<getsubhistory>(
                                 builder: (context, value, child) {
                               if (value.loading == false) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 );
                               } else if (value.fullresult.isEmpty) {
                                 return const Center(
@@ -1610,7 +1618,8 @@ class _subscriptionState extends State<subscription>
                                     });
                               } else {
                                 return Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(
+                                        color: Theme.of(context).primaryColor));
                               }
                             }),
                           )

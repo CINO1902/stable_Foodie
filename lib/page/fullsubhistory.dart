@@ -76,8 +76,9 @@ class _fullsubhistoryState extends State<fullsubhistory> {
             borderRadius: BorderRadius.circular(15)),
         child: Consumer<getsubhistory>(builder: (context, value, child) {
           if (value.loading == false) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
             );
           } else if (value.loading == true) {
             history = value.fullresult;
@@ -261,10 +262,11 @@ class _fullsubhistoryState extends State<fullsubhistory> {
                       }),
                 ),
                 context.watch<getsubhistory>().isloadmore == true
-                    ? const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 30),
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 30),
                         child: Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor),
                         ))
                     : Container(),
                 context.watch<getsubhistory>().hasnextpage == false
@@ -291,7 +293,9 @@ class _fullsubhistoryState extends State<fullsubhistory> {
               ],
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor));
           }
         }),
       ),

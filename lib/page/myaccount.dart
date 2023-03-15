@@ -1,14 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
+import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
+import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/addnewaddress.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
 import 'package:foodie_ios/page/otpverify.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:foodie_ios/linkfile/networkhandler.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class myaccount extends StatefulWidget {
   const myaccount({super.key});
@@ -20,14 +26,41 @@ class myaccount extends StatefulWidget {
 class _myaccountState extends State<myaccount> {
   String? address;
   bool network = false;
+  String success = '';
+  String msg = '';
+  bool loading = true;
+  Future<void> deleteaccount() async {
+    print(Provider.of<checkstate>(context, listen: false).email);
+    try {
+      setState(() {
+        loading = true;
+      });
+
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/deleteaccount'),
+          body: jsonEncode(<String, String>{
+            'email': Provider.of<checkstate>(context, listen: false).email
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          });
+
+      final decodedresponse = jsonDecode(response.body);
+      setState(() {
+        msg = decodedresponse['msg'];
+        success = decodedresponse['success'];
+      });
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<ConnectivityStatus>(context) ==
-        ConnectivityStatus.Offline) {
-      showoverlay();
-    } else {
-      SmartDialog.dismiss(tag: 'network');
-    }
     return Scaffold(
         appBar: AppBar(
           title: Text('Account Details'),
@@ -322,61 +355,114 @@ class _myaccountState extends State<myaccount> {
             SizedBox(
               height: 20,
             ),
-            Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.09,
-                width: MediaQuery.of(context).size.width * 0.9,
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.03,
-                    vertical: MediaQuery.of(context).size.height * 0.01),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: FittedBox(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Close Account',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.red),
+            InkWell(
+              onTap: () async {
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.warning,
+                  headerAnimationLoop: false,
+                  animType: AnimType.topSlide,
+                  title: 'Warning',
+                  desc: 'This action would delete all your record with Foodie',
+                  btnCancelOnPress: () {},
+                  onDismissCallback: (type) {},
+                  btnOkOnPress: () async {
+                    SmartDialog.showLoading();
+                    await deleteaccount();
+
+                    if (success == 'fail') {
+                      SmartDialog.dismiss();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: CustomeSnackbar(
+                          topic: 'Oh Snap!',
+                          msg: msg,
+                          color1: Color.fromARGB(255, 171, 51, 42),
+                          color2: Color.fromARGB(255, 127, 39, 33),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                      ));
+                    } else if (success == 'success') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: CustomeSnackbar(
+                          topic: 'Great!',
+                          msg: msg,
+                          color1: Color.fromARGB(255, 25, 107, 52),
+                          color2: Color.fromARGB(255, 19, 95, 40),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                      ));
+                      context.read<checkstate>().logout();
+                      context.read<checkcart>().loggout();
+                      context.read<subscribed>().getsubscribed();
+
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/landingpage', (route) => false);
+                    }
+                  },
+                ).show();
+              },
+              child: Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.09,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.03,
+                      vertical: MediaQuery.of(context).size.height * 0.01),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  child: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Close Account',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.red),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.02,
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: FittedBox(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Deativate your Pay me Account',
-                                    style: TextStyle(),
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Delete your Foodie Account',
+                                      style: TextStyle(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                          child: Icon(
-                        Icons.forward,
-                        size: 30,
-                        color: Theme.of(context).primaryColor,
-                      )),
-                    ]),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                            child: Icon(
+                          Icons.forward,
+                          size: 30,
+                          color: Theme.of(context).primaryColor,
+                        )),
+                      ]),
+                ),
               ),
             ),
           ]),
