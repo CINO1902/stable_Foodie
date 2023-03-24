@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/page/account.dart';
@@ -48,21 +49,34 @@ class _homelandingState extends State<homelanding> {
             body: CupertinoTabScaffold(
             tabBar: CupertinoTabBar(
                 iconSize: 20,
-                backgroundColor: Theme.of(context).primaryColor,
+                //  backgroundColor: Colors.grey[3],
                 currentIndex: currentIndex,
                 onTap: (index) => setState(() {
                       currentIndex = index;
                     }),
-                activeColor: Theme.of(context).colorScheme.onTertiary,
-                inactiveColor:
-                    Theme.of(context).colorScheme.onTertiary.withOpacity(0.6),
-                items: const <BottomNavigationBarItem>[
+                activeColor: Theme.of(context).primaryColor,
+                inactiveColor: Theme.of(context).colorScheme.onBackground,
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.home),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Vector-3.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Vector-3.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.mail_outline_outlined),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Vector-2.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Vector-2.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Subscription',
                   ),
                   BottomNavigationBarItem(
@@ -70,7 +84,14 @@ class _homelandingState extends State<homelanding> {
                     label: 'Order',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.person),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Group.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Group.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Account',
                   )
                 ]),
@@ -93,30 +114,50 @@ class _homelandingState extends State<homelanding> {
                 onTap: (index) => setState(() {
                       currentIndex = index;
                     }),
-                selectedItemColor: Theme.of(context).colorScheme.onTertiary,
+                selectedItemColor: Theme.of(context).primaryColor,
                 selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
-                unselectedItemColor:
-                    Theme.of(context).colorScheme.onTertiary.withOpacity(0.7),
+                unselectedItemColor: Theme.of(context).colorScheme.onBackground,
                 items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Vector-3.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Vector-3.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Home',
-                    backgroundColor: Theme.of(context).primaryColor,
+                    //  backgroundColor: Color.fromARGB(200, 39, 39, 39),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.mail_outline_outlined),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Vector-2.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Vector-2.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Subscription',
-                    backgroundColor: Theme.of(context).primaryColor,
+                    //  backgroundColor: Color.fromARGB(200, 39, 39, 39),
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.history),
                     label: 'Order',
-                    backgroundColor: Theme.of(context).primaryColor,
+                    // backgroundColor: Color.fromARGB(200, 39, 39, 39),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
+                    activeIcon: SvgPicture.asset(
+                      'images/svg/Group.svg',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    icon: SvgPicture.asset(
+                      'images/svg/Group.svg',
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     label: 'Account',
-                    backgroundColor: Theme.of(context).primaryColor,
+                    //  backgroundColor: Color.fromARGB(200, 39, 39, 39),
                   )
                 ]),
           );

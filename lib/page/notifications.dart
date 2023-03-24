@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodie_ios/linkfile/Model/sendNotificationModel.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/greetings.dart';
@@ -17,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 
 class notification extends StatefulWidget {
   const notification({super.key});
@@ -53,6 +55,7 @@ class _notificationState extends State<notification> {
     'Dec'
   ];
   late ScrollController controller;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -78,164 +81,167 @@ class _notificationState extends State<notification> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Notification',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: RefreshWidget(
-              control: controller,
-              onRefresh: () async {
-                context.read<notifications>().getnotification();
-              },
-              child: Consumer<notifications>(builder: (context, value, child) {
-                if (value.loading == true) {
-                  return Container(
-                    height: MediaQuery.of(context).size.height * 0.9,
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).primaryColor,
-                        )),
-                  );
-                } else {
-                  if (value.notify.isEmpty) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'You have no notifications yet',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    );
-                  } else {
-                    notify = value.notify;
-                    return GroupedListView<Pagnitednotify, DateTime>(
-                        controller: controller,
-                        shrinkWrap: true,
-                        groupBy: (Pagnitednotify element) => DateTime(
-                              element.date.year,
-                              element.date.month,
-                              element.date.day,
+      body: Consumer<notifications>(builder: (context, value, child) {
+        if (value.loading == true) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Align(
+                alignment: Alignment.center,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                )),
+          );
+        } else {
+          if (value.notify.isEmpty) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'You have no notifications yet',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+              ),
+            );
+          } else {
+            notify = value.notify;
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(children: [
+                Expanded(
+                  child: GroupedListView<Pagnitednotify, DateTime>(
+                      controller: controller,
+                      shrinkWrap: true,
+                      groupBy: (Pagnitednotify element) => DateTime(
+                            element.date.year,
+                            element.date.month,
+                            element.date.day,
+                          ),
+                      itemComparator:
+                          (Pagnitednotify element1, Pagnitednotify element2) =>
+                              element2.date.compareTo(element1.date),
+                      groupComparator: (DateTime value1, DateTime value2) =>
+                          value2.compareTo(value1),
+                      groupSeparatorBuilder: (DateTime date) {
+                        DateTime? currentdate = context.watch<greetings>().time;
+
+                        final day = date.day;
+                        final currentday = currentdate.day;
+
+                        String date1 = '';
+
+                        if ((currentday - day) == 0) {
+                          date1 = 'Today';
+                        } else if ((currentday - day) == 1) {
+                          date1 = 'Yesterday';
+                        } else if ((currentday - day) > 1) {
+                          date1 =
+                              '${date.day}, ${months[date.month - 1]} ${date.year}';
+                        } else {
+                          date1 =
+                              '${date.day}, ${months[date.month - 1]} ${date.year}';
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              date1,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                        itemComparator: (Pagnitednotify element1,
-                                Pagnitednotify element2) =>
-                            element2.date.compareTo(element1.date),
-                        groupComparator: (DateTime value1, DateTime value2) =>
-                            value2.compareTo(value1),
-                        groupSeparatorBuilder: (DateTime date) {
-                          DateTime? currentdate =
-                              context.watch<greetings>().time;
-
-                          final day = date.day;
-                          final currentday = currentdate.day;
-
-                          String date1 = '';
-
-                          if ((currentday - day) == 0) {
-                            date1 = 'Today';
-                          } else if ((currentday - day) == 1) {
-                            date1 = 'Yesterday';
-                          } else if ((currentday - day) > 1) {
-                            date1 =
-                                '${date.day}, ${months[date.month - 1]} ${date.year}';
-                          } else {
-                            date1 =
-                                '${date.day}, ${months[date.month - 1]} ${date.year}';
-                          }
-
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
+                          ),
+                        );
+                      },
+                      order: GroupedListOrder.ASC,
+                      floatingHeader: true,
+                      elements: notify,
+                      itemBuilder: (context, element) {
+                        if (element.notificationType == 1) {
+                          return Notificationtype1(context, element.discount,
+                              element.coupon, element.date);
+                        } else if (element.notificationType == 2) {
+                          return Notificationtype2(context, element.date,
+                              element.discount, element.coupon);
+                        } else if (element.notificationType == 3) {
+                          return Notificationtype3(context, element.date);
+                        } else if (element.notificationType == 4) {
+                          return Notificationtype4(
+                              context, element.date, element.amountDaily);
+                        } else if (element.notificationType == 5) {
+                          return Notificationtype5(
+                              context, element.date, element.amountweekly);
+                        } else if (element.notificationType == 6) {
+                          return Notificationtype6(context, element.date);
+                        } else if (element.notificationType == 7) {
+                          return Notificationtype7(context, element.date);
+                        } else if (element.notificationType == 8) {
+                          return Notificationtype8(context, element.date);
+                        } else if (element.notificationType == 9) {
+                          return Notificationtype9(context, element.date);
+                        } else if (element.notificationType == 10) {
+                          return Notificationtype10(context, element.date,
+                              element.paymentAmount, element.ordernum);
+                        } else if (element.notificationType == 11) {
+                          return Notificationtype11(
+                              context, element.date, element.paymentAmount);
+                        } else if (element.notificationType == 12) {
+                          return Notificationtype12(context, element.date);
+                        } else if (element.notificationType == 13) {
+                          return Notificationtype13(context, element.date,
+                              element.discount, element.coupon);
+                        } else {
+                          return Container();
+                        }
+                      }),
+                ),
+                context.watch<notifications>().isloadmore == true
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 30),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ))
+                    : Container(),
+                context.watch<notifications>().hasnextpage == false
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 0),
+                        child: Container(
+                          height: 70,
+                          width: double.infinity,
+                          decoration: BoxDecoration(color: Colors.amber),
+                          child: Center(
                               child: Text(
-                                date1,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          );
-                        },
-                        order: GroupedListOrder.ASC,
-                        floatingHeader: true,
-                        elements: notify,
-                        itemBuilder: (context, element) {
-                          if (element.notificationType == 1) {
-                            return Notificationtype1(context, element.discount,
-                                element.coupon, element.date);
-                          } else if (element.notificationType == 2) {
-                            return Notificationtype2(context, element.date,
-                                element.discount, element.coupon);
-                          } else if (element.notificationType == 3) {
-                            return Notificationtype3(context, element.date);
-                          } else if (element.notificationType == 4) {
-                            return Notificationtype4(
-                                context, element.date, element.amountDaily);
-                          } else if (element.notificationType == 5) {
-                            return Notificationtype5(
-                                context, element.date, element.amountweekly);
-                          } else if (element.notificationType == 6) {
-                            return Notificationtype6(context, element.date);
-                          } else if (element.notificationType == 7) {
-                            return Notificationtype7(context, element.date);
-                          } else if (element.notificationType == 8) {
-                            return Notificationtype8(context, element.date);
-                          } else if (element.notificationType == 9) {
-                            return Notificationtype9(context, element.date);
-                          } else if (element.notificationType == 10) {
-                            return Notificationtype10(context, element.date,
-                                element.paymentAmount, element.ordernum);
-                          } else if (element.notificationType == 11) {
-                            return Notificationtype11(
-                                context, element.date, element.paymentAmount);
-                          } else if (element.notificationType == 12) {
-                            return Notificationtype12(context, element.date);
-                          } else if (element.notificationType == 13) {
-                            return Notificationtype13(context, element.date,
-                                element.discount, element.coupon);
-                          } else {
-                            return Container();
-                          }
-                        });
-                  }
-                }
-              }),
-            ),
-          ),
-          context.watch<notifications>().isloadmore == true
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 30),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ))
-              : Container(),
-          context.watch<notifications>().hasnextpage == false
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 0),
-                  child: Container(
-                    height: 70,
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.amber),
-                    child: Center(
-                        child: Text(
-                      'You have fetched all content',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.onSecondary),
-                    )),
-                  ),
-                )
-              : Container()
-        ],
-      ),
+                            'You have fetched all content',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary),
+                          )),
+                        ),
+                      )
+                    : Container()
+              ]),
+            );
+          }
+        }
+      }),
     );
   }
 
@@ -300,120 +306,132 @@ class _notificationState extends State<notification> {
       date = formattedTime;
     }
     return Container(
-      padding: EdgeInsets.all(20),
       margin: EdgeInsets.only(
           bottom: 10,
           left: MediaQuery.of(context).size.width * 0.05,
           right: MediaQuery.of(context).size.width * 0.05),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(
-            'images/logo.png',
-            height: 30,
-            width: 30,
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: token == null
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Hello ${context.watch<checkstate>().notloggedname}, Thank you for your recent order, we hope to see you back again soon. As a courtesy for your trust we have a special offer waiting for you - Take ₦1000 of your next order with the coupon code below.',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                        softWrap: true,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await Clipboard.setData(ClipboardData(text: coupon));
-                          _showToast();
-                          HapticFeedback.mediumImpact();
-                        },
-                        child: Text(
-                          '$coupon',
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'images/logo.png',
+              height: 30,
+              width: 30,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: token == null
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Hello ${context.watch<checkstate>().notloggedname}, Thank you for your recent order, we hope to see you back again soon. As a courtesy for your trust we have a special offer waiting for you - Take ₦1000 of your next order with the coupon code below.',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                          softWrap: true,
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            toggle = !toggle;
-                          });
-                        },
-                        child: toggle
-                            ? Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  formattedTime,
+                        SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await Clipboard.setData(
+                                ClipboardData(text: coupon));
+                            _showToast();
+                            HapticFeedback.mediumImpact();
+                          },
+                          child: Text(
+                            '$coupon',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              toggle = !toggle;
+                            });
+                          },
+                          child: toggle
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    formattedTime,
+                                  ),
+                                )
+                              : Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    date,
+                                  ),
                                 ),
-                              )
-                            : Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  date,
-                                ),
-                              ),
-                      )
-                    ],
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Hello ${context.watch<checkstate>().firstname}, Thank you for your recent order, we hope to see you back again soon. As a courtesy for your trust we have a special offer waiting for you - Take $discount of your next order with the coupon code below.',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                        softWrap: true,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await Clipboard.setData(ClipboardData(text: coupon));
-                          _showToast();
-                          HapticFeedback.mediumImpact();
-                        },
-                        child: Text(
-                          '$coupon',
+                        )
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Hello ${context.watch<checkstate>().firstname}, Thank you for your recent order, we hope to see you back again soon. As a courtesy for your trust we have a special offer waiting for you - Take $discount of your next order with the coupon code below.',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                          softWrap: true,
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            toggle = !toggle;
-                          });
-                        },
-                        child: toggle
-                            ? Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  formattedTime,
+                        SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await Clipboard.setData(
+                                ClipboardData(text: coupon));
+                            _showToast();
+                            HapticFeedback.mediumImpact();
+                          },
+                          child: Text(
+                            '$coupon',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              toggle = !toggle;
+                            });
+                          },
+                          child: toggle
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    formattedTime,
+                                  ),
+                                )
+                              : Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    date,
+                                  ),
                                 ),
-                              )
-                            : Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  date,
-                                ),
-                              ),
-                      )
-                    ],
-                  ),
-          )
-        ],
+                        )
+                      ],
+                    ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -441,8 +459,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -533,8 +559,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -596,65 +630,74 @@ class _notificationState extends State<notification> {
       date = formattedTime;
     }
     return Container(
-      padding: EdgeInsets.all(20),
       margin: EdgeInsets.only(
           bottom: 10,
           left: MediaQuery.of(context).size.width * 0.05,
           right: MediaQuery.of(context).size.width * 0.05),
-      //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(
-            'images/logo.png',
-            height: 30,
-            width: 30,
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Column(
-              children: [
-                token == null
-                    ? Text(
-                        'Hello ${context.watch<checkstate>().notloggedname}, we have a deal for you! Make an order of ₦$amount extra today and get a Coupon of ₦1000 off your next order',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                        softWrap: true,
-                      )
-                    : Text(
-                        'Hello ${context.watch<checkstate>().firstname}, we have a deal for you! Make an order of ₦$amount extra today and get a Coupon of ₦1000 off your next order',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                        softWrap: true,
-                      ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      toggle = !toggle;
-                    });
-                  },
-                  child: toggle
-                      ? Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            formattedTime,
-                          ),
-                        )
-                      : Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            date,
-                          ),
-                        ),
-                )
-              ],
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'images/logo.png',
+              height: 30,
+              width: 30,
             ),
-          )
-        ],
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                children: [
+                  token == null
+                      ? Text(
+                          'Hello ${context.watch<checkstate>().notloggedname}, we have a deal for you! Make an order of ₦$amount extra today and get a Coupon of ₦1000 off your next order',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                          softWrap: true,
+                        )
+                      : Text(
+                          'Hello ${context.watch<checkstate>().firstname}, we have a deal for you! Make an order of ₦$amount extra today and get a Coupon of ₦1000 off your next order',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                          softWrap: true,
+                        ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        toggle = !toggle;
+                      });
+                    },
+                    child: toggle
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              formattedTime,
+                            ),
+                          )
+                        : Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              date,
+                            ),
+                          ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -681,8 +724,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -759,8 +810,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -829,8 +888,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -899,8 +966,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -969,8 +1044,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1041,8 +1124,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1111,8 +1202,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1181,8 +1280,16 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1260,8 +1367,18 @@ class _notificationState extends State<notification> {
           right: MediaQuery.of(context).size.width * 0.05),
       //height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer),
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg.Svg(
+            'images/svg/Pattern-7.svg',
+          ),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -75,8 +75,16 @@ class _OrderState extends State<Order> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Order History'),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'History of Order',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
         actions: <Widget>[
           context.watch<checkstate>().checkregisteredlogg()
               ? InkWell(
@@ -89,7 +97,7 @@ class _OrderState extends State<Order> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.black,
+                        color: Theme.of(context).primaryColor,
                       ),
                       margin: EdgeInsets.only(right: 10),
                       height: 30,
@@ -337,170 +345,198 @@ class _OrderState extends State<Order> {
   }
 
   Widget Cartbox(BuildContext context, checkcart value, indexx) {
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: SizedBox(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.13,
-        child: InkWell(
-          onTap: () {
-            modalpopup(
-                context,
-                indexx.image,
-                indexx.multiple,
-                indexx.food,
-                indexx.extras,
-                indexx.amount,
-                indexx.total,
-                indexx.packageid,
-                indexx.date,
-                indexx.ordernum,
-                indexx.email,
-                indexx.name,
-                indexx.number,
-                indexx.address,
-                indexx.location);
-          },
-          child: Stack(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.width * 0.215,
-                width: MediaQuery.of(context).size.width * 1,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        width: MediaQuery.of(context).size.width * 0.22,
-                        child: CachedNetworkImage(
-                          imageUrl: indexx.image ?? '',
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.width * 0.35,
-                        ),
+    return Container(
+      margin: EdgeInsets.all(10),
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.13,
+      child: InkWell(
+        onTap: () {
+          modalpopup(
+              context,
+              indexx.image,
+              indexx.multiple,
+              indexx.food,
+              indexx.extras,
+              indexx.amount,
+              indexx.total,
+              indexx.packageid,
+              indexx.date,
+              indexx.ordernum,
+              indexx.email,
+              indexx.name,
+              indexx.number,
+              indexx.address,
+              indexx.location);
+        },
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: SvgPicture.asset(
+                'images/svg/Pattern-7.svg',
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height * 0.45,
+                color: Theme.of(context).primaryColorLight,
+                colorBlendMode: BlendMode.difference,
+              ),
+            ),
+            SizedBox(
+              height: double.infinity,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: indexx.image ?? '',
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        width: 90,
+                        height: MediaQuery.of(context).size.width * 0.25,
                       ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.17,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              child: Text(
-                                '${indexx.multiple} X',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 19),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.17,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          SizedBox(
+                            child: Text(
+                              '${indexx.multiple} X',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 19),
+                            ),
+                          ),
+                          const SizedBox(
+                            child: Text(
+                              'Extras:',
+                              style: TextStyle(
+                                fontSize: 17,
                               ),
                             ),
-                            const SizedBox(
-                              child: Text(
-                                'Extras:',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                ),
-                              ),
-                            ),
-                          ]),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.24,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${indexx.food}',
+                          ),
+                        ]),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.24,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            '${indexx.food}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: indexx.extras!.length,
+                                itemBuilder: (context, index) {
+                                  return Text(
+                                    '${indexx.extras![index].the5}',
+                                    // overflow-: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 17),
+                                  );
+                                }),
+                          ),
+                        ]),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.10,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          SizedBox(
+                            child: Text(
+                              '${indexx.amount}',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: indexx.extras!.length,
-                                  itemBuilder: (context, index) {
-                                    return Text(
-                                      '${indexx.extras![index].the5}',
-                                      // overflow-: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 17),
-                                    );
-                                  }),
-                            ),
-                          ]),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.10,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              child: Text(
-                                '${indexx.amount}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: indexx.extras!.length,
-                                  itemBuilder: (context, index) {
-                                    return Text(
-                                      '${indexx.extras![index].the1}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
-                                    );
-                                  }),
-                            ),
-                          ]),
-                    ),
-                    Container(
-                      width: 70,
-                      color: Colors.yellowAccent,
-                      child: Text(
-                        'Order In progress',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: indexx.extras!.length,
+                                itemBuilder: (context, index) {
+                                  return Text(
+                                    '${indexx.extras![index].the1}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  );
+                                }),
+                          ),
+                        ]),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      width: 60,
+                      height: 30,
+                      padding: EdgeInsets.symmetric(horizontal: 3),
+                      decoration: BoxDecoration(
+                          color: Colors.yellow.withOpacity(.5),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: FittedBox(
+                        child: Text(
+                          'Processing',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.yellow.shade700,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    )
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 20,
+                margin: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.11),
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Total:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 17)),
+                    Text('${indexx.total}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 17))
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  height: 20,
-                  margin: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.22),
-                  width: MediaQuery.of(context).size.width * 0.52,
-                  color: Colors.black.withOpacity(.3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Total:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 17)),
-                      Text('${indexx.total}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 17))
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -524,6 +560,7 @@ class _OrderState extends State<Order> {
       location) {
     return showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext context) {
           DateTime? currentdate = context.watch<greetings>().time;
@@ -544,237 +581,339 @@ class _OrderState extends State<Order> {
 
           return Stack(
             children: [
-              ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 5, left: 20, right: 10),
-                    width: double.infinity,
-                    height: 30,
-                    color: Theme.of(context).primaryColor,
-                    child: Center(
+              SizedBox(
+                width: double.infinity,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(35),
+                  child: SvgPicture.asset(
+                    'images/svg/Pattern-3.svg',
+                    fit: BoxFit.cover,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    colorBlendMode: BlendMode.difference,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: Text(
-                        'Order Details',
+                        'Order Detail',
                         style: TextStyle(
-                          fontSize: 23,
-                          letterSpacing: -0.4,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onTertiary,
-                        ),
+                            fontSize: 23, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.12,
-                            width: 100,
-                            child: CachedNetworkImage(
-                              imageUrl: image ?? '',
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.30,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: SvgPicture.asset(
+                              'images/svg/Pattern-7.svg',
                               fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.width * 0.35,
+                              height: MediaQuery.of(context).size.height * 0.30,
+                              color: Theme.of(context).primaryColorLight,
+                              colorBlendMode: BlendMode.difference,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Column(
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Text(
-                                      '$multiple X',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: const Text(
-                                      'Extras:',
-                                      style: TextStyle(fontSize: 17),
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  Column(
                                     children: [
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                          right: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.05,
-                                        ),
-                                        child: Text(
-                                          '$food',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 19),
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: CachedNetworkImage(
+                                            imageUrl: image ?? '',
+                                            fit: BoxFit.cover,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                            width: 90,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.12,
+                                          ),
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  SizedBox(
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              '$multiple X',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 19),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            child: const Text(
+                                              'Extras:',
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.34,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '$food',
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 17),
+                                              ),
+                                              SizedBox(
+                                                width: 50,
+                                                child: Text(
+                                                  '₦ $amount',
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 16),
+                                                ),
+                                              ),
+                                            ]),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.23,
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: extra.length,
+                                              itemBuilder: (context, index) {
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      '${extra![index].the5}',
+                                                      // overflow-: TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 50,
+                                                      child: Text(
+                                                        '₦ ${extra![index].the1}',
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 15),
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Container(
+                                      width: 60,
+                                      height: 30,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 3),
+                                      decoration: BoxDecoration(
+                                          color: Colors.yellow.withOpacity(.5),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: FittedBox(
+                                        child: Text(
+                                          'Processing',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.yellow.shade700,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ]),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.14,
+                                left: 10),
+                            width: 155,
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            child: ListView(
+                              children: [
+                                Text(
+                                  'Code:',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  height: 45,
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Color.fromARGB(255, 216, 216, 216)
+                                          .withOpacity(.7)),
+                                  child: Stack(
+                                    children: [
                                       Text(
-                                        '$amount',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17),
+                                        '#$package_id',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Container(
+                                          height: 23,
+                                          width: 23,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: Colors.white,
+                                          ),
+                                          child: InkWell(
+                                            onTap: () async {
+                                              await Clipboard.setData(
+                                                  ClipboardData(
+                                                      text: package_id));
+                                              _showToast();
+                                              HapticFeedback.mediumImpact();
+                                            },
+                                            child: Icon(
+                                              Icons.copy,
+                                              color: Colors.grey,
+                                              size: 15,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Container(
-                                    //color: Colors.black,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.5,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    padding: EdgeInsets.only(
-                                      bottom:
-                                          MediaQuery.of(context).size.height *
-                                              0.2,
-                                    ),
-                                    child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: extra.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            margin: const EdgeInsets.only(
-                                              bottom: 5,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.23,
-                                                  child: Text(
-                                                    '${extra![index].the5}',
-                                                    // overflow-: TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                        fontSize: 19),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 30),
-                                                  child: Text(
-                                                    '${extra![index].the1}',
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 17),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        })),
-                              ]),
-                        ]),
-                  ]),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.17,
-                ),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        color: Colors.yellowAccent,
-                        child: Text(
-                          'Order In progress',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        child: ListView(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFormField(
-                              maxLines: 2,
-                              initialValue: '#$package_id',
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                suffixIcon: InkWell(
-                                  onTap: () async {
-                                    await Clipboard.setData(
-                                        ClipboardData(text: package_id));
-                                    _showToast();
-                                    HapticFeedback.mediumImpact();
-                                  },
-                                  child: Icon(
-                                    Icons.copy,
-                                    size: 15,
-                                  ),
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
+                                Text(
+                                  'Placed On: $time1',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Order Number: $ordernum',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Placed On: $time1',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Order Number: $ordernum',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+              // Container(
+              //   margin: EdgeInsets.only(
+              //     top: MediaQuery.of(context).size.height * 0.17,
+              //   ),
+              //   child: Align(
+              //     alignment: Alignment.topLeft,
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+
+              //         SizedBox(
+              //           width: MediaQuery.of(context).size.width * 0.45,
+              //           height: MediaQuery.of(context).size.height * 0.15,
+              //           child: ListView(
+              //             //   crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               TextFormField(
+              //                 maxLines: 2,
+              //                 initialValue: '#$package_id',
+              //                 readOnly: true,
+              //                 decoration: InputDecoration(
+              //                   border: InputBorder.none,
+              //                   suffixIcon: InkWell(
+              //                     onTap: () async {
+              //                       await Clipboard.setData(
+              //                           ClipboardData(text: package_id));
+              //                       _showToast();
+              //                       HapticFeedback.mediumImpact();
+              //                     },
+              //                     child: Icon(
+              //                       Icons.copy,
+              //                       size: 15,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               SizedBox(
+              //                 height: 10,
+              //               ),
+              //               Text(
+              //                 'Placed On: $time1',
+              //                 style: TextStyle(fontSize: 18),
+              //               ),
+              //               SizedBox(
+              //                 height: 10,
+              //               ),
+              //               Text(
+              //                 'Order Number: $ordernum',
+              //                 style: TextStyle(fontSize: 18),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -785,7 +924,6 @@ class _OrderState extends State<Order> {
                   height: MediaQuery.of(context).size.height * 0.17,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 216, 216, 216).withOpacity(.7),
                       borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(10.0))),
                   child: Column(

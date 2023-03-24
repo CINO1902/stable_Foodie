@@ -3,7 +3,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 void showoverlay() {
   SmartDialog.show(
-    tag: 'network',
+      tag: 'network',
       clickMaskDismiss: false,
       backDismiss: false,
       builder: (context) {
@@ -20,8 +20,10 @@ void showoverlay() {
                   children: [
                     Text(
                       'Network Not Available',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          color: Colors.white),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +31,9 @@ void showoverlay() {
                         Text(
                           'Reconnecting ',
                           style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 16),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                              color: Colors.white),
                         ),
                         SizedBox(
                           width: 10,

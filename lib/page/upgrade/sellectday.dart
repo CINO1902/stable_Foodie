@@ -11,6 +11,7 @@ import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class sellectday extends StatefulWidget {
   const sellectday({super.key});
@@ -72,9 +73,25 @@ class _sellectdayState extends State<sellectday> {
     }
   }
 
-  String topic = 'How many times a Day would you like to recieve a meal';
-  String topic2 =
-      'What meal do you enjoy the most(You can sellect two options)';
+  Text topic = const Text(
+    'How many times a day would you like to recieve a meal',
+    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+  );
+  RichText topic2 = RichText(
+    text: const TextSpan(
+      text: 'What meal do you enjoy the most  ',
+      style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+      children: <TextSpan>[
+        TextSpan(
+          text: "(You can sellect two option)",
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   void initState() {
     // TODO: implement initState
@@ -92,8 +109,17 @@ class _sellectdayState extends State<sellectday> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quick question'),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Quick question',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.zero,
@@ -193,10 +219,17 @@ class _sellectdayState extends State<sellectday> {
       categoryint, List sellectpath) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           bottomRight: Radius.circular(30),
+        ),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
         ),
       ),
       child: ListView(
@@ -205,12 +238,8 @@ class _sellectdayState extends State<sellectday> {
           physics: NeverScrollableScrollPhysics(),
           children: [
             Container(
-              margin: EdgeInsets.only(top: 20, right: 20, left: 20),
-              child: Text(
-                topic,
-                style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-              ),
-            ),
+                margin: EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: topic),
             ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,

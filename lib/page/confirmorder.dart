@@ -20,7 +20,7 @@ import 'package:foodie_ios/page/webpage.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 import 'overlay.dart';
 
 class confirmorder extends StatefulWidget {
@@ -133,8 +133,17 @@ class _confirmorderState extends State<confirmorder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Confirmation'),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Order Confirmation',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: Stack(
         children: [
@@ -165,8 +174,17 @@ class _confirmorderState extends State<confirmorder> {
                   height: MediaQuery.of(context).size.height * 0.19,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: Svg.Svg('images/svg/Pattern-7.svg',
+                          size: Size(400, 200)),
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).primaryColorLight,
+                        BlendMode.difference,
+                      ),
+                    ),
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -347,11 +365,20 @@ class _confirmorderState extends State<confirmorder> {
                 padding: EdgeInsets.all(15),
                 height: 150,
                 margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height * 0.14),
+                    bottom: MediaQuery.of(context).size.height * 0.14, top: 10),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(15)),
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: Svg.Svg('images/svg/Pattern-7.svg',
+                        size: Size(400, 200)),
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).primaryColorLight,
+                      BlendMode.difference,
+                    ),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -434,7 +461,9 @@ class _confirmorderState extends State<confirmorder> {
                         const Text(
                           'Total:',
                           style: TextStyle(
-                              fontSize: 21, fontWeight: FontWeight.bold),
+                              fontSize: 21,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         context.watch<checkcart>().moneytopay < 0
                             ? Text('₦ 0.00',
@@ -443,7 +472,9 @@ class _confirmorderState extends State<confirmorder> {
                             : Text(
                                 '₦ ${context.watch<checkcart>().moneytopay.toString()}',
                                 style: TextStyle(
-                                    fontSize: 21, fontWeight: FontWeight.bold),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
                       ],
                     ),
@@ -529,7 +560,10 @@ class _confirmorderState extends State<confirmorder> {
                             alignment: Alignment.center,
                             child: Text(
                               'Place Order',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold),
                             )),
                       ),
                     )

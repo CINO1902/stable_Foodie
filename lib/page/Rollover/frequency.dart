@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/getsubdetails.dart';
@@ -96,8 +97,17 @@ class _frequencyState extends State<frequency> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quick question'),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Quick question',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.zero,
@@ -179,10 +189,17 @@ class _frequencyState extends State<frequency> {
       categoryint, List sellectpath) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           bottomRight: Radius.circular(30),
+        ),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).primaryColorLight,
+            BlendMode.difference,
+          ),
         ),
       ),
       child: ListView(

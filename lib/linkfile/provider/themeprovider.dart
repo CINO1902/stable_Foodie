@@ -68,17 +68,29 @@ class Themeprovider extends ChangeNotifier {
   }
 }
 
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
 class myTheme {
   static final darktheme = ThemeData(
-      scaffoldBackgroundColor: const Color.fromARGB(255, 54, 54, 54),
-      primaryColor: Colors.red,
+      scaffoldBackgroundColor: Color.fromARGB(255, 34, 34, 34),
+      primaryColor: HexColor('#87130f'),
       primaryColorLight: Colors.black,
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.red,
-        selectionColor: Colors.red,
+        cursorColor: HexColor('#87130f'),
+        selectionColor: HexColor('#87130f'),
       ),
       iconTheme: IconThemeData(
-        color: Colors.red,
+        color: HexColor('#87130f'),
       ),
       appBarTheme: AppBarTheme(
           backgroundColor: Colors.black,
@@ -94,14 +106,14 @@ class myTheme {
       ));
 
   static final lighttheme = ThemeData(
-      scaffoldBackgroundColor: const Color.fromARGB(255, 224, 224, 224),
-      primaryColor: Colors.red,
+      scaffoldBackgroundColor: Color.fromARGB(255, 232, 232, 232),
+      primaryColor: HexColor('#87130f'),
       iconTheme: IconThemeData(
-        color: Colors.red,
+        color: HexColor('#87130f'),
       ),
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.red,
-        selectionColor: Colors.red,
+        cursorColor: HexColor('#87130f'),
+        selectionColor: HexColor('#87130f'),
       ),
       primaryColorLight: Colors.white,
       appBarTheme: AppBarTheme(

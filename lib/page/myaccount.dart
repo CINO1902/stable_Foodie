@@ -418,40 +418,36 @@ class _myaccountState extends State<myaccount> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  child: FittedBox(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Close Account',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.red),
-                                    ),
-                                  ),
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04,
+                              width:
+                                  MediaQuery.of(context).size.width * 0.3,
+                              child: FittedBox(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Close Account',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.red),
                                 ),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.02,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: FittedBox(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Delete your Foodie Account',
-                                      style: TextStyle(),
-                                    ),
-                                  ),
+                              ),
+                            ),
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02,
+                              width:
+                                  MediaQuery.of(context).size.width * 0.4,
+                              child: FittedBox(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Delete your Foodie Account',
+                                  style: TextStyle(),
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),

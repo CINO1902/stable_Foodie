@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodie_ios/linkfile/Model/fetchpackage.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
@@ -89,8 +90,15 @@ class _bucketlist2State extends State<bucketlist2> {
     }
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Bucket Long Throat'),
+          iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+          centerTitle: false,
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text('Long Throat Bucket',
+              style: TextStyle(
+                  color: Theme.of(context).primaryColorDark,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold)),
           actions: <Widget>[
             InkWell(
               onTap: () {
@@ -122,7 +130,7 @@ class _bucketlist2State extends State<bucketlist2> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                   ),
                   margin: EdgeInsets.only(right: 10),
                   height: 30,
@@ -732,78 +740,111 @@ class _bucketlist2State extends State<bucketlist2> {
       BuildContext context, List<Extra>? packageinclude, image) {
     return showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(35), topRight: Radius.circular(35))),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext context) {
           return Stack(
             children: [
-              ListView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 5, left: 20, right: 10),
-                    width: double.infinity,
-                    height: 30,
-                    color: Theme.of(context).primaryColor,
-                    child: Center(
+              SizedBox(
+                width: double.infinity,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(35),
+                  child: SvgPicture.asset(
+                    'images/svg/Pattern-3.svg',
+                    fit: BoxFit.cover,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    colorBlendMode: BlendMode.difference,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                child: ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         'Package Details',
                         style: TextStyle(
-                          fontSize: 23,
+                            fontSize: 23, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        'What is inside the package:',
+                        style: TextStyle(
+                          fontSize: 21,
                           letterSpacing: -0.4,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onTertiary,
                         ),
                       ),
                     ),
-                  ),
-                  Text(
-                    'Package Include:',
-                    style: TextStyle(
-                      fontSize: 21,
-                      letterSpacing: -0.4,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: packageinclude!.length,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Text(
-                                        '${packageinclude[index].the0}',
-                                        // overflow-: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 17),
+                    Container(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.55,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: packageinclude!.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${index + 1}',
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                              width: 180,
+                                              child: Text(
+                                                '${packageinclude[index].the0}',
+                                                // overflow-: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          height: 130,
-                          width: 130,
-                          child: CachedNetworkImage(
-                            imageUrl: image ?? '',
-                            fit: BoxFit.fill,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.width * 0.35,
+                                    ],
+                                  );
+                                }),
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          SizedBox(
+                            height: 130,
+                            width: 130,
+                            child: CachedNetworkImage(
+                              imageUrl: image ?? '',
+                              fit: BoxFit.fill,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: MediaQuery.of(context).size.width * 0.35,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ],
           );

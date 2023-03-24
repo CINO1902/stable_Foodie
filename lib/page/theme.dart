@@ -20,7 +20,7 @@ bool network = false;
 class _themepageState extends State<themepage> {
   @override
   Widget build(BuildContext context) {
-      if (Provider.of<ConnectivityStatus>(context) ==
+    if (Provider.of<ConnectivityStatus>(context) ==
         ConnectivityStatus.Offline) {
       showoverlay();
     } else {
@@ -28,8 +28,17 @@ class _themepageState extends State<themepage> {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text('Theme'),
-          backgroundColor: Theme.of(context).primaryColor,
+          iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+          centerTitle: false,
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text(
+            'Theme',
+            style: TextStyle(
+                color: Theme.of(context).primaryColorDark,
+                fontSize: 27,
+                fontWeight: FontWeight.bold),
+          ),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,9 +70,8 @@ class _themepageState extends State<themepage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                "images/hexagon.svg",
-                                color: Colors.black,
+                              Image.asset(
+                                "images/logo.png",
                                 height:
                                     MediaQuery.of(context).size.width * 0.13,
                                 width: MediaQuery.of(context).size.width * 0.13,
@@ -97,9 +105,8 @@ class _themepageState extends State<themepage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                "images/hexagon.svg",
-                                color: Colors.white,
+                              Image.asset(
+                                "images/logo.png",
                                 height:
                                     MediaQuery.of(context).size.width * 0.13,
                                 width: MediaQuery.of(context).size.width * 0.13,

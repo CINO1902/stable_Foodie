@@ -1,152 +1,176 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 
 Widget Cartbox(BuildContext context, checkcart value, int indexx, cart, image,
     multiple, food, extra, amount, total, cartresults) {
-  String msg1 = '';
-  String success = '';
-  return Card(
-    margin: const EdgeInsets.all(10),
-    child: SizedBox(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.13,
-      child: InkWell(
-        onTap: () {
-          modalpopup(context, image, multiple, food, extra, amount, total,
-              cartresults);
-        },
-        child: Stack(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.width * 0.215,
-              //  color: Colors.black,
-              width: MediaQuery.of(context).size.width * 0.95,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.12,
-                      width: MediaQuery.of(context).size.width * 0.22,
-                      child: CachedNetworkImage(
-                        imageUrl: cartresults[indexx].image ?? '',
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.35,
-                        fit: BoxFit.cover,
+  return Container(
+    margin: const EdgeInsets.only(top: 10),
+    width: double.infinity,
+    height: MediaQuery.of(context).size.height * 0.13,
+    child: Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: SvgPicture.asset(
+            'images/svg/Pattern-7.svg',
+            fit: BoxFit.cover,
+            height: MediaQuery.of(context).size.height * 0.45,
+            color: Theme.of(context).primaryColorLight,
+            colorBlendMode: BlendMode.difference,
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            modalpopup(context, image, multiple, food, extra, amount, total,
+                cartresults);
+          },
+          child: Stack(
+            children: [
+              SizedBox(
+                height: double.infinity,
+                //  color: Colors.black,
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: cartresults[indexx].image ?? '',
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          width: 90,
+                          height: MediaQuery.of(context).size.width * 0.23,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    //color: Colors.black,
-                    width: MediaQuery.of(context).size.width * 0.17,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            child: Text(
-                              '${cartresults[indexx].multiple} X',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 19),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.17,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 5,
                             ),
-                          ),
-                          SizedBox(
-                            child: const Text(
-                              'Extras:',
-                              style: TextStyle(
-                                fontSize: 17,
+                            SizedBox(
+                              child: Text(
+                                '${cartresults[indexx].multiple} X',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 19),
                               ),
                             ),
-                          ),
-                        ]),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.24,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${cartresults[indexx].food}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 17),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: cartresults[indexx].extras!.length,
-                                itemBuilder: (context, index) {
-                                  return Text(
-                                    '${cartresults[indexx].extras![index].the5}',
-                                    // overflow-: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 17),
-                                  );
-                                }),
-                          ),
-                        ]),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.18,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            child: Text(
-                              '${cartresults[indexx].amount}',
+                            SizedBox(
+                              child: const Text(
+                                'Extras:',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.23,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '${cartresults[indexx].food}',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17),
                             ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: cartresults[indexx].extras!.length,
-                                itemBuilder: (context, index) {
-                                  return Text(
-                                    '${cartresults[indexx].extras![index].the1}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16),
-                                  );
-                                }),
-                          ),
-                        ]),
-                  ),
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                height: 20,
-                margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.22),
-                width: MediaQuery.of(context).size.width * 0.55,
-                color: Colors.black.withOpacity(.3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Total:',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 17)),
-                    Text('${cartresults[indexx].total}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 17))
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: cartresults[indexx].extras!.length,
+                                  itemBuilder: (context, index) {
+                                    return Text(
+                                      '${cartresults[indexx].extras![index].the5}',
+                                      // overflow-: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontSize: 17),
+                                    );
+                                  }),
+                            ),
+                          ]),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.18,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              child: Text(
+                                '₦ ${cartresults[indexx].amount}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: cartresults[indexx].extras!.length,
+                                  itemBuilder: (context, index) {
+                                    return Text(
+                                      '₦ ${cartresults[indexx].extras![index].the1}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    );
+                                  }),
+                            ),
+                          ]),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 20,
+                  margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.19),
+                  width: MediaQuery.of(context).size.width * 0.54,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Total:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 17)),
+                      Text('₦ ${cartresults[indexx].total}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 17))
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     ),
   );
 }

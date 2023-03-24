@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/getsubdetails.dart';
@@ -28,11 +29,7 @@ class _page2State extends State<page2> {
   String topic2 = 'Sellect Your';
   String join = 'bucket';
 
-  List question = [
-    'Bucket List Sapa',
-    'Bucket List Long Throat',
-    'Bucket List Odogwu'
-  ];
+  List question = ['Smalie Bucket', 'Long Throat Bucket', 'Biggie Bucket'];
   List sellectpath = [];
   bool sellect = false;
   List selllect = [];
@@ -70,8 +67,17 @@ class _page2State extends State<page2> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Quick question'),
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Quick question',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
         actions: <Widget>[
           InkWell(
             onTap: () {
@@ -436,11 +442,19 @@ class _page2State extends State<page2> {
       return Container(
         margin: EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: Svg('images/svg/Pattern-7.svg', size: Size(400, 200)),
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).primaryColorLight,
+              BlendMode.difference,
             ),
-            color: Theme.of(context).colorScheme.primaryContainer),
+          ),
+        ),
         child: ListView(
             padding: EdgeInsets.only(top: 0, bottom: 20),
             shrinkWrap: true,
