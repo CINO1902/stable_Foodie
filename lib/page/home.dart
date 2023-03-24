@@ -31,6 +31,7 @@ import 'package:foodie_ios/page/overlay.dart';
 import 'package:foodie_ios/page/review.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:foodie_ios/page/reviewspecial.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,8 +143,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            // color: Colors.red,
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.18,
             width: double.infinity,
             child: SafeArea(
@@ -154,11 +154,10 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                   padding: EdgeInsets.symmetric(
                     horizontal: 25,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
                         children: [
                           context.watch<checkstate>().checkregisteredlogg()
                               ? SizedBox(
@@ -202,6 +201,26 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                         ),
                                       ),
                                     ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Satisfy your cravings with a few taps - Order now on our food delivery app',
+                                softWrap: true,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Row(
                             children: [
                               Container(
@@ -273,21 +292,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                               )
                             ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Satisfy your cravings with a few taps - Order now on our food delivery app',
-                                softWrap: true,
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ),
+                          SizedBox(
+                            height: 10,
                           ),
                           InkWell(
                               onTap: () {
@@ -323,6 +329,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                     ),
                                   ),
                                   SizedBox(
+                                    width: 10,
+                                  ),
+                                  SizedBox(
                                     width: 5,
                                   ),
                                   Text(
@@ -330,7 +339,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                     // style: TextStyle(fontSize: 18),
                                   )
                                 ],
-                              )),
+                              ))
                         ],
                       )
                     ],
@@ -723,107 +732,131 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                           primary: Platform.isAndroid ? true : false,
                           itemCount: items.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 20),
-                              height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: Svg.Svg('images/svg/Pattern-7.svg',
-                                      size: Size(400, 200)),
-                                  colorFilter: ColorFilter.mode(
-                                    Theme.of(context).primaryColor,
-                                    BlendMode.difference,
-                                  ),
-                                ),
-                              ),
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                ClipRRect(
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Reviewspecial()));
+                                //  Navigator.pushNamed(context, '/review');
+                                context.read<calculatemeal>().itemclick(
+                                    items[index].item,
+                                    items[index].imageUrl,
+                                    int.parse(items[index].mincost),
+                                    int.parse(items[index].mincost),
+                                    items[index].itemId,
+                                    items[index].maxspoon);
+                                context
+                                    .read<getiItemExtra>()
+                                    .getItemExtra(items[index].itemId);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 20),
+                                height: 100,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: CachedNetworkImage(
-                                    imageUrl: items[index].imageUrl ?? '',
-                                    fit: BoxFit.fill,
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                    width: 100,
-                                    height:
-                                        MediaQuery.of(context).size.width * 0.2,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: Svg.Svg('images/svg/Pattern-7.svg',
+                                        size: Size(400, 200)),
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).primaryColor,
+                                      BlendMode.difference,
+                                    ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
+                                child: Row(children: [
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: CachedNetworkImage(
+                                      imageUrl: items[index].imageUrl ?? '',
+                                      fit: BoxFit.fill,
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                      width: 100,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.2,
                                     ),
-                                    Text(
-                                      'Big Boys Pack',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Container(
-                                      height: 40,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.55,
-                                      child: Text(
-                                        'Big boys pack offers 6 value pack of carbs with a full bucket chicken and also four side',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Big Boys Pack',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Container(
+                                        height: 40,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.55,
+                                        child: Text(
+                                          'Big boys pack offers 6 value pack of carbs with a full bucket chicken and also four side',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.55,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '₦ 4700',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Container(
-                                            height: 25,
-                                            width: 50,
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(7),
-                                                color: Colors.white),
-                                            child: Align(
-                                              alignment: Alignment.center,
-                                              child: FittedBox(
-                                                child: Text(
-                                                  'Buy now',
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.55,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '₦ 4700',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Container(
+                                              height: 25,
+                                              width: 50,
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(7),
+                                                  color: Colors.white),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: FittedBox(
+                                                  child: Text(
+                                                    'Buy now',
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .primaryColor),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ]),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ]),
+                              ),
                             );
                           },
                         ),
@@ -886,15 +919,34 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                             .toList();
 
                         return RefreshWidget(
-                          control: control,
-                          onRefresh: () async {
-                            await checkregistered();
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [],
-                          ),
-                        );
+                            control: control,
+                            onRefresh: () async {
+                              await checkregistered();
+                            },
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Recomendation is not yet Available',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "We would let you know \n when it's ready",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ));
                       }
                     }),
                   ),

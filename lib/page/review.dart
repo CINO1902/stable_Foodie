@@ -706,12 +706,12 @@ class _ReviewState extends State<Review> {
                                       style: TextStyle(color: Colors.white),
                                     )
                                   : context.watch<addTocart>().loading
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                           height: 20,
                                           width: 20,
                                           child: CircularProgressIndicator(
-                                            backgroundColor: Colors.white,
-                                          ))
+                                              color: Theme.of(context)
+                                                  .primaryColor))
                                       : Text(
                                           'Add to Cart',
                                           style: TextStyle(color: Colors.white),
