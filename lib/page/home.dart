@@ -58,7 +58,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     context.read<getiItem>().getItem();
     context.read<checkstate>().getID();
 
-    context.read<notifications>().getnotification();
+   context.read<notifications>().getnotification();
 
     checkregistered();
   }
@@ -69,8 +69,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
   bool network = false;
   checkregistered() async {
     final prefs = await SharedPreferences.getInstance();
-    context.read<checkcart>().checkcarts();
-    context.read<checkcart>().checkcartforcart();
+   // context.read<checkcart>().checkcarts();
+    //context.read<checkcart>().checkcartforcart();
     print(prefs.getInt('ID'));
     context.read<checkstate>().getaddress();
     getslide();
@@ -79,6 +79,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     });
 
     if (token != null) {
+      print('hey');
       context.read<checkstate>().getregisterdID();
       context.read<getmostcommon>().getcommon();
       context.read<getsubhistory>().getordersub();
@@ -158,7 +159,11 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                            height: 10,
+                          ),
                           context.watch<checkstate>().checkregisteredlogg()
                               ? SizedBox(
                                   height: 30,
@@ -221,6 +226,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
                               Container(

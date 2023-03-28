@@ -18,9 +18,11 @@ class Loadingwidget2 extends StatelessWidget {
     return Center(
       child: Container(
           padding: const EdgeInsets.all(15),
-          height: 100,
-          width: 100,
-          child: CircularProgressIndicator()),
+          height: 70,
+          width: 70,
+          child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor,
+          )),
     );
     ;
   }

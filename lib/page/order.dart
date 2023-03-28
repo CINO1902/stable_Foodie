@@ -51,7 +51,7 @@ class _OrderState extends State<Order> {
   late ScrollController _controller;
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     context.read<checkcart>().checkcarts();
     _controller = ScrollController()
@@ -129,36 +129,27 @@ class _OrderState extends State<Order> {
               } else {
                 if (value.orderempty == false) {
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.15),
-                            height: 200,
-                            width: 200,
+                        child: SizedBox(
+                            height: 100,
+                            width: 100,
                             child: SvgPicture.asset(
                               'images/empty.svg',
-                              color: Colors.black.withOpacity(.5),
+                              color: Theme.of(context).primaryColorDark,
                             )),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 50, bottom: 20),
-                        child: Text(
-                          'Opps!!!',
-                          style: TextStyle(
-                            fontSize: 29,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black.withOpacity(.5),
-                          ),
-                        ),
+                      SizedBox(
+                        height: 30,
                       ),
                       Text(
-                        'No order found',
+                        'No record',
                         style: TextStyle(
                           fontSize: 29,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black.withOpacity(.5),
+                          color: Theme.of(context).primaryColorDark,
                         ),
                       )
                     ],

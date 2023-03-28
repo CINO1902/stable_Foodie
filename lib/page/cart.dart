@@ -207,36 +207,27 @@ class _cartState extends State<cart> {
                   ),
                 )
               : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
                       alignment: Alignment.center,
-                      child: Container(
-                          margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.15),
-                          height: 200,
-                          width: 200,
+                      child: SizedBox(
+                          height: 100,
+                          width: 100,
                           child: SvgPicture.asset(
                             'images/shopping-cart-svgrepo-com.svg',
-                            color: Colors.black.withOpacity(.5),
+                            color: Theme.of(context).primaryColorDark,
                           )),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 50, bottom: 20),
-                      child: Text(
-                        'Opps!!!',
-                        style: TextStyle(
-                          fontSize: 29,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black.withOpacity(.5),
-                        ),
-                      ),
+                    SizedBox(
+                      height: 30,
                     ),
                     Text(
                       'No order found',
                       style: TextStyle(
-                        fontSize: 29,
+                        fontSize: 23,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black.withOpacity(.5),
+                        color: Theme.of(context).primaryColorDark,
                       ),
                     )
                   ],

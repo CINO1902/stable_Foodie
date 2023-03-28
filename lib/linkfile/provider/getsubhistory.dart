@@ -77,53 +77,54 @@ class getsubhistory extends ChangeNotifier {
     page = 1;
     try {
       loading = false;
+      if (email != '') {
+        SendSubhistory fetch = SendSubhistory(email: email);
+        var response = await networkHandler.client.post(
+            networkHandler.builderUrl('/subhistory?page=$page&limit=$limit'),
+            body: sendSubhistoryToJson(fetch),
+            headers: {
+              'content-Type': 'application/json; charset=UTF-8',
+            });
 
-      SendSubhistory fetch = SendSubhistory(email: email);
-      var response = await networkHandler.client.post(
-          networkHandler.builderUrl('/subhistory?page=$page&limit=$limit'),
-          body: sendSubhistoryToJson(fetch),
-          headers: {
-            'content-Type': 'application/json; charset=UTF-8',
-          });
+        final data = getsubhistoryFromJson(response.body);
 
-      final data = getsubhistoryFromJson(response.body);
+        fetchresult = data.result!.pagnited;
 
-      fetchresult = data.result!.pagnited;
+        final loadmore = data.result!.next.page;
+        if (loadmore == page) {
+          hasnextpage = false;
+        } else {
+          hasnextpage = true;
+        }
 
-      final loadmore = data.result!.next.page;
-      if (loadmore == page) {
-        hasnextpage = false;
-      } else {
-        hasnextpage = true;
+        fetchresult.sort((b, a) => a.date.compareTo(b.date));
+        String day = DateFormat('d').format(data.date);
+        String month = DateFormat('M').format(data.date);
+        String year = DateFormat('y').format(data.date);
+        cappedresult = fetchresult
+            .where((element) =>
+                element.date.day.toString() == day && element.order != false)
+            .take(3)
+            .toList();
+
+        fullresult =
+            fetchresult.where((element) => element.order != false).toList();
+        historylenght = fullresult.length.toString();
+        final daylenght = fullresult
+            .where((element) =>
+                element.category != '4' &&
+                element.date.day.toString() == day &&
+                element.date.month.toString() == month &&
+                element.date.year.toString() == year &&
+                element.order == true)
+            .toList();
+
+        todorder = daylenght.length;
+        totalordered = data.totalordered;
+        print(fullresult.length);
+        rollover = data.rollover;
+        notifyListeners();
       }
-
-      fetchresult.sort((b, a) => a.date.compareTo(b.date));
-      String day = DateFormat('d').format(data.date);
-      String month = DateFormat('M').format(data.date);
-      String year = DateFormat('y').format(data.date);
-      cappedresult = fetchresult
-          .where((element) =>
-              element.date.day.toString() == day && element.order != false)
-          .take(3)
-          .toList();
-
-      fullresult =
-          fetchresult.where((element) => element.order != false).toList();
-      historylenght = fullresult.length.toString();
-      final daylenght = fullresult
-          .where((element) =>
-              element.category != '4' &&
-              element.date.day.toString() == day &&
-              element.date.month.toString() == month &&
-              element.date.year.toString() == year &&
-              element.order == true)
-          .toList();
-
-      todorder = daylenght.length;
-      totalordered = data.totalordered;
-      print(fullresult.length);
-      rollover = data.rollover;
-      notifyListeners();
     } catch (e) {
       print(e);
     } finally {

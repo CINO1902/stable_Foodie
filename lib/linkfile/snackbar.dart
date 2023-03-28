@@ -37,7 +37,7 @@ class CustomeSnackbar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.width * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.025,
                   child: FittedBox(
                     child: Text(
                       topic,
@@ -46,16 +46,18 @@ class CustomeSnackbar extends StatelessWidget {
                     ),
                   ),
                 ),
-                Spacer(),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.width * 0.085,
+                  height: MediaQuery.of(context).size.height * 0.035,
                   child: Text(
                     msg,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
-                        fontSize: 18),
-                    softWrap: true,
+                        fontSize: 15),
+
                     //overflow: TextOverflow.ellipsis,
                   ),
                 )

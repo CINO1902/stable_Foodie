@@ -91,8 +91,17 @@ class _addAddressState extends State<addAddress> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Address'),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Add Address',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

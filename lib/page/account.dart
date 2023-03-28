@@ -19,6 +19,7 @@ import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
 import 'package:foodie_ios/page/landingpage.dart';
+import 'package:foodie_ios/page/otpverify.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -166,22 +167,35 @@ class _AccountState extends State<Account> {
                                           ),
                                         ),
                                       )
-                                    : Container(
-                                        height: 30,
-                                        width: 120,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.yellow,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: const Text('Not Verified',
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white)),
+                                    : InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Otp(
+                                                        email: Provider.of<
+                                                                    checkstate>(
+                                                                context)
+                                                            .email,
+                                                      )));
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          width: 120,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.yellow,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: const Text('Not Verified',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black)),
+                                          ),
                                         ),
                                       )
                               ],
@@ -272,9 +286,7 @@ class _AccountState extends State<Account> {
                               onDismissCallback: (type) {},
                               btnOkOnPress: () async {
                                 SmartDialog.showLoading();
-                                await deleteaccount();
 
-                                SmartDialog.showLoading();
                                 context.read<checkstate>().logout();
                                 context.read<checkcart>().loggout();
                                 context.read<subscribed>().getsubscribed();
