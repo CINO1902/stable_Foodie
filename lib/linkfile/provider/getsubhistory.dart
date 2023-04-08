@@ -13,7 +13,7 @@ class getsubhistory extends ChangeNotifier {
   double progress = 0;
   List<Pagnited> fullresult = [];
 
-  int? rollover;
+  int rollover = 0;
   List distinctList = [];
   String historylenght = '';
   int todorder = 0;
@@ -40,9 +40,9 @@ class getsubhistory extends ChangeNotifier {
             });
 
         final data = getsubhistoryFromJson(response.body);
-
-        fetchresult = data.result!.pagnited;
-        final loadmore = data.result!.next;
+       
+        fetchresult = data.result.pagnited;
+        final loadmore = data.result.next;
         if (loadmore.page == page) {
           hasnextpage = false;
         } else {
@@ -88,9 +88,9 @@ class getsubhistory extends ChangeNotifier {
 
         final data = getsubhistoryFromJson(response.body);
 
-        fetchresult = data.result!.pagnited;
+        fetchresult = data.result.pagnited;
 
-        final loadmore = data.result!.next.page;
+        final loadmore = data.result.next.page;
         if (loadmore == page) {
           hasnextpage = false;
         } else {
@@ -121,7 +121,7 @@ class getsubhistory extends ChangeNotifier {
 
         todorder = daylenght.length;
         totalordered = data.totalordered;
-        print(fullresult.length);
+
         rollover = data.rollover;
         notifyListeners();
       }

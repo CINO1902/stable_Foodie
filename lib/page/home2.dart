@@ -549,8 +549,7 @@ class _home2State extends State<home2> {
                                                       BorderRadius.circular(20),
                                                   child: CachedNetworkImage(
                                                     imageUrl:
-                                                        items[index].imageUrl ??
-                                                            '',
+                                                        items[index].imageUrl,
                                                     fit: BoxFit.fill,
                                                     errorWidget:
                                                         (context, url, error) =>
@@ -571,7 +570,7 @@ class _home2State extends State<home2> {
                                                   height: 5,
                                                 ),
                                                 Text(
-                                                  items[index].item ?? '',
+                                                  items[index].item,
                                                   style: const TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -637,8 +636,7 @@ class _home2State extends State<home2> {
                                                     BorderRadius.circular(20),
                                                 child: CachedNetworkImage(
                                                   imageUrl:
-                                                      items[index].imageUrl ??
-                                                          '',
+                                                      items[index].imageUrl ,
                                                   fit: BoxFit.fill,
                                                   errorWidget:
                                                       (context, url, error) =>
@@ -657,7 +655,7 @@ class _home2State extends State<home2> {
                                                 height: 5,
                                               ),
                                               Text(
-                                                items[index].item ?? '',
+                                                items[index].item,
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:

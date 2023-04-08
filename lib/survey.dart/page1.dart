@@ -100,74 +100,119 @@ class _page1State extends State<page1> {
       SmartDialog.dismiss(tag: 'network');
     }
     return Scaffold(
-      body: Column(children: [
-        Container(
-          height: 100,
-          color: Theme.of(context).primaryColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.height * 0.1,
-                  margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.07, left: 20),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.07,
-                ),
-                child: const Text(
-                  'Quick question',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const homelanding(),
-                      ),
-                      (Route<dynamic> route) => false);
-                },
-                child: Container(
-                  height: 30,
-                  width: 100,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        bottomLeft: Radius.circular(5)),
-                    color: Colors.black,
-                  ),
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.07,
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Back To Home',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'Quick question',
+          style: TextStyle(
+              color: Theme.of(context).primaryColorDark,
+              fontSize: 27,
+              fontWeight: FontWeight.bold),
         ),
+        actions: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const homelanding(),
+                  ),
+                  (Route<dynamic> route) => false);
+              context.read<sellectbucket>().clearlist();
+            },
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                ),
+                margin: EdgeInsets.only(right: 0),
+                height: 30,
+                width: 120,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Back To Home',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+      body: Column(children: [
+        // Container(
+        //   height: 100,
+        //   color: Theme.of(context).primaryColor,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       InkWell(
+        //         onTap: () {
+        //           Navigator.pop(context);
+        //         },
+        //         child: Container(
+        //           width: MediaQuery.of(context).size.height * 0.1,
+        //           margin: EdgeInsets.only(
+        //               top: MediaQuery.of(context).size.height * 0.07, left: 20),
+        //           child: const Align(
+        //             alignment: Alignment.centerLeft,
+        //             child: Icon(
+        //               Icons.arrow_back_ios,
+        //               size: 20,
+        //               color: Colors.white,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //       Container(
+        //         margin: EdgeInsets.only(
+        //           top: MediaQuery.of(context).size.height * 0.07,
+        //         ),
+        //         child: const Text(
+        //           'Quick question',
+        //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        //         ),
+        //       ),
+        //       InkWell(
+        //         onTap: () {
+        //           Navigator.pushAndRemoveUntil(
+        //               context,
+        //               MaterialPageRoute<void>(
+        //                 builder: (BuildContext context) => const homelanding(),
+        //               ),
+        //               (Route<dynamic> route) => false);
+        //         },
+        //         child: Container(
+        //           height: 30,
+        //           width: 100,
+        //           decoration: const BoxDecoration(
+        //             borderRadius: BorderRadius.only(
+        //                 topLeft: Radius.circular(5),
+        //                 bottomLeft: Radius.circular(5)),
+        //             color: Colors.black,
+        //           ),
+        //           margin: EdgeInsets.only(
+        //             top: MediaQuery.of(context).size.height * 0.07,
+        //           ),
+        //           child: Align(
+        //             alignment: Alignment.center,
+        //             child: Text(
+        //               'Back To Home',
+        //               style: TextStyle(
+        //                   fontWeight: FontWeight.bold, color: Colors.white),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -254,7 +299,7 @@ class _page1State extends State<page1> {
   Widget questionbox(BuildContext context, topic, List question, sellect,
       categoryint, List sellectpath) {
     return Container(
-    decoration: BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           bottomRight: Radius.circular(30),

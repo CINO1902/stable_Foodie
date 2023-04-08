@@ -112,8 +112,6 @@ class _subscriptionState extends State<subscription>
 
       final decodedresponse = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print(decodedresponse);
-
         setState(() {
           success = decodedresponse['success'];
           msg = decodedresponse['msg'];
@@ -135,10 +133,11 @@ class _subscriptionState extends State<subscription>
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(context.read<subscribed>().days);
   }
 
   Text getdate() {
-    String day = DateFormat('EEEE').format(context.watch<greetings>().time);
+    String day = DateFormat('EEEE').format( context.watch<greetings>().time);
     String date = DateFormat('d').format(context.watch<greetings>().time);
     String month = DateFormat('MMMM').format(context.watch<greetings>().time);
 
@@ -157,7 +156,7 @@ class _subscriptionState extends State<subscription>
     }
 
     return Text(
-      '${day}, ${date}${prefix()} ${month}',
+      '${day}, ${date}${prefix()} of ${month}',
       style: const TextStyle(fontSize: 17),
     );
   }
@@ -233,11 +232,13 @@ class _subscriptionState extends State<subscription>
                                   text: 'Your subscription plan expires ',
                                   style: DefaultTextStyle.of(context).style,
                                   children: <TextSpan>[
-                                    context.read<subscribed>().days == 1
+                                    context.read<subscribed>().days == 0
                                         ? TextSpan(text: "today")
-                                        : TextSpan(
-                                            text:
-                                                "in ${context.read<subscribed>().days.toString()} days"),
+                                        : context.read<subscribed>().days == 1
+                                            ? TextSpan(text: "tomorrow")
+                                            : TextSpan(
+                                                text:
+                                                    "in ${context.read<subscribed>().days.toString()} days"),
                                     TextSpan(
                                         text:
                                             ', Click this modal to renew your plan and enjoy 10% of any subscription plan of your choice')
@@ -1612,7 +1613,7 @@ class _subscriptionState extends State<subscription>
                                                     index.ordernum,
                                                     index.address,
                                                     index.name,
-                                                    index.number,
+                                                    index.phone,
                                                     index.email,
                                                     index.location);
                                               },
@@ -1705,49 +1706,73 @@ class _subscriptionState extends State<subscription>
                                                               )
                                                             ],
                                                           ),
-                                                          index.status == '1'
-                                                              ? Container(
-                                                                  width: 60,
-                                                                  color: Colors
-                                                                      .yellowAccent,
-                                                                  child: Text(
-                                                                    'Order In progress',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          13,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : Container(
-                                                                  width: 60,
-                                                                  color: Colors
-                                                                      .greenAccent,
-                                                                  child: Text(
-                                                                    'Delivered',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          13,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                )
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Container(
+                                                              width: 60,
+                                                              height: 30,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          3),
+                                                              decoration: BoxDecoration(
+                                                                  color: index.status == 1
+                                                                      ? Colors.yellow.withOpacity(.5)
+                                                                      : index.status == 2
+                                                                          ? Color.fromARGB(255, 171, 122, 82).withOpacity(.5)
+                                                                          : index.status == 3
+                                                                              ? Colors.green.withOpacity(.5)
+                                                                              : index.status == 4
+                                                                                  ? Colors.red.withOpacity(.5)
+                                                                                  : Colors.black,
+                                                                  borderRadius: BorderRadius.circular(10)),
+                                                              child: FittedBox(
+                                                                  child: index.status ==
+                                                                          1
+                                                                      ? Text(
+                                                                          'Processing',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.yellow.shade700,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                        )
+                                                                      : index.status ==
+                                                                              2
+                                                                          ? const Text(
+                                                                              'Packaged',
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(
+                                                                                color: Color.fromARGB(255, 251, 186, 45),
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            )
+                                                                          : index.status == 3
+                                                                              ? const Text(
+                                                                                  'Sent Out',
+                                                                                  textAlign: TextAlign.center,
+                                                                                  style: TextStyle(
+                                                                                    color: Color.fromARGB(255, 120, 228, 92),
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                )
+                                                                              : index.status == 4
+                                                                                  ? const Text(
+                                                                                      'Returned',
+                                                                                      textAlign: TextAlign.center,
+                                                                                      style: TextStyle(
+                                                                                        color: Color.fromARGB(255, 251, 45, 45),
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    )
+                                                                                  : const Text('')),
+                                                            ),
+                                                          )
                                                         ],
                                                       ),
                                                     ),
@@ -2297,7 +2322,7 @@ class _subscriptionState extends State<subscription>
           final currentday = currentdate.hour;
           String date1 = '';
           final difference = currentdate.difference(date).inDays;
-          print(currentday);
+
           if (difference == 0) {
             date1 = 'Today';
           } else if (difference == 1) {
@@ -2384,7 +2409,7 @@ class _subscriptionState extends State<subscription>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           const Padding(
                                             padding: EdgeInsets.only(left: 8.0),
@@ -2395,35 +2420,108 @@ class _subscriptionState extends State<subscription>
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
-                                          status == '1'
-                                              ? Container(
-                                                  width: 80,
-                                                  color: Colors.yellowAccent,
-                                                  child: Text(
-                                                    'Order In progress',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  width: 80,
-                                                  color: Colors.greenAccent,
-                                                  child: Text(
-                                                    'Delivered',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                )
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 60,
+                                              height: 30,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 3),
+                                              decoration: BoxDecoration(
+                                                  color: status == 1
+                                                      ? Colors.yellow
+                                                          .withOpacity(.5)
+                                                      : status == 2
+                                                          ? Color.fromARGB(255,
+                                                                  171, 122, 82)
+                                                              .withOpacity(.5)
+                                                          : status == 3
+                                                              ? Colors.green
+                                                                  .withOpacity(
+                                                                      .5)
+                                                              : status == 4
+                                                                  ? Colors.red
+                                                                      .withOpacity(
+                                                                          .5)
+                                                                  : Colors
+                                                                      .black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: FittedBox(
+                                                  child: status == 1
+                                                      ? Text(
+                                                          'Processing',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            color: Colors.yellow
+                                                                .shade700,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        )
+                                                      : status == 2
+                                                          ? const Text(
+                                                              'Packaged',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        251,
+                                                                        186,
+                                                                        45),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            )
+                                                          : status == 3
+                                                              ? const Text(
+                                                                  'Sent Out',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            120,
+                                                                            228,
+                                                                            92),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                )
+                                                              : status == 4
+                                                                  ? const Text(
+                                                                      'Returned',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            251,
+                                                                            45,
+                                                                            45),
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    )
+                                                                  : const Text(
+                                                                      '')),
+                                            ),
+                                          )
                                         ],
                                       ),
                                       SizedBox(

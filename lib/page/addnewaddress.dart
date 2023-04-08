@@ -135,7 +135,10 @@ class _addAddressState extends State<addAddress> {
                                 namechange = true;
                               });
                             },
-                            initialValue: context.watch<checkcart>().fullname,
+                            initialValue: context.watch<checkcart>().fullname ==
+                                    ''
+                                ? '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}'
+                                : context.watch<checkcart>().fullname,
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -180,7 +183,9 @@ class _addAddressState extends State<addAddress> {
                             phonechange = true;
                           });
                         },
-                        initialValue: context.watch<checkcart>().number,
+                        initialValue: context.watch<checkcart>().fullname == ''
+                            ? '${context.watch<checkstate>().phone}'
+                            : context.watch<checkcart>().number,
                         keyboardType: TextInputType.number,
                         validator: _validatephone,
                         decoration: InputDecoration(
@@ -398,7 +403,9 @@ class _addAddressState extends State<addAddress> {
                             addresschange = true;
                           });
                         },
-                        initialValue: context.watch<checkcart>().address,
+                        initialValue: context.watch<checkcart>().fullname == ''
+                            ? '${context.watch<checkstate>().address}'
+                            : context.watch<checkcart>().address,
                         validator: _validateaddress,
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
@@ -488,10 +495,23 @@ class _addAddressState extends State<addAddress> {
                                       if (token != null &&
                                           value.address == '') {
                                         SmartDialog.showLoading();
+                                        String phoneget() {
+                                          String value = '';
+                                          if (phonechange == true) {
+                                            value = phone;
+                                          } else {
+                                            value = Provider.of<checkstate>(
+                                                    context,
+                                                    listen: false)
+                                                .phone;
+                                          }
+                                          return value;
+                                        }
+
                                         await context
                                             .read<checkstate>()
-                                            .changeadress(
-                                                phone, items[index], address);
+                                            .changeadress(phoneget(),
+                                                items[index], address);
 
                                         if (value.success == true) {
                                           ScaffoldMessenger.of(context)

@@ -17,7 +17,7 @@ class confirmcart extends ChangeNotifier {
   bool verified = false;
   bool error = false;
   double discount = 0.0;
-  Future<void> checkcarts(group, amount, ref) async {
+  Future<void> checkcarts( amount, ref) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -33,12 +33,24 @@ class confirmcart extends ChangeNotifier {
       return emailsent;
     }
 
+    String getid() {
+      String id = '';
+      if (token1 == null) {
+        final intid = prefs.getInt('ID') ?? 0;
+        id = intid.toString();
+      } else {
+        id = prefs.getString("email") ?? '';
+      }
+      return id;
+    }
+
     try {
       loading = true;
       error = false;
       Confirmmodel confirmmodel = Confirmmodel(
-          packageGroup: group,
+        
           email: getmail(),
+          id: getid(),
           verified: verified,
           amount: amount,
           name: name1,
@@ -56,6 +68,7 @@ class confirmcart extends ChangeNotifier {
 
       final data = jsonDecode(response.body);
       success = data['status'];
+      print(success);
       notifyListeners();
     } catch (e) {
       print(e);

@@ -33,14 +33,14 @@ class CartRecieveModel {
 
 class Result {
   Result({
-    this.pagnited,
-    this.next,
-    this.previous,
+    required this.pagnited,
+    required this.next,
+    required this.previous,
   });
 
-  List<Pagnited>? pagnited;
-  Next? next;
-  Next? previous;
+  List<Pagnited> pagnited;
+  Next next;
+  Next previous;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         pagnited: List<Pagnited>.from(
@@ -50,9 +50,9 @@ class Result {
       );
 
   Map<String, dynamic> toJson() => {
-        "pagnited": List<dynamic>.from(pagnited!.map((x) => x.toJson())),
-        "next": next!.toJson(),
-        "previous": previous!.toJson(),
+        "pagnited": List<dynamic>.from(pagnited.map((x) => x.toJson())),
+        "next": next.toJson(),
+        "previous": previous.toJson(),
       };
 }
 
@@ -77,101 +77,144 @@ class Next {
 }
 
 class Pagnited {
-  Pagnited(
-      {required this.id,
-      required this.pagnitedId,
-      required this.food,
-      required this.amount,
-      required this.extras,
-      required this.order,
-      required this.status,
-      required this.multiple,
-      required this.total,
-      required this.image,
-      required this.packageid,
-      required this.packageGroup,
-      required this.date,
-      required this.v,
-      this.discounted,
-      this.discountedAmount,
-      this.ordernum,
-      this.name,
-      this.number,
-      this.email,
-      this.address,
-      this.location});
+  Pagnited({
+    required this.id,
+    required this.pagnitedId,
+    this.specialName,
+    this.specialNameId,
+    this.sides,
+    this.foods,
+    this.drinks,
+    required this.status,
+    required this.multiple,
+    required this.amount,
+    required this.image,
+    required this.packageid,
+    required this.order,
+    required this.date,
+    required this.v,
+    this.address,
+    required this.discounted,
+    required this.discountedAmount,
+    this.email,
+    this.location,
+    this.name,
+    this.number,
+    required this.ordernum,
+    this.ref,
+    this.food,
+    this.extras,
+    this.total,
+    this.packageGroup,
+  });
 
   String id;
   String pagnitedId;
-  String food;
-  String amount;
-  List<Extra> extras;
-  bool order;
+  String? specialName;
+  String? specialNameId;
+  List<dynamic>? sides;
+  List<Map<String, dynamic>>? foods;
+  List<Map<String, dynamic>>? drinks;
   int status;
-  String multiple;
-  String total;
+  dynamic multiple;
+  dynamic amount;
   String image;
   String packageid;
-  String packageGroup;
+  bool order;
   DateTime date;
   int v;
+  String? address;
   bool? discounted;
   String? discountedAmount;
-  String? ordernum;
+  String? email;
+  String? location;
   String? name;
   String? number;
-  String? address;
-  String? location;
-  String? email;
+  String? ordernum;
+  String? ref;
+  String? food;
+  List<Extra>? extras;
+  String? total;
+  String? packageGroup;
 
   factory Pagnited.fromJson(Map<String, dynamic> json) => Pagnited(
         id: json["_id"],
         pagnitedId: json["id"],
-        food: json["food"],
-        amount: json["amount"],
-        extras: List<Extra>.from(json["extras"].map((x) => Extra.fromJson(x))),
-        order: json["order"],
+        specialName: json["specialName"],
+        specialNameId: json["specialNameID"],
+        sides: json["sides"] == null
+            ? []
+            : List<dynamic>.from(json["sides"]!.map((x) => x)),
+        foods: json["foods"] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json["foods"]!.map((x) =>
+                Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        drinks: json["drinks"] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json["drinks"]!.map((x) =>
+                Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
         status: json["status"],
         multiple: json["multiple"],
-        total: json["total"],
+        amount: json["amount"],
         image: json["image"],
         packageid: json["packageid"],
-        packageGroup: json["package_group"],
+        order: json["order"],
         date: DateTime.parse(json["date"]),
         v: json["__v"],
+        address: json["address"],
         discounted: json["discounted"],
         discountedAmount: json["discounted_amount"],
-        ordernum: json["ordernum"],
+        email: json["email"],
+        location: json["location"],
         name: json["name"],
         number: json["number"],
-        address: json["address"],
-        location: json["location"],
-        email: json["email"]
+        ordernum: json["ordernum"],
+        ref: json["ref"],
+        food: json["food"],
+        extras: json["extras"] == null
+            ? []
+            : List<Extra>.from(json["extras"]!.map((x) => Extra.fromJson(x))),
+        total: json["total"],
+        packageGroup: json["package_group"],
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
         "id": pagnitedId,
-        "food": food,
-        "amount": amount,
-        "extras": List<dynamic>.from(extras.map((x) => x.toJson())),
-        "order": order,
+        "specialName": specialName,
+        "specialNameID": specialNameId,
+        "sides": sides == null ? [] : List<dynamic>.from(sides!.map((x) => x)),
+        "foods": foods == null
+            ? []
+            : List<dynamic>.from(foods!.map((x) =>
+                Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        "drinks": drinks == null
+            ? []
+            : List<dynamic>.from(drinks!.map((x) =>
+                Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
         "status": status,
         "multiple": multiple,
-        "total": total,
+        "amount": amount,
         "image": image,
         "packageid": packageid,
-        "package_group": packageGroup,
+        "order": order,
         "date": date.toIso8601String(),
         "__v": v,
+        "address": address,
         "discounted": discounted,
         "discounted_amount": discountedAmount,
-        "ordernum": ordernum,
-         "name": name,
-        "number": number,
-        "address": address,
+        "email": email,
         "location": location,
-        "email":email
+        "name": name,
+        "number": number,
+        "ordernum": ordernum,
+        "ref": ref,
+        "food": food,
+        "extras": extras == null
+            ? []
+            : List<dynamic>.from(extras!.map((x) => x.toJson())),
+        "total": total,
+        "package_group": packageGroup,
       };
 }
 
@@ -181,7 +224,7 @@ class Extra {
     required this.the1,
     required this.the2,
     required this.the3,
-    this.the4,
+    required this.the4,
     required this.the5,
     required this.id,
   });

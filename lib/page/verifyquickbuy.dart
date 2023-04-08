@@ -26,18 +26,12 @@ class _verifyquickbuyState extends State<verifyquickbuy> {
 
   void performpayment() async {
     SmartDialog.showLoading(msg: 'Processing Purchase... Do not leave the app');
-    await context.read<confirmcart>().checkcarts(
-        Provider.of<checkcart>(context, listen: false)
-            .cartresult[0]
-            .packageGroup
-            .toString(),
-        widget.price,
-        widget.ref);
+    await context.read<confirmcart>().checkcarts(widget.price, widget.ref);
     if (Provider.of<confirmcart>(context, listen: false).success == 'success') {
       SmartDialog.dismiss();
       Navigator.pushNamedAndRemoveUntil(
           context, '/landingpage', (Route<dynamic> route) => false);
-      context.read<checkcart>().checkcarts();
+      context.read<checkcart>().checkcartforcart();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: CustomeSnackbar(
           topic: 'Great!',
@@ -149,7 +143,6 @@ class _verifysuborderState extends State<verifysuborder> {
         ));
       }
     } else {
-
       await context.read<sellectbucket>().sendsubscription();
 
       SmartDialog.dismiss();

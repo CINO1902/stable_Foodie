@@ -72,10 +72,10 @@ class _page2State extends State<page2> {
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'Quick question',
+          'Sellect food Category',
           style: TextStyle(
               color: Theme.of(context).primaryColorDark,
-              fontSize: 27,
+              fontSize: 19,
               fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
@@ -97,7 +97,7 @@ class _page2State extends State<page2> {
                 ),
                 margin: EdgeInsets.only(right: 0),
                 height: 30,
-                width: 100,
+                width: 120,
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -249,7 +249,6 @@ class _page2State extends State<page2> {
                                                 listen: false)
                                             .rolloverclick ==
                                         true) {
-                                      print('hey');
                                       await context
                                           .read<sellectbucket>()
                                           .rollovercalculateammount();

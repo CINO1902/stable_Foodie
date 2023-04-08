@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/Model/cartrecieve.dart';
@@ -357,8 +358,21 @@ class _confirmorderState extends State<confirmorder> {
                       final total = cartresults[index].total;
                       List<Extra>? extra = cartresults[index].extras;
 
-                      return Cartbox(context, value, index, cart, image,
-                          multiple, food, extra, amount, total, cartresults);
+                      return cartresults[index].specialName == null
+                          ? Cartbox(context, value, index, cart, image,
+                              multiple, food, extra, amount, total, cartresults)
+                          : Cartbox2(
+                              context,
+                              value,
+                              index,
+                              cart,
+                              image,
+                              multiple,
+                              food,
+                              extra,
+                              amount,
+                              total,
+                              cartresults);
                     });
               }),
               Container(

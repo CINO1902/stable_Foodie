@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -13,10 +14,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 
 class checkcart extends ChangeNotifier {
-  List cartmain = [];
-  List cartlist = [];
   List sumadd = [];
+  bool loaded = false;
   List getTotal = [];
+  Timer? t;
   int sumget = 0;
   double moneytopay = 0.00;
   String stringmoney = '';
@@ -28,6 +29,7 @@ class checkcart extends ChangeNotifier {
   List<Pagnited> fetchresult = [];
   List<Pagnited> orderesult = [];
   List selected = [0];
+  List<List<dynamic>> itemsquote = [];
   String fullname = '';
   String number = '';
   String address = '';
@@ -58,9 +60,8 @@ class checkcart extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     int? ID = prefs.getInt("ID");
     String id = ID.toString();
-
     String email = prefs.getString("email") ?? '';
-    String? token1 = prefs.getString("tokenregistered");
+
     if (hasnextpage == true && isloadmore == false && loading == false) {
       isloadmore = true;
       notifyListeners();
@@ -88,19 +89,18 @@ class checkcart extends ChangeNotifier {
 
         final data = cartRecieveModelFromJson(response.body);
 
-        fetchresult = data.result.pagnited ?? [];
+        fetchresult = data.result.pagnited;
 
         fetchresult.sort((a, b) => b.date.compareTo(a.date));
 
         orderesult.addAll(
             fetchresult.where((element) => element.order == true).toList());
         final loadmore = data.result.next;
-        if (loadmore!.page == page) {
+        if (loadmore.page == page) {
           hasnextpage = false;
         } else {
           hasnextpage = true;
         }
-
         checkempty();
         totalcart();
         checkorderempty();
@@ -121,7 +121,6 @@ class checkcart extends ChangeNotifier {
     String id = id1.toString();
 
     String email = prefs.getString("email") ?? '';
-    String token1 = prefs.getString("tokenregistered") ?? '';
 
     try {
       loading = true;
@@ -148,13 +147,17 @@ class checkcart extends ChangeNotifier {
 
       final data = cartRecieveModelFromJson(response.body);
 
-      fetchresult = data.result.pagnited ?? [];
+      fetchresult = data.result.pagnited;
 
-      fetchresult.sort((a, b) => a.date.compareTo(b.date));
+      fetchresult.sort((a, b) => b.date.compareTo(a.date));
 
       orderesult =
           fetchresult.where((element) => element.order == true).toList();
-    
+      for (var i = 0; i < orderesult.length; i++) {
+        var productMap = [orderesult[i].status, orderesult[i].ordernum];
+        itemsquote.add(productMap);
+      }
+
       checkempty();
       totalcart();
       checkorderempty();
@@ -162,6 +165,68 @@ class checkcart extends ChangeNotifier {
       print(e);
     } finally {
       loading = false;
+
+      if (loaded == false) {
+        refreshcheckcarts();
+        loaded = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  runcode() {
+    t = Timer(Duration(seconds: 5), () {
+      refreshcheckcarts();
+    });
+  }
+
+  Future<void> refreshcheckcarts() async {
+    hasnextpage = true;
+    final prefs = await SharedPreferences.getInstance();
+    int id1 = prefs.getInt("ID") ?? 0;
+    String id = id1.toString();
+
+    String email = prefs.getString("email") ?? '';
+
+    try {
+      notifyListeners();
+      FetchcartModel getfetchmodel() {
+        FetchcartModel fetchmodel = FetchcartModel(id: id, email: email);
+
+        if (selected.contains(0)) {
+          fetchmodel = FetchcartModel(id: id, email: email);
+        } else if (selected.contains(1)) {
+          fetchmodel = FetchcartModel(id: '', email: email);
+        } else if (selected.contains(2)) {
+          fetchmodel = FetchcartModel(id: id, email: '');
+        }
+        return fetchmodel;
+      }
+
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/getCart?page=1&limit=20'),
+          body: fetchcartModelToJson(getfetchmodel()),
+          headers: {
+            'content-Type': 'application/json; charset=UTF-8',
+          });
+
+      final data = cartRecieveModelFromJson(response.body);
+
+      final fetchstatus = data.result.pagnited;
+      fetchstatus.sort((a, b) => b.date.compareTo(a.date));
+      final statusresult =
+          fetchstatus.where((element) => element.order == true).toList();
+      itemsquote.clear();
+      for (var i = 0; i < statusresult.length; i++) {
+        var productMap = [statusresult[i].status, statusresult[i].ordernum];
+        itemsquote.add(productMap);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      // loading = false;
+
+      runcode();
     }
     notifyListeners();
   }
@@ -198,7 +263,7 @@ class checkcart extends ChangeNotifier {
 
       final data = cartRecieveModelFromJson(response.body);
 
-      fetchresult = data.result.pagnited ?? [];
+      fetchresult = data.result.pagnited;
 
       fetchresult.sort((a, b) => a.date.compareTo(b.date));
 
@@ -212,7 +277,6 @@ class checkcart extends ChangeNotifier {
             fetchresult.where((element) => element.order == false).toList();
       }
 
-      print(cartresult);
       checkempty();
       totalcart();
       checkorderempty();
@@ -276,10 +340,15 @@ class checkcart extends ChangeNotifier {
 
   void totalcart() {
     getTotal.clear();
-    for (var i = 0; i < cartresult.length; i++) {
-      getTotal.add(int.parse(cartresult[i].total));
+    if (cartresult.isNotEmpty) {
+      for (var i = 0; i < cartresult.length; i++) {
+        if (cartresult[i].specialName == null) {
+          getTotal.add(int.parse(cartresult[i].total!));
+        } else {
+          getTotal.add(int.parse(cartresult[i].amount.toString()));
+        }
+      }
     }
-
     if (getTotal.isNotEmpty) {
       sumget = getTotal.reduce((a, b) => a + b);
     }
@@ -301,7 +370,7 @@ class checkcart extends ChangeNotifier {
           });
 
       final coupondetails = verifyCouponFromJson(response.body);
-      print(response.body);
+
       type = coupondetails!.type;
 
       msg = coupondetails.msg;

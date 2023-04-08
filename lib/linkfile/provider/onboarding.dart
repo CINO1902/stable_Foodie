@@ -115,7 +115,7 @@ class checkstate with ChangeNotifier {
       } catch (e) {
         //  print(e);
       } finally {
-     //   runcode();
+        //   runcode();
       }
     }
     notifyListeners();
@@ -141,7 +141,7 @@ class checkstate with ChangeNotifier {
         });
 
         final data = jsonDecode(response.body);
-        print(data['ref']);
+
         final stamp = data['ref'];
 
         if (storagestamp != stamp) {
@@ -150,7 +150,7 @@ class checkstate with ChangeNotifier {
       } catch (e) {
         //  print(e);
       } finally {
-      //  runcode();
+        //  runcode();
       }
     }
     //notifyListeners();

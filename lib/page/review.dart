@@ -679,46 +679,50 @@ class _ReviewState extends State<Review> {
                             ],
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Provider.of<addTocart>(context, listen: false)
-                                    .buynow
-                                ? buynow()
-                                : soupid.isNotEmpty
-                                    ? checkempty()
-                                        ? SmartDialog.showToast('Select a soup')
-                                        : addTocarts()
-                                    : addTocarts();
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(.8),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10))),
-                            height: 40,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: context.watch<addTocart>().buynow
-                                  ? Text(
-                                      'Buy Now',
-                                      style: TextStyle(color: Colors.white),
-                                    )
-                                  : context.watch<addTocart>().loading
-                                      ? SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                              color: Theme.of(context)
-                                                  .primaryColor))
-                                      : Text(
-                                          'Add to Cart',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                        Consumer<addTocart>(builder: (context, value, child) {
+                          return InkWell(
+                            onTap: () {
+                              Provider.of<addTocart>(context, listen: false)
+                                      .buynow
+                                  ? buynow()
+                                  : soupid.isNotEmpty
+                                      ? checkempty()
+                                          ? SmartDialog.showToast(
+                                              'Select a soup')
+                                          : addTocarts(value)
+                                      : addTocarts(value);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(.8),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10))),
+                              height: 40,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: context.watch<addTocart>().buynow
+                                    ? Text(
+                                        'Buy Now',
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    : context.watch<addTocart>().loading
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                                color: Theme.of(context)
+                                                    .primaryColor))
+                                        : Text(
+                                            'Add to Cart',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                              ),
                             ),
-                          ),
-                        )
+                          );
+                        })
                       ],
                     ),
                   ],
@@ -731,39 +735,69 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  void addTocarts() {
-    if (context.read<calculatemeal>().foodtotal() < 499) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: CustomeSnackbar(
-          topic: 'Oh Snap!',
-          msg: 'Total Amount of food per pack must be more than ₦500',
-          color1: Color.fromARGB(255, 171, 51, 42),
-          color2: Color.fromARGB(255, 127, 39, 33),
-        ),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ));
-    } else {
-      context.read<addTocart>().getClickedfood();
+  void addTocarts(value) {
+    if (value.loading != true) {
+      if (context.read<calculatemeal>().foodtotal() < 499) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: CustomeSnackbar(
+            topic: 'Oh Snap!',
+            msg: 'Total Amount of food per pack must be more than ₦500',
+            color1: Color.fromARGB(255, 171, 51, 42),
+            color2: Color.fromARGB(255, 127, 39, 33),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
+      } else {
+        context.read<addTocart>().getClickedfood();
 
-      context.read<calculatemeal>().reset();
-      // print(context.watch<addTocart>().cartList);
-      popupscaffold();
-      setState(() {
-        _selecteCategorys.clear();
-        for (var i = 0; i < itemsquote.length; i++) {
-          final thisquote = itemsquote[i];
-          thisquote.contains(thisquote[2])
-              ? thisquote[thisquote.indexWhere((v) => v == thisquote[2])] = 1
-              : thisquote;
-          thisquote.contains(thisquote[1])
-              ? thisquote[thisquote.indexWhere((v) => v == thisquote[1])] =
-                  thisquote[3]
-              : thisquote;
+        context.read<calculatemeal>().reset();
+
+        popupscaffold();
+        setState(() {
+          _selecteCategorys.clear();
+          for (var i = 0; i < itemsquote.length; i++) {
+            final thisquote = itemsquote[i];
+            thisquote.contains(thisquote[2])
+                ? thisquote[thisquote.indexWhere((v) => v == thisquote[2])] = 1
+                : thisquote;
+            thisquote.contains(thisquote[1])
+                ? thisquote[thisquote.indexWhere((v) => v == thisquote[1])] =
+                    thisquote[3]
+                : thisquote;
+          }
+          multiplier = 1;
+        });
+      }
+      print(value.success);
+      if (value.loading == false) {
+        if (value.success == 'success') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomeSnackbar(
+              topic: 'Great!',
+              msg: value.msg1,
+              color1: Color.fromARGB(255, 25, 107, 52),
+              color2: Color.fromARGB(255, 19, 95, 40),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
+        } else if (value.success == 'fail') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomeSnackbar(
+              topic: 'Oh Snap!',
+              msg: value.msg1,
+              color1: Color.fromARGB(255, 171, 51, 42),
+              color2: Color.fromARGB(255, 127, 39, 33),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
         }
-        multiplier = 1;
-      });
+      }
     }
   }
 

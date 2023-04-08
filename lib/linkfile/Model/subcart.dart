@@ -28,13 +28,13 @@ class Detail {
     Detail({
         required this.id,
         required this.email,
-        this.detailId,
+        required this.detailId,
         required this.order,
         required this.generatedid,
-        this.category,
-        this.packagename,
+        required this.category,
+        required this.packagename,
         required this.status,
-        this.image,
+        required this.image,
         required this.day,
         required this.month,
         required this.year,
@@ -46,13 +46,13 @@ class Detail {
 
     String id;
     String email;
-    String? detailId;
+    String detailId;
     bool order;
     String generatedid;
-    String? category;
-    String? packagename;
-    String status;
-    String? image;
+    String category;
+    String packagename;
+    int status;
+    String image;
     String day;
     String month;
     String year;

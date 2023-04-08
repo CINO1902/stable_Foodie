@@ -27,6 +27,8 @@ import 'package:foodie_ios/linkfile/provider/mostcommon.dart';
 import 'package:foodie_ios/linkfile/provider/notification.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/linkfile/provider/sellectbucket.dart';
+import 'package:foodie_ios/linkfile/provider/special_offer.dart';
+import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/linkfile/provider/themeprovider.dart';
 import 'package:foodie_ios/linkfile/services/connectivity_service.dart';
@@ -130,6 +132,8 @@ class _myAppState extends State<myApp> {
         ChangeNotifierProvider(create: (context) => showrecent()),
         ChangeNotifierProvider(create: (context) => notifications()),
         ChangeNotifierProvider(create: (context) => internetcheck()),
+        ChangeNotifierProvider(create: (context) => special_offer()),
+        ChangeNotifierProvider(create: (context) => meal_calculate()),
         ChangeNotifierProxyProvider<subscribed, sellectbucket>(
             create: (context) => sellectbucket(),
             update: (BuildContext context, subscribed checkstate,
@@ -160,7 +164,6 @@ class _myAppState extends State<myApp> {
                   return ConnectivityService().secondCountStream;
                 },
                 builder: (context, child) {
-                 
                   return MaterialApp(
                     debugShowCheckedModeBanner: false,
                     navigatorObservers: [FlutterSmartDialog.observer],

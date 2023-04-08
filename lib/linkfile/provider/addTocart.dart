@@ -100,7 +100,7 @@ class addTocart extends ChangeNotifier {
 
       msg1 = msg['msg'];
       success = msg['status'];
-
+      print(msg);
       waitresponse = true;
       notifyListeners();
     } catch (e) {

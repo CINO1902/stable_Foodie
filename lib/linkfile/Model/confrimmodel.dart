@@ -11,8 +11,8 @@ String confirmmodelToJson(Confirmmodel data) => json.encode(data.toJson());
 
 class Confirmmodel {
   Confirmmodel(
-      {required this.packageGroup,
-      required this.amount,
+      {required this.amount,
+      required this.id,
       required this.verified,
       required this.email,
       required this.name,
@@ -21,8 +21,8 @@ class Confirmmodel {
       required this.location,
       required this.ref});
 
-  String packageGroup;
   int amount;
+  String id;
   bool verified;
   String email;
   String name;
@@ -32,8 +32,8 @@ class Confirmmodel {
   String ref;
 
   factory Confirmmodel.fromJson(Map<dynamic, dynamic> json) => Confirmmodel(
-      packageGroup: json["package_group"],
       amount: json["amount"],
+      id: json["id"],
       verified: json["verified"],
       email: json["email"],
       name: json["name"],
@@ -43,8 +43,8 @@ class Confirmmodel {
       ref: json["ref"]);
 
   Map<dynamic, dynamic> toJson() => {
-        "package_group": packageGroup,
         "amount": amount,
+        "id": id,
         "verified": verified,
         "email": email,
         "name": name,

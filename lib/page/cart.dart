@@ -65,6 +65,29 @@ class _cartState extends State<cart> {
     }
   }
 
+  Future<void> removecartspecial(id) async {
+    RemoveCart remove = RemoveCart(packageid: id);
+
+    try {
+      Loadingwidget2.show(context);
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/removespecialfromcart'),
+          body: removeCartToJson(remove),
+          headers: {
+            'content-Type': 'application/json; charset=UTF-8',
+          });
+
+      var msg = jsonDecode(response.body);
+      msg1 = msg['msg'];
+      success = msg['status'];
+    } catch (e) {
+      print(e);
+    } finally {
+      Loadingwidget2.hide(context);
+      context.read<checkcart>().checkcartforcart();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (Provider.of<ConnectivityStatus>(context) ==
@@ -111,18 +134,31 @@ class _cartState extends State<cart> {
                                 final total = cartresults[index].total;
                                 List<Extra>? extra = cartresults[index].extras;
 
-                                return Cartbox(
-                                    context,
-                                    value,
-                                    index,
-                                    cart,
-                                    image,
-                                    multiple,
-                                    food,
-                                    extra,
-                                    amount,
-                                    total,
-                                    cartresults);
+                                return cartresults[index].specialName == null
+                                    ? Cartbox(
+                                        context,
+                                        value,
+                                        index,
+                                        cart,
+                                        image,
+                                        multiple,
+                                        food,
+                                        extra,
+                                        amount,
+                                        total,
+                                        cartresults)
+                                    : Cartbox2(
+                                        context,
+                                        value,
+                                        index,
+                                        cart,
+                                        image,
+                                        multiple,
+                                        food,
+                                        extra,
+                                        amount,
+                                        total,
+                                        cartresults);
                               }),
                         );
                       })
@@ -460,6 +496,287 @@ class _cartState extends State<cart> {
     );
   }
 
+  Widget Cartbox2(BuildContext context, checkcart value, int indexx, cart,
+      image, multiple, food, extra, amount, total, List<Pagnited> cartresults) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: SvgPicture.asset(
+              'images/svg/Pattern-7.svg',
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height * 0.45,
+              color: Theme.of(context).primaryColorLight,
+              colorBlendMode: BlendMode.difference,
+            ),
+          ),
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  modalpopup2(context, image, multiple, food, extra, amount,
+                      total, cartresults, indexx);
+                },
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: double.infinity,
+                      //  color: Colors.black,
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: CachedNetworkImage(
+                                imageUrl: cartresults[indexx].image,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                width: 90,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.23,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.55,
+                            height: MediaQuery.of(context).size.height * 0.13,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        child: Text(
+                                          '${cartresults[indexx].multiple} X',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 19),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        width: 150,
+                                        child: Text(
+                                          '${cartresults[indexx].specialName}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  cartresults[indexx].sides!.isNotEmpty
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                              SizedBox(
+                                                child: const Text(
+                                                  'Sides:',
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.03,
+                                                width: 150,
+                                                child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                        cartresults[indexx]
+                                                            .sides!
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Text(
+                                                        '${cartresults[indexx].sides![index]["1"]}',
+                                                        // overflow-: TextOverflow.ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 17),
+                                                      );
+                                                    }),
+                                              ),
+                                            ])
+                                      : SizedBox(),
+                                  cartresults[indexx].drinks!.isNotEmpty
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                              SizedBox(
+                                                child: const Text(
+                                                  'Drinks:',
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.03,
+                                                width: 150,
+                                                child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                        cartresults[indexx]
+                                                            .drinks!
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Text(
+                                                        '${cartresults[indexx].drinks![index]["1"]}',
+                                                        // overflow-: TextOverflow.ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 17),
+                                                      );
+                                                    }),
+                                              ),
+                                            ])
+                                      : SizedBox(),
+                                  cartresults[indexx].foods!.isNotEmpty
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                              SizedBox(
+                                                child: const Text(
+                                                  'Food:',
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.03,
+                                                width: 150,
+                                                child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                        cartresults[indexx]
+                                                            .foods!
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Text(
+                                                        '${cartresults[indexx].foods![index]["1"]}',
+                                                        // overflow-: TextOverflow.ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 17),
+                                                      );
+                                                    }),
+                                              ),
+                                            ])
+                                      : SizedBox(),
+                                ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          height: 20,
+                          margin: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * 0.3),
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text('₦ ${cartresults[indexx].amount}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 17))),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  await removecartspecial(
+                      cartresults[indexx].packageid.toString());
+                  if (success == 'success') {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: CustomeSnackbar(
+                        topic: 'Great!',
+                        msg: msg1,
+                        color1: const Color.fromARGB(255, 25, 107, 52),
+                        color2: const Color.fromARGB(255, 19, 95, 40),
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: CustomeSnackbar(
+                        topic: 'Oh Snap!',
+                        msg: msg1,
+                        color1: const Color.fromARGB(255, 171, 51, 42),
+                        color2: const Color.fromARGB(255, 127, 39, 33),
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ));
+                  }
+                },
+                child: const Align(
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<dynamic> modalpopup(BuildContext context, image, multiple, food, extra,
       amount, total, cartresults) {
     return showModalBottomSheet(
@@ -694,6 +1011,369 @@ class _cartState extends State<cart> {
                                           fontWeight: FontWeight.w600,
                                           fontSize: 17)),
                                   Text('₦ $total',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 17))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<dynamic> modalpopup2(BuildContext context, image, multiple, food,
+      extra, amount, total, List<Pagnited> cartresults, indexx) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(35), topRight: Radius.circular(35))),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        builder: (BuildContext context) {
+          return Stack(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(35),
+                  child: SvgPicture.asset(
+                    'images/svg/Pattern-3.svg',
+                    fit: BoxFit.cover,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    colorBlendMode: BlendMode.difference,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        'Order Detail',
+                        style: TextStyle(
+                            fontSize: 23, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: SvgPicture.asset(
+                            'images/svg/Pattern-7.svg',
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.height * 0.45,
+                            color: Theme.of(context).primaryColorLight,
+                            colorBlendMode: BlendMode.difference,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: CachedNetworkImage(
+                                        imageUrl: image ?? '',
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        width: 110,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.27,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.55,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.40,
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              child: Text(
+                                                '${cartresults[indexx].multiple} X',
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 19),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            SizedBox(
+                                              width: 150,
+                                              child: Text(
+                                                '${cartresults[indexx].specialName}',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 17),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 7,
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.34,
+                                          child: ListView(
+                                            shrinkWrap: true,
+                                            children: [
+                                              cartresults[indexx]
+                                                      .sides!
+                                                      .isNotEmpty
+                                                  ? Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                          SizedBox(
+                                                            child: const Text(
+                                                              'Sides:',
+                                                              style: TextStyle(
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 7,
+                                                          ),
+                                                          Container(
+                                                            width: 150,
+                                                            constraints:
+                                                                BoxConstraints(
+                                                              maxHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.12,
+                                                              minHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.03,
+                                                            ),
+                                                            child: ListView
+                                                                .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        const NeverScrollableScrollPhysics(),
+                                                                    itemCount: cartresults[
+                                                                            indexx]
+                                                                        .sides!
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            bottom:
+                                                                                5),
+                                                                        child:
+                                                                            Text(
+                                                                          '${cartresults[indexx].sides![index]["1"]}',
+                                                                          // overflow-: TextOverflow.ellipsis,
+                                                                          style:
+                                                                              const TextStyle(fontSize: 17),
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                        ])
+                                                  : SizedBox(),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              cartresults[indexx]
+                                                      .drinks!
+                                                      .isNotEmpty
+                                                  ? Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                          SizedBox(
+                                                            child: const Text(
+                                                              'Drinks:',
+                                                              style: TextStyle(
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 7,
+                                                          ),
+                                                          Container(
+                                                            width: 150,
+                                                            constraints:
+                                                                BoxConstraints(
+                                                              maxHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.12,
+                                                              minHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.03,
+                                                            ),
+                                                            child: ListView
+                                                                .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        const NeverScrollableScrollPhysics(),
+                                                                    itemCount: cartresults[
+                                                                            indexx]
+                                                                        .drinks!
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            bottom:
+                                                                                5),
+                                                                        child:
+                                                                            Text(
+                                                                          '${cartresults[indexx].drinks![index]["1"]}',
+                                                                          // overflow-: TextOverflow.ellipsis,
+                                                                          style:
+                                                                              const TextStyle(fontSize: 17),
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                        ])
+                                                  : SizedBox(),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              cartresults[indexx]
+                                                      .foods!
+                                                      .isNotEmpty
+                                                  ? Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                          SizedBox(
+                                                            child: const Text(
+                                                              'Food:',
+                                                              style: TextStyle(
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 7,
+                                                          ),
+                                                          Container(
+                                                            width: 150,
+                                                            constraints:
+                                                                BoxConstraints(
+                                                              maxHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.12,
+                                                              minHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.03,
+                                                            ),
+                                                            child: ListView
+                                                                .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        const NeverScrollableScrollPhysics(),
+                                                                    itemCount: cartresults[
+                                                                            indexx]
+                                                                        .foods!
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            bottom:
+                                                                                5),
+                                                                        child:
+                                                                            Text(
+                                                                          '${cartresults[indexx].foods![index]["1"]}',
+                                                                          // overflow-: TextOverflow.ellipsis,
+                                                                          style:
+                                                                              const TextStyle(fontSize: 17),
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                        ])
+                                                  : SizedBox(),
+                                            ],
+                                          ),
+                                        ),
+                                      ]),
+                                )
+                              ]),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.height * 0.4,
+                          left: MediaQuery.of(context).size.width * 0.30,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: SizedBox(
+                              height: 20,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Total:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 17)),
+                                  Text('₦ ${cartresults[indexx].amount}',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 17))

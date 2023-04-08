@@ -45,7 +45,6 @@ class _AccountState extends State<Account> {
   String msg = '';
   bool loading = true;
   Future<void> deleteaccount() async {
-    print(Provider.of<checkstate>(context, listen: false).email);
     try {
       setState(() {
         loading = true;

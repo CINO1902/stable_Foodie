@@ -63,7 +63,7 @@ class subscribed extends ChangeNotifier {
 
       frequency = data.frequency;
       daysback = data.dayuse;
-      print(daysback);
+
     } catch (e) {
       print(e);
     }

@@ -82,17 +82,13 @@ class calculatemeal extends ChangeNotifier {
 
     for (var i = 0; i < extrasquote.length; i++) {
       Map<int, dynamic> map = extrasquote[i].asMap();
-      Map<String, dynamic> newMap = new Map<String, dynamic>(); //keys as String
-
+      Map<String, dynamic> newMap = new Map<String, dynamic>();
       map.forEach((key, value) {
         newMap.putIfAbsent(key.toString(), () => value);
       });
-      // int x = 0;
-      // Map<String, dynamic> map = {for (var item in extrasquote[i]) 'x++': item};
+
       sum.add(newMap);
     }
-
-    // var sumget = sum.reduce((a, b) => a + b);
     distinctList1 = sum.where((element) => element['4'] == true).toList();
     notifyListeners();
   }

@@ -135,7 +135,7 @@ class _notificationState extends State<notification> {
                       groupComparator: (DateTime value1, DateTime value2) =>
                           value2.compareTo(value1),
                       groupSeparatorBuilder: (DateTime date) {
-                        DateTime? currentdate = context.watch<greetings>().time;
+                        DateTime? currentdate =  context.watch<greetings>().time;
 
                         final day = date.day;
                         final currentday = currentdate.day;
@@ -260,7 +260,7 @@ class _notificationState extends State<notification> {
       'Nov',
       'Dec'
     ];
-    DateTime? currentdate = context.watch<greetings>().time;
+    DateTime? currentdate =  context.watch<greetings>().time;
     Duration diff = currentdate.difference(element.date);
     final day = element.date.day;
     final currentday = currentdate.day;
@@ -292,7 +292,7 @@ class _notificationState extends State<notification> {
 
   Container Notificationtype1(
       BuildContext context, discount, coupon, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -438,7 +438,7 @@ class _notificationState extends State<notification> {
 
   Container Notificationtype2(
       BuildContext context, DateTime date1, discount, coupon) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -538,7 +538,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype3(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -616,7 +616,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype4(BuildContext context, DateTime date1, amount) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -703,7 +703,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype5(BuildContext context, DateTime date1, amount) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -789,7 +789,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype6(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -867,7 +867,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype7(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -945,7 +945,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype8(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -1023,7 +1023,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype9(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -1102,7 +1102,7 @@ class _notificationState extends State<notification> {
 
   Container Notificationtype10(
       BuildContext context, DateTime date1, amount, group) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -1181,7 +1181,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype11(BuildContext context, DateTime date1, amount) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -1259,7 +1259,7 @@ class _notificationState extends State<notification> {
   }
 
   Container Notificationtype12(BuildContext context, DateTime date1) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';
@@ -1346,7 +1346,7 @@ class _notificationState extends State<notification> {
 
   Container Notificationtype13(
       BuildContext context, DateTime date1, discount, coupon) {
-    final currentdate = context.watch<greetings>().time;
+    final currentdate =  context.watch<greetings>().time;
     String formattedTime = DateFormat.jm().format(date1);
     Duration diff = currentdate.difference(date1);
     String date = '';

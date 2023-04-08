@@ -176,7 +176,10 @@ class _confirmsuborderState extends State<confirmsuborder> {
       ),
       body: Consumer<getmostcommon>(builder: (context, value, child) {
         if (value.loading == true) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+              child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor,
+          ));
         } else if (value.error == true) {
           return Stack(
             fit: StackFit.expand,
@@ -360,7 +363,7 @@ class _confirmsuborderState extends State<confirmsuborder> {
                                     height: 50,
                                     width: 50,
                                     child: CachedNetworkImage(
-                                      imageUrl: subcart[index].image ?? '',
+                                      imageUrl: subcart[index].image,
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                       width: MediaQuery.of(context).size.width *
@@ -391,8 +394,7 @@ class _confirmsuborderState extends State<confirmsuborder> {
                                                       .width *
                                                   0.6,
                                               child: Text(
-                                                subcart[index].packagename ??
-                                                    '',
+                                                subcart[index].packagename,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
                                                     fontSize: 17,

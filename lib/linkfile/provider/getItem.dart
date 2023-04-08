@@ -9,7 +9,7 @@ class getiItem extends ChangeNotifier {
   List<Item> _items = [];
   bool error = false;
   bool _data = false;
-  int ID = 0;
+
 
   bool get data => _data;
   List<Item> get items => _items;
@@ -24,7 +24,7 @@ class getiItem extends ChangeNotifier {
       });
 
       final decodedresponse = getItemFromJson(response.body);
-      _items = decodedresponse.item ?? [];
+      _items = decodedresponse.item ;
 
       _data = true;
 

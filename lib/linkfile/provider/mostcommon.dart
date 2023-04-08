@@ -81,7 +81,7 @@ class getmostcommon extends ChangeNotifier {
           longthroatcheck = decodedresponse.longthroat;
           odogwucheck = decodedresponse.odogwu;
           swallow = decodedresponse.swallow;
-          print(swallow);
+         
           _data = true;
           mostcommon = getr.where((element) => element.common == true).toList();
           notcommon = getr.where((element) => element.common == false).toList();
@@ -253,7 +253,7 @@ class getmostcommon extends ChangeNotifier {
       Fetchmostcommon fetch = Fetchmostcommon(
         email: email,
       );
-      print(fetch.email);
+     
       Response response = await networkHandler.client.post(
           networkHandler.builderUrl('/getcartsub'),
           body: fetchmostcommonToJson(fetch),
@@ -302,7 +302,7 @@ class getmostcommon extends ChangeNotifier {
       subcart = decodedresponse.details;
 
       sucartdata = true;
-      print(success);
+     
       notifyListeners();
     } catch (e) {
       print(e);

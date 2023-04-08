@@ -14,6 +14,7 @@ import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 
 import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
 import 'package:foodie_ios/linkfile/refresh.dart';
 import 'package:foodie_ios/linkfile/snackbar.dart';
 import 'package:foodie_ios/page/overlay.dart';
@@ -29,20 +30,16 @@ class Reviewspecial extends StatefulWidget {
 }
 
 class _ReviewspecialState extends State<Reviewspecial> {
-  List<List<ItemExtra>> items = [];
-  bool sett = false;
   List _selecteCategorys = [];
   List<String> soupid = [];
-  List soupadded = [];
-  List foodquote = [];
-  List itemindex = [];
-  List soupindex = [];
+
   List<List<dynamic>> itemsquote = [];
   bool checkdone = false;
   String amount = '';
   int multiplier = 1;
   String msg1 = '';
   String success = '';
+  bool error = false;
   bool waitresponse = false;
   void _onCategorySelected(bool selected, category_id) {
     if (selected == true) {
@@ -60,7 +57,8 @@ class _ReviewspecialState extends State<Reviewspecial> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    items.clear();
+    addprocess();
+    context.read<meal_calculate>().extracall();
     // Provider.of<calculatemeal>(context, listen: false).total();
   }
 
@@ -68,19 +66,51 @@ class _ReviewspecialState extends State<Reviewspecial> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    items.clear();
+
     itemsquote.clear();
   }
 
   final ScrollController control = ScrollController();
   void addsoup(id) {}
-
+  bool drinkerror = false;
+  bool fooderror = false;
+  bool sideerror = false;
+  bool drinkcomplete = false;
+  bool foodcomplete = false;
+  bool sidecomplete = false;
+  List<List> check = [
+    [0],
+    [0],
+    [0]
+  ];
   @override
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    context.read<getiItemExtra>().cancelresquest();
-    context.read<calculatemeal>().clearlist();
+
+    context.read<meal_calculate>().clearclick();
+  }
+
+  addprocess() {
+    if (Provider.of<meal_calculate>(context, listen: false).item_clicked[6] ==
+        true) {
+      setState(() {
+        check[check.indexWhere((v) => v == check[0])] = [3];
+      });
+    }
+    print(check[1][0]);
+    if (Provider.of<meal_calculate>(context, listen: false).item_clicked[7] ==
+        true) {
+      setState(() {
+        check[check.indexWhere((v) => v == check[1])] = [3];
+      });
+    }
+    if (Provider.of<meal_calculate>(context, listen: false).item_clicked[8] ==
+        true) {
+      setState(() {
+        check[check.indexWhere((v) => v == check[2])] = [3];
+      });
+    }
   }
 
   bool network = false;
@@ -98,7 +128,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
             height: MediaQuery.of(context).size.height * 0.4,
             width: double.infinity,
             child: CachedNetworkImage(
-              imageUrl: context.watch<calculatemeal>().clickedfood[1] ?? '',
+              imageUrl: context.watch<meal_calculate>().item_clicked[1] ?? '',
               errorWidget: (context, url, error) => Icon(Icons.error),
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.width * 0.35,
@@ -148,13 +178,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                 children: [
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        if (multiplier != 1) {
-                          multiplier = multiplier - 1;
-                          context.read<calculatemeal>().substractlist();
-                        }
-                      });
-                      context.read<addTocart>().checkbuy();
+                      context.read<meal_calculate>().removelist();
                     },
                     child: Container(
                       height: 30,
@@ -173,7 +197,10 @@ class _ReviewspecialState extends State<Reviewspecial> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        multiplier.toString(),
+                        context
+                            .watch<meal_calculate>()
+                            .item_clicked[5]
+                            .toString(),
                         style: TextStyle(
                             fontSize: 21, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -182,19 +209,22 @@ class _ReviewspecialState extends State<Reviewspecial> {
                   ),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        if (multiplier !=
-                            Provider.of<calculatemeal>(context, listen: false)
-                                .clickedfood[5]) {
-                          multiplier = multiplier + 1;
-                          context.read<calculatemeal>().addlist();
+                      if (Provider.of<meal_calculate>(context, listen: false)
+                              .available1 ==
+                          false) {
+                        // print(object)
+                        if (Provider.of<meal_calculate>(context, listen: false)
+                                .remains !=
+                            Provider.of<meal_calculate>(context, listen: false)
+                                .item_clicked[5]) {
+                          context.read<meal_calculate>().addlist();
                         } else {
                           SmartDialog.showToast(
-                            "Cannot add more of this item",
-                          );
+                              "You can't add more than the remaing item");
                         }
-                      });
-                      context.read<addTocart>().checkbuy();
+                      } else {
+                        context.read<meal_calculate>().addlist();
+                      }
                     },
                     child: Container(
                       height: 30,
@@ -208,63 +238,1132 @@ class _ReviewspecialState extends State<Reviewspecial> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Big Boys Pack',
-                        style: TextStyle(
-                            fontSize: 19, fontWeight: FontWeight.bold),
-                      ),
-                      Text('₦ 5,700',
+                child: context.watch<meal_calculate>().available1
+                    ? SizedBox()
+                    : Column(children: [
+                        Text(
+                          'Remaining',
                           style: TextStyle(
-                              fontSize: 19, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    child: Text(
-                        'Saalaria Crumbs has chicken broth, coconut milk, lime, lettuce, tomataoes, seasame seeds.Get your taste buds clucking with our juicy and flavorful chicken! Order now and experience the ultimate poultry indulgence on your doorstep. Satisfaction guaranteed!',
-                        style: TextStyle(fontSize: 17)),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
+                              color: Colors.red,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          context.watch<meal_calculate>().remains.toString(),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        )
+                      ])),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child:
+                    Consumer<meal_calculate>(builder: (context, value, child) {
+                  return ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: ClampingScrollPhysics(),
                     children: [
-                      SvgPicture.asset('images/svg/Vector-9.svg'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            context.watch<meal_calculate>().item_clicked[0],
+                            style: TextStyle(
+                                fontSize: 19, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                              '₦ ${context.watch<meal_calculate>().item_clicked[4].toString()}',
+                              style: TextStyle(
+                                  fontSize: 19, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                       SizedBox(
-                        width: 10,
+                        height: 15,
                       ),
-                      Text('7-10 minutes')
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 170,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Align(
-                        alignment: Alignment.center,
+                      Container(
                         child: Text(
-                          'Add To Cart',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        )),
-                  )
-                ],
+                            context.watch<meal_calculate>().item_clicked[2],
+                            style: TextStyle(fontSize: 17)),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset('images/svg/Vector-9.svg'),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                              '${context.watch<meal_calculate>().item_clicked[3]} minutes')
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //Side
+                      context.watch<meal_calculate>().item_clicked[6]
+                          ? SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .loading_extra
+                                        ? Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .side
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 35,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    context
+                                                                .watch<
+                                                                    meal_calculate>()
+                                                                .side[index]
+                                                                .remaining ==
+                                                            true
+                                                        ? Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Text(
+                                                                  context
+                                                                      .watch<
+                                                                          meal_calculate>()
+                                                                      .side[
+                                                                          index]
+                                                                      .extraName,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                child: Text(
+                                                                  'Remaining : ${context.watch<meal_calculate>().side[index].remainingvalue}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .red),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        : Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              context
+                                                                  .watch<
+                                                                      meal_calculate>()
+                                                                  .side[index]
+                                                                  .extraName,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (Provider.of<meal_calculate>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .side[index]
+                                                                .remaining ==
+                                                            true) {
+                                                          if (Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .sidecollect
+                                                                  .length !=
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .side[index]
+                                                                  .remainingvalue) {
+                                                            setState(() {
+                                                              sideerror = false;
+                                                            });
+                                                            if (Provider.of<meal_calculate>(
+                                                                            context,
+                                                                            listen:
+                                                                                false)
+                                                                        .item_clicked[9]
+                                                                    [0]['0'] !=
+                                                                Provider.of<meal_calculate>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .sidecollect
+                                                                    .length) {
+                                                              context.read<meal_calculate>().addside(
+                                                                  Provider.of<meal_calculate>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .side[
+                                                                          index]
+                                                                      .extraId,
+                                                                  Provider.of<meal_calculate>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .side[
+                                                                          index]
+                                                                      .extraName);
+
+                                                              if (value.item_clicked[
+                                                                          9][0]
+                                                                      ['0'] ==
+                                                                  value
+                                                                      .sidecollect
+                                                                      .length) {
+                                                                setState(() {
+                                                                  check[check
+                                                                      .indexWhere((v) =>
+                                                                          v ==
+                                                                          check[
+                                                                              0])] = [
+                                                                    0
+                                                                  ];
+                                                                });
+                                                              }
+                                                            } else {
+                                                              SmartDialog.showToast(
+                                                                  'You have added the max number of side for this offer');
+                                                            }
+                                                          } else {
+                                                            SmartDialog.showToast(
+                                                                'Cannot add more of this item');
+                                                          }
+                                                        } else {
+                                                          setState(() {
+                                                            sideerror = false;
+                                                          });
+                                                          if (Provider.of<meal_calculate>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .item_clicked[
+                                                                  9][0]['0'] !=
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .sidecollect
+                                                                  .length) {
+                                                            context.read<meal_calculate>().addside(
+                                                                Provider.of<meal_calculate>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .side[index]
+                                                                    .extraId,
+                                                                Provider.of<meal_calculate>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .side[index]
+                                                                    .extraName);
+
+                                                            if (value.item_clicked[
+                                                                        9][0]
+                                                                    ['0'] ==
+                                                                value
+                                                                    .sidecollect
+                                                                    .length) {
+                                                              setState(() {
+                                                                check[check
+                                                                    .indexWhere(
+                                                                        (v) =>
+                                                                            v ==
+                                                                            check[0])] = [
+                                                                  0
+                                                                ];
+                                                              });
+                                                            }
+                                                          } else {
+                                                            SmartDialog.showToast(
+                                                                'You have added the max number of side for this offer');
+                                                          }
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.blue,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: sideerror
+                                            ? Colors.red
+                                            : Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .sidecollect
+                                            .isEmpty
+                                        ? Center(
+                                            child: Text(
+                                              'Add Side',
+                                              style: TextStyle(
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .sidecollect
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 30,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        context
+                                                            .watch<
+                                                                meal_calculate>()
+                                                            .sidecollect[index][1],
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        context
+                                                            .read<
+                                                                meal_calculate>()
+                                                            .removeside(index);
+                                                        if (value.item_clicked[
+                                                                9][0]['0'] !=
+                                                            value.sidecollect
+                                                                .length) {
+                                                          setState(() {
+                                                            check[check
+                                                                .indexWhere((v) =>
+                                                                    v ==
+                                                                    check[
+                                                                        0])] = [
+                                                              3
+                                                            ];
+                                                          });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                          'images/svg/cancel1.svg',
+                                                          color: Colors.red,
+                                                        )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //Food
+                      context.watch<meal_calculate>().item_clicked[7]
+                          ? SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .loading_extra
+                                        ? Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .food
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 30,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    context
+                                                                .watch<
+                                                                    meal_calculate>()
+                                                                .food[index]
+                                                                .remaining ==
+                                                            true
+                                                        ? Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Text(
+                                                                  context
+                                                                      .watch<
+                                                                          meal_calculate>()
+                                                                      .food[
+                                                                          index]
+                                                                      .extraName,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                child: Text(
+                                                                  'Remaining : ${context.watch<meal_calculate>().food[index].remainingvalue}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .red),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        : Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              context
+                                                                  .watch<
+                                                                      meal_calculate>()
+                                                                  .food[index]
+                                                                  .extraName,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          fooderror = false;
+                                                        });
+                                                        if (Provider.of<meal_calculate>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .item_clicked[
+                                                                10][0]['0'] !=
+                                                            Provider.of<meal_calculate>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .foodcollect
+                                                                .length) {
+                                                          context.read<meal_calculate>().addfood(
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .food[index]
+                                                                  .extraId,
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .food[index]
+                                                                  .extraName);
+                                                          if (value.item_clicked[
+                                                                  10][0]['0'] ==
+                                                              value.foodcollect
+                                                                  .length) {
+                                                            setState(() {
+                                                              check[check
+                                                                  .indexWhere((v) =>
+                                                                      v ==
+                                                                      check[
+                                                                          1])] = [
+                                                                0
+                                                              ];
+                                                            });
+                                                          }
+                                                        } else {
+                                                          SmartDialog.showToast(
+                                                              'You have added the max number of food for this offer');
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.blue,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: fooderror
+                                            ? Colors.red
+                                            : Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .foodcollect
+                                            .isEmpty
+                                        ? Center(
+                                            child: Text(
+                                              'Add Food',
+                                              style: TextStyle(
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .foodcollect
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 30,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        context
+                                                            .watch<
+                                                                meal_calculate>()
+                                                            .foodcollect[index][1],
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        context
+                                                            .read<
+                                                                meal_calculate>()
+                                                            .removefood(index);
+                                                        if (value.item_clicked[
+                                                                10][0]['0'] !=
+                                                            value.foodcollect
+                                                                .length) {
+                                                          setState(() {
+                                                            check[check
+                                                                .indexWhere((v) =>
+                                                                    v ==
+                                                                    check[
+                                                                        1])] = [
+                                                              3
+                                                            ];
+                                                          });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                          'images/svg/cancel1.svg',
+                                                          color: Colors.red,
+                                                        )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //Drink
+                      context.watch<meal_calculate>().item_clicked[8]
+                          ? SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .loading_extra
+                                        ? Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .drink
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 30,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    context
+                                                                .watch<
+                                                                    meal_calculate>()
+                                                                .drink[index]
+                                                                .remaining ==
+                                                            true
+                                                        ? Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Text(
+                                                                  context
+                                                                      .watch<
+                                                                          meal_calculate>()
+                                                                      .drink[
+                                                                          index]
+                                                                      .extraName,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                child: Text(
+                                                                  'Remaining : ${context.watch<meal_calculate>().drink[index].remainingvalue}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .red),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        : Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              context
+                                                                  .watch<
+                                                                      meal_calculate>()
+                                                                  .drink[index]
+                                                                  .extraName,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          drinkerror = false;
+                                                        });
+                                                        if (Provider.of<meal_calculate>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .item_clicked[
+                                                                11][0]['0'] !=
+                                                            Provider.of<meal_calculate>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .drinkcollect
+                                                                .length) {
+                                                          context.read<meal_calculate>().adddrink(
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .drink[index]
+                                                                  .extraId,
+                                                              Provider.of<meal_calculate>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .drink[index]
+                                                                  .extraName);
+                                                          if (value.item_clicked[
+                                                                  11][0]['0'] ==
+                                                              value.drinkcollect
+                                                                  .length) {
+                                                            setState(() {
+                                                              check[check
+                                                                  .indexWhere((v) =>
+                                                                      v ==
+                                                                      check[
+                                                                          2])] = [
+                                                                0
+                                                              ];
+                                                            });
+                                                          }
+                                                        } else {
+                                                          SmartDialog.showToast(
+                                                              'You have added the max number of drink for this offer');
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.blue,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                  Container(
+                                    height: 130,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: drinkerror
+                                            ? Colors.red
+                                            : Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(.5),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: context
+                                            .watch<meal_calculate>()
+                                            .drinkcollect
+                                            .isEmpty
+                                        ? Center(
+                                            child: Text(
+                                              'Add Drink',
+                                              style: TextStyle(
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount: context
+                                                .watch<meal_calculate>()
+                                                .drinkcollect
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                height: 30,
+                                                width: 60,
+                                                margin: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        context
+                                                            .watch<
+                                                                meal_calculate>()
+                                                            .drinkcollect[index][1],
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        context
+                                                            .read<
+                                                                meal_calculate>()
+                                                            .removedrink(index);
+                                                        if (value.item_clicked[
+                                                                11][0]['0'] !=
+                                                            value.drinkcollect
+                                                                .length) {
+                                                          setState(() {
+                                                            check[check
+                                                                .indexWhere((v) =>
+                                                                    v ==
+                                                                    check[
+                                                                        2])] = [
+                                                              3
+                                                            ];
+                                                          });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: FittedBox(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                          'images/svg/cancel1.svg',
+                                                          color: Colors.red,
+                                                        )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                      ),
+                      Consumer<meal_calculate>(
+                          builder: (context, value, child) {
+                        return InkWell(
+                          onTap: () async {
+                            if (check[0][0] == 3) {
+                              setState(() {
+                                sideerror = true;
+                              });
+                            }
+                            if (check[1][0] == 3) {
+                              setState(() {
+                                fooderror = true;
+                              });
+                            }
+
+                            if (check[2][0] == 3) {
+                              setState(() {
+                                drinkerror = true;
+                              });
+                            }
+                            print(check);
+                            for (var i = 0; i < check.length; i++) {
+                              if (check[i][0] != 0) {
+                                setState(() {
+                                  error = true;
+                                  i = 3;
+                                });
+                              } else {
+                                setState(() {
+                                  error = false;
+                                });
+                              }
+                            }
+
+                            if (error == false) {
+                              await context.read<meal_calculate>().sendtocart();
+                              addprocess();
+                              if (value.status == 'success') {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: CustomeSnackbar(
+                                    topic: 'Great!',
+                                    msg: value.report,
+                                    color1:
+                                        const Color.fromARGB(255, 25, 107, 52),
+                                    color2:
+                                        const Color.fromARGB(255, 19, 95, 40),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                ));
+                              } else if (value.status == 'fail') {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: CustomeSnackbar(
+                                    topic: 'Oh Snap!',
+                                    msg: value.report,
+                                    color1:
+                                        const Color.fromARGB(255, 171, 51, 42),
+                                    color2:
+                                        const Color.fromARGB(255, 127, 39, 33),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                ));
+                              }
+                            } else {
+                              SmartDialog.showToast('Please add all Extras');
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 170,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: value.sendload
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Add To Cart',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                          ),
+                        );
+                      }),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  );
+                }),
               ),
             )
           ]),

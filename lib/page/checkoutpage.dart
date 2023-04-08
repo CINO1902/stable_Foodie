@@ -465,13 +465,16 @@ class _checkoutsubState extends State<checkoutsub> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5)),
-                                                child: Text(
-                                                  '-10%',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white),
-                                                  textAlign: TextAlign.center,
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    '-10%',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                 ),
                                               ),
                                             )

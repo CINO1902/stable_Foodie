@@ -101,7 +101,7 @@ class _fullsubhistoryState extends State<fullsubhistory> {
                       groupComparator: (DateTime value1, DateTime value2) =>
                           value2.compareTo(value1),
                       groupSeparatorBuilder: (DateTime date) {
-                        DateTime? currentdate = context.watch<greetings>().time;
+                        DateTime? currentdate =  context.watch<greetings>().time;
                         final day = date.hour;
                         final currentday = currentdate.hour;
                         String date1 = '';
@@ -160,7 +160,7 @@ class _fullsubhistoryState extends State<fullsubhistory> {
                                 element.ordernum,
                                 element.address,
                                 element.name,
-                                element.number,
+                                element.phone,
                                 element.email,
                                 element.location);
                           },
@@ -309,7 +309,7 @@ class _fullsubhistoryState extends State<fullsubhistory> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext context) {
           String datestring = date.toString();
-          DateTime? currentdate = context.watch<greetings>().time;
+          DateTime? currentdate =  context.watch<greetings>().time;
           final day = date.hour;
           final currentday = currentdate.hour;
           String date1 = '';

@@ -21,6 +21,8 @@ import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/linkfile/provider/mostcommon.dart';
 import 'package:foodie_ios/linkfile/provider/notification.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
+import 'package:foodie_ios/linkfile/provider/special_offer.dart';
+import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/linkfile/refresh.dart';
 import 'package:foodie_ios/onboarding.dart';
@@ -39,6 +41,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 
+import '../linkfile/Model/special_offer.dart';
+
 class home extends StatefulWidget {
   const home({super.key});
 
@@ -56,30 +60,30 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     super.initState();
     context.read<greetings>().gettim();
     context.read<getiItem>().getItem();
+    context.read<special_offer>().calloffer();
     context.read<checkstate>().getID();
-
-   context.read<notifications>().getnotification();
+    getslide();
 
     checkregistered();
   }
 
   List<Item> items = [];
+  List<Msg> data = [];
   String? token;
   //String? address;
   bool network = false;
   checkregistered() async {
     final prefs = await SharedPreferences.getInstance();
-   // context.read<checkcart>().checkcarts();
-    //context.read<checkcart>().checkcartforcart();
-    print(prefs.getInt('ID'));
+    context.read<checkcart>().checkcarts();
+    context.read<checkcart>().checkcartforcart();
+
     context.read<checkstate>().getaddress();
-    getslide();
+
     setState(() {
       token = prefs.getString("tokenregistered");
     });
 
     if (token != null) {
-      print('hey');
       context.read<checkstate>().getregisterdID();
       context.read<getmostcommon>().getcommon();
       context.read<getsubhistory>().getordersub();
@@ -370,14 +374,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                   }
                 }
               },
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.86,
                 height: 170,
-                // constraints: BoxConstraints(
-                //     minHeight: 100,
-                //     maxHeight: 150,
-                //     minWidth: MediaQuery.of(context).size.width * 0.9,
-                //     maxWidth: 400),
                 child: Card(
                   elevation: 2.7,
                   color: Colors.white,
@@ -607,7 +606,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child: CachedNetworkImage(
-                                          imageUrl: items[index].imageUrl ?? '',
+                                          imageUrl: items[index].imageUrl,
                                           fit: BoxFit.fill,
                                           errorWidget: (context, url, error) =>
                                               Icon(Icons.error),
@@ -626,7 +625,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 12),
                                       child: Text(
-                                        items[index].item ?? '',
+                                        items[index].item,
                                         style: const TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
@@ -681,8 +680,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                     }
                   }),
                   //second Tab
-                  Consumer<getiItem>(builder: (context, value, child) {
-                    if (value.data == false) {
+                  Consumer<special_offer>(builder: (context, value, child) {
+                    if (value.loading == true) {
                       return Center(
                         child: CircularProgressIndicator(
                           color: Theme.of(context).primaryColor,
@@ -702,7 +701,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                             ),
                             InkWell(
                               onTap: () async {
-                                await context.read<getiItem>().getItem();
+                                await context.read<special_offer>().calloffer();
                               },
                               child: Container(
                                 height: 30,
@@ -725,20 +724,22 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                         ),
                       );
                     } else {
-                      items = value.items
-                          .where((element) => element.extraable == false)
+                      data = value.data
+                          .where((element) =>
+                              element.availability == true ||
+                              element.remaining == true)
                           .toList();
 
                       return RefreshWidget(
                         control: control,
                         onRefresh: () async {
-                          await checkregistered();
+                          await context.read<special_offer>().calloffer();
                         },
                         child: ListView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           primary: Platform.isAndroid ? true : false,
-                          itemCount: items.length,
+                          itemCount: data.length,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
@@ -748,16 +749,25 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                         builder: (context) =>
                                             const Reviewspecial()));
                                 //  Navigator.pushNamed(context, '/review');
-                                context.read<calculatemeal>().itemclick(
-                                    items[index].item,
-                                    items[index].imageUrl,
-                                    int.parse(items[index].mincost),
-                                    int.parse(items[index].mincost),
-                                    items[index].itemId,
-                                    items[index].maxspoon);
-                                context
-                                    .read<getiItemExtra>()
-                                    .getItemExtra(items[index].itemId);
+                                context.read<meal_calculate>().itemclick(
+                                      data[index].offerName,
+                                      data[index].image,
+                                      data[index].description,
+                                      data[index].time,
+                                      data[index].value,
+                                      data[index].side,
+                                      data[index].food,
+                                      data[index].drink,
+                                      data[index].extras,
+                                      data[index].foodTras,
+                                      data[index].drinksTras,
+                                      data[index].offerId,
+                                      data[index].availability,
+                                      data[index].remainingvalue,
+                                    );
+                                // context
+                                //     .read<getiItemExtra>()
+                                //     .getItemExtra(items[index].itemId);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 20),
@@ -782,7 +792,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(15),
                                     child: CachedNetworkImage(
-                                      imageUrl: items[index].imageUrl ?? '',
+                                      imageUrl: data[index].image,
                                       fit: BoxFit.fill,
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
@@ -793,7 +803,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 5,
+                                    width: 10,
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -802,12 +812,18 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      Text(
-                                        'Big Boys Pack',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600),
+                                      SizedBox(
+                                        height: 20,
+                                        //width: 70,
+                                        child: FittedBox(
+                                          child: Text(
+                                            data[index].offerName,
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
                                       ),
                                       Container(
                                         height: 40,
@@ -815,7 +831,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                             MediaQuery.of(context).size.width *
                                                 0.55,
                                         child: Text(
-                                          'Big boys pack offers 6 value pack of carbs with a full bucket chicken and also four side',
+                                          data[index].description,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
                                           style: TextStyle(
@@ -832,7 +848,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '₦ 4700',
+                                              '₦ ${data[index].value.toString()}',
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.white,
@@ -874,7 +890,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                   //third tab
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(.1),
                         borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20))),

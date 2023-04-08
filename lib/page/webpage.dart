@@ -73,7 +73,7 @@ class _webpageState extends State<webpage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => verifyquickbuy(
-                            price: int.parse(widget.price),
+                            price: int.parse(widget.price.toString()),
                             ref: widget.ref,
                           )),
                   (Route<dynamic> route) => false);
@@ -123,7 +123,7 @@ class _webpageState extends State<webpage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => verifysuborder(
-                          price: int.parse(widget.price),
+                          price: int.parse(widget.price.toString()),
                           ref: widget.ref,
                         )),
                 (Route<dynamic> route) => false);
@@ -132,7 +132,7 @@ class _webpageState extends State<webpage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => verifyquickbuy(
-                          price: int.parse(widget.price),
+                          price: int.parse(widget.price.toString()),
                           ref: widget.ref,
                         )),
                 (Route<dynamic> route) => false);
