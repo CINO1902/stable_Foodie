@@ -14,6 +14,7 @@ class Register {
     this.lastname,
     this.email,
     this.phone,
+    this.referee,
     this.password,
   });
 
@@ -21,6 +22,7 @@ class Register {
   String? lastname;
   String? email;
   String? phone;
+  String? referee;
   String? password;
 
   factory Register.fromJson(Map<String, dynamic> json) => Register(
@@ -28,6 +30,7 @@ class Register {
         lastname: json["lastname"],
         email: json["email"],
         phone: json['phone'],
+         referee: json['referee'],
         password: json["password"],
       );
 
@@ -36,6 +39,7 @@ class Register {
         "lastname": lastname,
         "email": email,
         "phone":phone,
+        "referee":referee,
         "password": password,
       };
 }

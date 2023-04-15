@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_launcher_icons/ios.dart';
 import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -99,104 +100,191 @@ class _AccountState extends State<Account> {
                           bottom: false,
                           maintainBottomViewPadding: false,
                           child: Center(
-                            child: Column(
+                            child: Stack(
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: CircleAvatar(
-                                    radius: MediaQuery.of(context).size.height *
-                                        0.052,
-                                    child: SvgPicture.asset(
-                                        "images/svg/Vector-4.svg",
-                                        height: 45,
-                                        width: 45,
-                                        color: Theme.of(context)
-                                            .primaryColorLight),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Stack(
+                                          children: [
+                                            Text(
+                                              'Referal Code: ${context.watch<checkstate>().referal}',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Container(
+                                                height: 23,
+                                                width: 23,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.white,
+                                                ),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    await Clipboard.setData(
+                                                        ClipboardData(
+                                                            text: Provider.of<
+                                                                        checkstate>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .referal));
+                                                    _showToast();
+                                                    HapticFeedback
+                                                        .mediumImpact();
+                                                  },
+                                                  child: Icon(
+                                                    Icons.copy,
+                                                    color: Colors.grey,
+                                                    size: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                            'Members Refered: ${context.watch<checkstate>().numberrefer.toString()}')
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                Container(
-                                    // color: Colors.red,
-                                    margin: EdgeInsets.only(
-                                      // horizontal: MediaQuery.of(context).size.height * 0.01,
-                                      top: MediaQuery.of(context).size.width *
-                                          0.03,
-                                    ),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.029,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.95,
-                                    child: Text(
-                                      context.watch<checkstate>().firstname !=
-                                              ''
-                                          ? '${context.watch<checkstate>().firstname.capitalize()} ${context.watch<checkstate>().lastname.capitalize()}'
-                                          : '',
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 19),
-                                    )),
-                                context.watch<checkstate>().verified
-                                    ? Container(
-                                        height: 30,
-                                        width: 140,
-                                        padding: EdgeInsets.symmetric(
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SvgPicture.asset(
-                                                  'images/svg/Vector-5.svg'),
-                                              const Text('Verified User',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white)),
-                                            ],
-                                          ),
+                                        child: CircleAvatar(
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.052,
+                                          child: SvgPicture.asset(
+                                              "images/svg/Vector-4.svg",
+                                              height: 45,
+                                              width: 45,
+                                              color: Theme.of(context)
+                                                  .primaryColorLight),
                                         ),
-                                      )
-                                    : InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Otp(
-                                                        email: Provider.of<
-                                                                    checkstate>(
-                                                                context)
-                                                            .email,
-                                                      )));
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 120,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          decoration: BoxDecoration(
-                                              color: Colors.yellow,
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: const Text('Not Verified',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black)),
+                                      ),
+                                      Container(
+                                          // color: Colors.red,
+                                          margin: EdgeInsets.only(
+                                            // horizontal: MediaQuery.of(context).size.height * 0.01,
+                                            top: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.03,
                                           ),
-                                        ),
-                                      )
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.029,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.45,
+                                          child: Text(
+                                            context
+                                                        .watch<checkstate>()
+                                                        .firstname !=
+                                                    ''
+                                                ? '${context.watch<checkstate>().firstname.capitalize()} ${context.watch<checkstate>().lastname.capitalize()}'
+                                                : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 19),
+                                          )),
+                                      context.watch<checkstate>().verified
+                                          ? Container(
+                                              height: 30,
+                                              width: 140,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                        'images/svg/Vector-5.svg'),
+                                                    const Text('Verified User',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Otp(
+                                                              email: Provider.of<
+                                                                          checkstate>(
+                                                                      context)
+                                                                  .email,
+                                                            )));
+                                              },
+                                              child: Container(
+                                                height: 30,
+                                                width: 120,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.yellow,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: const Text(
+                                                      'Not Verified',
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black)),
+                                                ),
+                                              ),
+                                            )
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -575,6 +663,12 @@ class _AccountState extends State<Account> {
                       ),
                     ])),
               ));
+  }
+
+  void _showToast() async {
+    SmartDialog.showToast('Coppied to Clipboard',
+        displayType: SmartToastType.onlyRefresh);
+    await Future.delayed(Duration(milliseconds: 500));
   }
 
   whatsapp() async {

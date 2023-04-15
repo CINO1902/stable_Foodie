@@ -81,6 +81,7 @@ class addTocart extends ChangeNotifier {
     } else {
       ID = prefs.getInt("ID");
     }
+    print(prefs.getString('email'));
     CartModel cartdata = CartModel(
         id: ID.toString(),
         food: food,

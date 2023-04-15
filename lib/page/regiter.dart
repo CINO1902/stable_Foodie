@@ -23,6 +23,7 @@ class register extends StatefulWidget {
 
 class _registerState extends State<register> {
   String? pass;
+  String referee = '';
   String? confirmPass;
   bool visible = false;
   String? firstname;
@@ -41,10 +42,10 @@ class _registerState extends State<register> {
         lastname: lastname,
         email: email,
         phone: phone,
+        referee: referee,
         password: pass);
 
     try {
-      SmartDialog.showLoading();
       var response = await networkHandler.client.post(
           networkHandler.builderUrl('/register'),
           body: registerToJson(register),
@@ -60,9 +61,27 @@ class _registerState extends State<register> {
       print(decodedresponse);
     } catch (e) {
       print(e);
-    } finally {
-      SmartDialog.dismiss();
-    }
+    } finally {}
+  }
+
+  Future<void> checkreferal() async {
+    try {
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/checkreferal'),
+          body: jsonEncode(<String, String>{'referee': referee}),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          });
+
+      final decodedresponse = jsonDecode(response.body);
+      setState(() {
+        success = decodedresponse['success'];
+        msg = decodedresponse['msg'];
+      });
+      print(decodedresponse);
+    } catch (e) {
+      print(e);
+    } finally {}
   }
 
   bool network = false;
@@ -399,6 +418,11 @@ class _registerState extends State<register> {
                     Visibility(
                       visible: visible,
                       child: TextFormField(
+                        onChanged: (value) {
+                          setState(() {
+                            referee = value;
+                          });
+                        },
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
                             borderSide:
@@ -538,7 +562,29 @@ class _registerState extends State<register> {
   _sendToServer() async {
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
-      await register();
+      SmartDialog.showLoading();
+      if (referee != '') {
+        await checkreferal();
+        if (success == 'true') {
+          await register();
+        } else {
+          SmartDialog.dismiss();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomeSnackbar(
+              topic: 'Oh Snap!',
+              msg: msg,
+              color1: Color.fromARGB(255, 171, 51, 42),
+              color2: Color.fromARGB(255, 127, 39, 33),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
+        }
+      } else {
+        await register();
+      }
+
       if (success == 'false') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: CustomeSnackbar(
@@ -551,7 +597,7 @@ class _registerState extends State<register> {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ));
-      } else {
+      } else if (success == 'true') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: CustomeSnackbar(
             topic: 'Great!',
@@ -570,6 +616,7 @@ class _registerState extends State<register> {
                       email: email,
                     )));
       }
+      SmartDialog.dismiss();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: CustomeSnackbar(

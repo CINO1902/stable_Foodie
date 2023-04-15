@@ -58,6 +58,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     context.read<greetings>().gettim();
     context.read<getiItem>().getItem();
     context.read<special_offer>().calloffer();
@@ -142,6 +143,21 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
   }
 
   int index1 = 0;
+  double containtop = 50.0;
+  double secondcontaintop = 20;
+  changemargin() {
+    setState(() {
+      containtop = 0;
+      secondcontaintop = 0;
+    });
+  }
+
+  Timer? t;
+  runcode() {
+    t = Timer(Duration(milliseconds: 100), () {
+      changemargin();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,10 +192,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                   child: FittedBox(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      context
-                                                  .watch<checkstate>()
-                                                  .firstname
-                                                  .split(' ')[0] !=
+                                      context.watch<checkstate>().firstname !=
                                               ''
                                           ? 'Hello ${context.watch<checkstate>().firstname.split(' ')[0].capitalize()}'
                                           : '',
@@ -233,76 +246,74 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 35,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Theme.of(context).primaryColor,
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => addAddressper()));
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 35,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  child: Center(
+                                      child: SvgPicture.asset(
+                                    'images/svg/Group18.svg',
+                                    color: Colors.white,
+                                    width: 23,
+                                    height: 23,
+                                  )),
                                 ),
-                                child: Center(
-                                    child: SvgPicture.asset(
-                                  'images/svg/Group18.svg',
-                                  color: Colors.white,
-                                  width: 23,
-                                  height: 23,
-                                )),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Container(
-                                constraints: BoxConstraints(
-                                    minWidth: 50,
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                            0.35),
-                                child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  addAddressper()));
-                                    },
-                                    child: token != null
-                                        ? context
-                                                .watch<checkstate>()
-                                                .checkaddress()
-                                            ? SizedBox(
-                                                child: Text(
-                                                  context
-                                                      .watch<checkstate>()
-                                                      .address,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(),
-                                                ),
-                                              )
-                                            : Text(
-                                                'Set Location',
-                                              )
-                                        : context
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: 50,
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.35),
+                                  child: token != null
+                                      ? context
+                                              .watch<checkstate>()
+                                              .checkaddress()
+                                          ? SizedBox(
+                                              child: Text(
+                                                context
                                                     .watch<checkstate>()
-                                                    .notloggedaddress !=
-                                                ''
-                                            ? SizedBox(
-                                                child: Text(
-                                                  context
-                                                      .watch<checkstate>()
-                                                      .notloggedaddress,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(),
-                                                ),
-                                              )
-                                            : Text(
-                                                'Set Location',
-                                              )),
-                              )
-                            ],
+                                                    .address,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(),
+                                              ),
+                                            )
+                                          : Text(
+                                              'Set Location',
+                                            )
+                                      : context
+                                                  .watch<checkstate>()
+                                                  .notloggedaddress !=
+                                              ''
+                                          ? SizedBox(
+                                              child: Text(
+                                                context
+                                                    .watch<checkstate>()
+                                                    .notloggedaddress,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(),
+                                              ),
+                                            )
+                                          : Text(
+                                              'Set Location',
+                                            ),
+                                )
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 10,
@@ -471,6 +482,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                   shape: const StadiumBorder(),
                   onPressed: () {
                     controller.animateTo(2);
+                    runcode();
                   },
                   label: Text(
                     "Recommended",
@@ -748,7 +760,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const Reviewspecial()));
-                                //  Navigator.pushNamed(context, '/review');
+
                                 context.read<meal_calculate>().itemclick(
                                       data[index].offerName,
                                       data[index].image,
@@ -765,9 +777,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       data[index].availability,
                                       data[index].remainingvalue,
                                     );
-                                // context
-                                //     .read<getiItemExtra>()
-                                //     .getItemExtra(items[index].itemId);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 20),
@@ -894,83 +903,37 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20))),
                     child: Consumer<getiItem>(builder: (context, value, child) {
-                      if (value.data == false) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        );
-                      } else if (value.error == true) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Something Went wrong',
-                                style: TextStyle(fontSize: 17),
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AnimatedContainer(
+                              duration: Duration(milliseconds: 800),
+                              margin: EdgeInsets.only(top: containtop),
+                              child: Text(
+                                'Recomendation is not yet Available',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              InkWell(
-                                onTap: () async {
-                                  await context.read<getiItem>().getItem();
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Retry",
-                                        style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 63, 63, 63),
-                                            fontSize: 18),
-                                      )),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            AnimatedContainer(
+                              duration: Duration(milliseconds: 900),
+                              margin: EdgeInsets.only(top: secondcontaintop),
+                              child: Text(
+                                "We would let you know \n when it's ready",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 17,
                                 ),
                               ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        items = value.items
-                            .where((element) => element.extraable == false)
-                            .toList();
-
-                        return RefreshWidget(
-                            control: control,
-                            onRefresh: () async {
-                              await checkregistered();
-                            },
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Recomendation is not yet Available',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "We would let you know \n when it's ready",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ));
-                      }
+                            )
+                          ],
+                        ),
+                      );
                     }),
                   ),
                 ],

@@ -32,6 +32,7 @@ class _cartState extends State<cart> {
   String msg1 = '';
   String success = '';
   bool network = false;
+  List delete = [];
 
   late StreamSubscription subscription;
   @override
@@ -90,6 +91,7 @@ class _cartState extends State<cart> {
 
   @override
   Widget build(BuildContext context) {
+    print(delete);
     if (Provider.of<ConnectivityStatus>(context) ==
         ConnectivityStatus.Offline) {
       showoverlay();
@@ -215,7 +217,13 @@ class _cartState extends State<cart> {
                                             listen: false)
                                         .loading !=
                                     true) {
-                                  Navigator.pushNamed(context, '/confirmorder');
+                                  if (delete.isEmpty) {
+                                    Navigator.pushNamed(
+                                        context, '/confirmorder');
+                                  } else {
+                                    SmartDialog.showToast(
+                                        'Please delete the marked item');
+                                  }
                                 } else {
                                   SmartDialog.showToast('System is still busy');
                                 }
@@ -274,7 +282,40 @@ class _cartState extends State<cart> {
   }
 
   Widget Cartbox(BuildContext context, checkcart value, int indexx, cart, image,
-      multiple, food, extra, amount, total, cartresults) {
+      multiple, food, extra, amount, total, List<Pagnited> cartresults) {
+    var date = cartresults[indexx].date;
+    var currentdate = DateTime.now();
+    Duration diff = currentdate.difference(date);
+    int difference = 300 - diff.inSeconds;
+    int hour = diff.inSeconds ~/ 60;
+    if (hour > 4) {
+      delete.removeWhere((element) => element == cartresults[indexx].packageid);
+      delete.add(cartresults[indexx].packageid);
+    }
+
+    String cancel() {
+      String minute = '';
+      String seconds = '';
+
+      if (hour == 0) {
+        minute = '4';
+        seconds = (difference - (4 * 60) - 1).toString();
+      } else if (hour == 1) {
+        minute = '3';
+        seconds = (difference - (3 * 60) - 1).toString();
+      } else if (hour == 2) {
+        minute = '2';
+        seconds = (difference - (2 * 60) - 1).toString();
+      } else if (hour == 3) {
+        minute = '1';
+        seconds = (difference - (1 * 60) - 1).toString();
+      } else if (hour == 4) {
+        minute = '0';
+        seconds = (difference - (0 * 60) - 1).toString();
+      }
+      return '${minute.padLeft(2, '0')} : ${seconds.padLeft(2, '0')}';
+    }
+
     return Container(
       margin: const EdgeInsets.all(10),
       width: double.infinity,
@@ -316,7 +357,7 @@ class _cartState extends State<cart> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: CachedNetworkImage(
-                                imageUrl: cartresults[indexx].image ?? '',
+                                imageUrl: cartresults[indexx].image,
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
@@ -391,7 +432,7 @@ class _cartState extends State<cart> {
                                 ]),
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.18,
+                            width: MediaQuery.of(context).size.width * 0.15,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -434,8 +475,8 @@ class _cartState extends State<cart> {
                       child: Container(
                         height: 20,
                         margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.27),
-                        width: MediaQuery.of(context).size.width * 0.5,
+                            left: MediaQuery.of(context).size.width * 0.29),
+                        width: MediaQuery.of(context).size.width * 0.53,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -452,42 +493,72 @@ class _cartState extends State<cart> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () async {
-                  await removecart(cartresults[indexx].packageid.toString());
-                  if (success == 'success') {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: CustomeSnackbar(
-                        topic: 'Great!',
-                        msg: msg1,
-                        color1: const Color.fromARGB(255, 25, 107, 52),
-                        color2: const Color.fromARGB(255, 19, 95, 40),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await removecart(
+                          cartresults[indexx].packageid.toString());
+                      delete.removeWhere((element) =>
+                          element == cartresults[indexx].packageid);
+                      if (success == 'success') {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: CustomeSnackbar(
+                            topic: 'Great!',
+                            msg: msg1,
+                            color1: const Color.fromARGB(255, 25, 107, 52),
+                            color2: const Color.fromARGB(255, 19, 95, 40),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: CustomeSnackbar(
+                            topic: 'Oh Snap!',
+                            msg: msg1,
+                            color1: const Color.fromARGB(255, 171, 51, 42),
+                            color2: const Color.fromARGB(255, 127, 39, 33),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ));
+                      }
+                    },
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.red,
                       ),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: CustomeSnackbar(
-                        topic: 'Oh Snap!',
-                        msg: msg1,
-                        color1: const Color.fromARGB(255, 171, 51, 42),
-                        color2: const Color.fromARGB(255, 127, 39, 33),
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ));
-                  }
-                },
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.red,
+                    ),
                   ),
-                ),
+                  delete.contains(cartresults[indexx].packageid)
+                      ? Container(
+                          width: 20,
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: const Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: 35,
+                          height: 20,
+                          margin: EdgeInsets.only(bottom: 5, right: 3),
+                          child: FittedBox(
+                            child: Text(
+                              cancel(),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ))
+                ],
               )
             ],
           ),
@@ -498,6 +569,38 @@ class _cartState extends State<cart> {
 
   Widget Cartbox2(BuildContext context, checkcart value, int indexx, cart,
       image, multiple, food, extra, amount, total, List<Pagnited> cartresults) {
+    var date = cartresults[indexx].date;
+    var currentdate = DateTime.now();
+    Duration diff = currentdate.difference(date);
+    int difference = 300 - diff.inSeconds;
+    int hour = diff.inSeconds ~/ 60;
+    if (hour > 4) {
+      delete.add(cartresults[indexx].packageid);
+    }
+
+    String cancel() {
+      String minute = '';
+      String seconds = '';
+
+      if (hour == 0) {
+        minute = '4';
+        seconds = (difference - (4 * 60) - 1).toString();
+      } else if (hour == 1) {
+        minute = '3';
+        seconds = (difference - (3 * 60) - 1).toString();
+      } else if (hour == 2) {
+        minute = '2';
+        seconds = (difference - (2 * 60) - 1).toString();
+      } else if (hour == 3) {
+        minute = '1';
+        seconds = (difference - (1 * 60) - 1).toString();
+      } else if (hour == 4) {
+        minute = '0';
+        seconds = (difference - (0 * 60) - 1).toString();
+      }
+      return '${minute.padLeft(2, '0')} : ${seconds.padLeft(2, '0')}';
+    }
+
     return Container(
       margin: const EdgeInsets.all(10),
       width: double.infinity,
@@ -732,43 +835,71 @@ class _cartState extends State<cart> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () async {
-                  await removecartspecial(
-                      cartresults[indexx].packageid.toString());
-                  if (success == 'success') {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: CustomeSnackbar(
-                        topic: 'Great!',
-                        msg: msg1,
-                        color1: const Color.fromARGB(255, 25, 107, 52),
-                        color2: const Color.fromARGB(255, 19, 95, 40),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await removecartspecial(
+                          cartresults[indexx].packageid.toString());
+                      delete.removeWhere((element) =>
+                          element == cartresults[indexx].packageid);
+                      if (success == 'success') {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: CustomeSnackbar(
+                            topic: 'Great!',
+                            msg: msg1,
+                            color1: const Color.fromARGB(255, 25, 107, 52),
+                            color2: const Color.fromARGB(255, 19, 95, 40),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: CustomeSnackbar(
+                            topic: 'Oh Snap!',
+                            msg: msg1,
+                            color1: const Color.fromARGB(255, 171, 51, 42),
+                            color2: const Color.fromARGB(255, 127, 39, 33),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ));
+                      }
+                    },
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.red,
                       ),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: CustomeSnackbar(
-                        topic: 'Oh Snap!',
-                        msg: msg1,
-                        color1: const Color.fromARGB(255, 171, 51, 42),
-                        color2: const Color.fromARGB(255, 127, 39, 33),
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ));
-                  }
-                },
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.red,
+                    ),
                   ),
-                ),
+                  delete.contains(cartresults[indexx].packageid)
+                      ? Container(
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: const Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: 35,
+                          height: 20,
+                          margin: EdgeInsets.only(bottom: 5, right: 3),
+                          child: FittedBox(
+                            child: Text(
+                              cancel(),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ))
+                ],
               )
             ],
           ),

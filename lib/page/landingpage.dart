@@ -9,6 +9,7 @@ import 'package:foodie_ios/page/home.dart';
 import 'package:foodie_ios/page/order.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:foodie_ios/page/subscription.dart';
+import 'package:foodie_ios/page/subscription2.dart';
 import 'package:provider/provider.dart';
 
 class homelanding extends StatefulWidget {
@@ -31,7 +32,7 @@ class _homelandingState extends State<homelanding> {
 
   static const screens = [
     home(),
-    subscription(),
+    subcription2(),
     Order(),
     Account(),
   ];

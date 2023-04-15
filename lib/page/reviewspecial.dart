@@ -183,8 +183,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                     child: Container(
                       height: 30,
                       width: 30,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 1)),
+                      // decoration: BoxDecoration(border: Border.all(width: 1)),
                       child: Icon(
                         Icons.remove,
                         color: Colors.white,
@@ -229,8 +228,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                     child: Container(
                       height: 30,
                       width: 30,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 1)),
+                      // decoration: BoxDecoration(border: Border.all(width: 1)),
                       child: Icon(Icons.add, color: Colors.white),
                     ),
                   ),
@@ -299,7 +297,10 @@ class _ReviewspecialState extends State<Reviewspecial> {
                       ),
                       Row(
                         children: [
-                          SvgPicture.asset('images/svg/Vector-9.svg'),
+                          SvgPicture.asset(
+                            'images/svg/Vector-9.svg',
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                           SizedBox(
                             width: 10,
                           ),
@@ -323,7 +324,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .primaryColor
-                                            .withOpacity(.5),
+                                            .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -575,7 +576,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                             ? Colors.red
                                             : Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(.5),
+                                                .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -693,7 +694,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .primaryColor
-                                            .withOpacity(.5),
+                                            .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -866,7 +867,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                             ? Colors.red
                                             : Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(.5),
+                                                .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -984,7 +985,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .primaryColor
-                                            .withOpacity(.5),
+                                            .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -1157,7 +1158,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                             ? Colors.red
                                             : Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(.5),
+                                                .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: context
@@ -1282,7 +1283,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                 drinkerror = true;
                               });
                             }
-                            print(check);
+
                             for (var i = 0; i < check.length; i++) {
                               if (check[i][0] != 0) {
                                 setState(() {
@@ -1352,6 +1353,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                     child: Text(
                                       'Add To Cart',
                                       style: TextStyle(
+                                          color: Colors.white,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     )),

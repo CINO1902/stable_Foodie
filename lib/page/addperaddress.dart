@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
@@ -22,9 +23,9 @@ class addAddressper extends StatefulWidget {
 }
 
 class _addAddressperState extends State<addAddressper> {
-  String? fullname;
+  String fullname = '';
   String phone = '';
-  String? email;
+  String email = '';
   String address = '';
   late FixedExtentScrollController _scrollController;
   late TextEditingController _controller;
@@ -88,6 +89,7 @@ class _addAddressperState extends State<addAddressper> {
     } else {
       SmartDialog.dismiss(tag: 'network');
     }
+    print(context.watch<checkstate>().notloggedname);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
@@ -134,8 +136,9 @@ class _addAddressperState extends State<addAddressper> {
                                 namechange = true;
                               });
                             },
-                            initialValue:
-                                '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}',
+                            initialValue: token == null
+                                ? context.watch<checkstate>().notloggedname
+                                : '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}',
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -180,7 +183,9 @@ class _addAddressperState extends State<addAddressper> {
                             phonechange = true;
                           });
                         },
-                        initialValue: context.watch<checkstate>().phone,
+                        initialValue: token == null
+                            ? context.watch<checkstate>().notloggednumber
+                            : context.watch<checkstate>().phone,
                         keyboardType: TextInputType.number,
                         validator: _validatephone,
                         decoration: InputDecoration(
@@ -228,8 +233,11 @@ class _addAddressperState extends State<addAddressper> {
                                       email = value;
                                     });
                                   },
-                                  initialValue:
-                                      context.watch<checkstate>().email,
+                                  initialValue: token == null
+                                      ? context
+                                          .watch<checkstate>()
+                                          .notloggedemail
+                                      : context.watch<checkstate>().email,
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _validateEmail,
                                   decoration: InputDecoration(
@@ -400,7 +408,9 @@ class _addAddressperState extends State<addAddressper> {
                             addresschange = true;
                           });
                         },
-                        initialValue: context.watch<checkstate>().address,
+                        initialValue: token == null
+                            ? context.watch<checkstate>().notloggedaddress
+                            : context.watch<checkstate>().address,
                         validator: _validateaddress,
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
@@ -487,8 +497,10 @@ class _addAddressperState extends State<addAddressper> {
 
                                         await context
                                             .read<checkstate>()
-                                            .changeadress(phoneget(),
-                                                items[index], addressget());
+                                            .changeadress(
+                                                phoneget(),
+                                                items[index],
+                                                addressget().trim());
 
                                         if (value.success == true) {
                                           ScaffoldMessenger.of(context)
@@ -531,10 +543,10 @@ class _addAddressperState extends State<addAddressper> {
                                         }
                                       } else if (token == null) {
                                         context.read<checkstate>().saveaddress(
-                                            address,
-                                            email,
-                                            phone,
-                                            fullname,
+                                            address.trim(),
+                                            email.trim(),
+                                            phone.trim(),
+                                            fullname.trim(),
                                             items[index]);
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(

@@ -18,6 +18,7 @@ class checkstate with ChangeNotifier {
   String lastname = '';
   String referal = '';
   String address = '';
+  int numberrefer = 0;
   String phone = '';
   String location = '';
   String? token;
@@ -98,7 +99,7 @@ class checkstate with ChangeNotifier {
         });
 
         final data = jsonDecode(response.body);
-
+        print(data);
         email = data['email'];
 
         firstname = data['firstname'];
@@ -108,6 +109,8 @@ class checkstate with ChangeNotifier {
         address = data['address'];
         phone = data['phone'];
         location = data['location'];
+        numberrefer = data['numberrefer'];
+        print(numberrefer);
         final subscribe = data['subscribed'];
 
         prefs.setBool('subscribed', subscribe);

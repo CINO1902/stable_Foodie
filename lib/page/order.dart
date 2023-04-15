@@ -828,12 +828,15 @@ class _OrderState extends State<Order> {
                                                       .watch<checkcart>()
                                                       .itemsquote[indexed]
                                                       .contains(2)
-                                                  ? Colors.green
+                                                  ? Color.fromARGB(
+                                                          255, 171, 122, 82)
+                                                      .withOpacity(.5)
                                                   : context
                                                           .watch<checkcart>()
                                                           .itemsquote[indexed]
                                                           .contains(3)
-                                                      ? Colors.purple
+                                                      ? Colors.green
+                                                          .withOpacity(.5)
                                                       : context
                                                               .watch<
                                                                   checkcart>()
@@ -841,6 +844,7 @@ class _OrderState extends State<Order> {
                                                                   indexed]
                                                               .contains(4)
                                                           ? Colors.red
+                                                              .withOpacity(.5)
                                                           : Colors.black,
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -868,7 +872,7 @@ class _OrderState extends State<Order> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         color: Color.fromARGB(
-                                                            255, 45, 251, 134),
+                                                            255, 251, 186, 45),
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -878,7 +882,7 @@ class _OrderState extends State<Order> {
                                                           .itemsquote[indexed]
                                                           .contains(3)
                                                       ? const Text(
-                                                          'Delivered',
+                                                          'Sent Out',
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(

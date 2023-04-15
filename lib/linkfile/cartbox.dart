@@ -7,6 +7,38 @@ import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 
 Widget Cartbox(BuildContext context, checkcart value, int indexx, cart, image,
     multiple, food, extra, amount, total, cartresults) {
+      var date = cartresults[indexx].date;
+    var currentdate = DateTime.now();
+    Duration diff = currentdate.difference(date);
+    int difference = 300 - diff.inSeconds;
+    int hour = diff.inSeconds ~/ 60;
+    if (hour > 4) {
+      //delete.add(cartresults[indexx].packageid);
+    }
+
+    String cancel() {
+      String minute = '';
+      String seconds = '';
+
+      if (hour == 0) {
+        minute = '4';
+        seconds = (difference - (4 * 60) - 1).toString();
+      } else if (hour == 1) {
+        minute = '3';
+        seconds = (difference - (3 * 60) - 1).toString();
+      } else if (hour == 2) {
+        minute = '2';
+        seconds = (difference - (2 * 60) - 1).toString();
+      } else if (hour == 3) {
+        minute = '1';
+        seconds = (difference - (1 * 60) - 1).toString();
+      } else if (hour == 4) {
+        minute = '0';
+        seconds = (difference - (0 * 60) - 1).toString();
+      }
+      return '$minute : $seconds';
+    }
+
   return Container(
     margin: const EdgeInsets.only(top: 10),
     width: double.infinity,

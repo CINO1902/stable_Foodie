@@ -4,7 +4,10 @@ import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/Model/requestotp.dart';
+import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/page/verifyquickbuy.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class webpage extends StatefulWidget {
@@ -33,6 +36,7 @@ class _webpageState extends State<webpage> {
     super.initState();
     getcontroller();
     runcode();
+    checkregistered();
   }
 
   Future<void> getcontroller() async {
@@ -138,6 +142,7 @@ class _webpageState extends State<webpage> {
                 (Route<dynamic> route) => false);
           }
         } else if (msg == 'failed') {
+          await unmarkpaid();
           SmartDialog.showToast('Something went wrong');
           Navigator.pushNamedAndRemoveUntil(
               context, '/landingpage', (Route<dynamic> route) => false);
@@ -152,6 +157,42 @@ class _webpageState extends State<webpage> {
     } finally {
       runcode();
     }
+  }
+
+  String? token;
+  checkregistered() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      token = prefs.getString("tokenregistered");
+    });
+  }
+
+  Future<void> unmarkpaid() async {
+    try {
+      var response = await networkHandler.client
+          .post(networkHandler.builderUrl('/unmarkpaid'),
+              body: jsonEncode(<String, String>{
+                'id': token != null
+                    ? Provider.of<checkstate>(context, listen: false).email
+                    : '${Provider.of<checkstate>(context, listen: false).ID}'
+              }),
+              headers: {
+            'content-Type': 'application/json; charset=UTF-8',
+          });
+      final decodedres = jsonDecode(response.body);
+
+      String successmark = decodedres['status'];
+
+      if (successmark == 'success') {
+      } else if (successmark == 'fail') {
+        SmartDialog.showToast('Something went wrong');
+      }
+
+      // print(decodedres);
+    } catch (e) {
+      print(e);
+    } finally {}
   }
 
   @override

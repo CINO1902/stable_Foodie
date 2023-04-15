@@ -89,6 +89,7 @@ class _addAddressState extends State<addAddress> {
     } else {
       SmartDialog.dismiss(tag: 'network');
     }
+    print(context.watch<checkcart>().fullname);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
@@ -135,10 +136,7 @@ class _addAddressState extends State<addAddress> {
                                 namechange = true;
                               });
                             },
-                            initialValue: context.watch<checkcart>().fullname ==
-                                    ''
-                                ? '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}'
-                                : context.watch<checkcart>().fullname,
+                            initialValue: context.watch<checkcart>().fullname,
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -183,9 +181,7 @@ class _addAddressState extends State<addAddress> {
                             phonechange = true;
                           });
                         },
-                        initialValue: context.watch<checkcart>().fullname == ''
-                            ? '${context.watch<checkstate>().phone}'
-                            : context.watch<checkcart>().number,
+                        initialValue: context.watch<checkcart>().number,
                         keyboardType: TextInputType.number,
                         validator: _validatephone,
                         decoration: InputDecoration(
@@ -233,6 +229,11 @@ class _addAddressState extends State<addAddress> {
                                       email = value;
                                     });
                                   },
+                                  initialValue: token == null
+                                      ? context
+                                          .watch<checkstate>()
+                                          .notloggedemail
+                                      : context.watch<checkstate>().email,
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _validateEmail,
                                   decoration: InputDecoration(
@@ -403,9 +404,7 @@ class _addAddressState extends State<addAddress> {
                             addresschange = true;
                           });
                         },
-                        initialValue: context.watch<checkcart>().fullname == ''
-                            ? '${context.watch<checkstate>().address}'
-                            : context.watch<checkcart>().address,
+                        initialValue: context.watch<checkcart>().address,
                         validator: _validateaddress,
                         decoration: InputDecoration(
                           errorBorder: const OutlineInputBorder(
@@ -492,145 +491,52 @@ class _addAddressState extends State<addAddress> {
                                     if (_key4.currentState!.validate()) {
                                       _key4.currentState!.save();
 
-                                      if (token != null &&
-                                          value.address == '') {
-                                        SmartDialog.showLoading();
-                                        String phoneget() {
-                                          String value = '';
-                                          if (phonechange == true) {
-                                            value = phone;
-                                          } else {
-                                            value = Provider.of<checkstate>(
-                                                    context,
-                                                    listen: false)
-                                                .phone;
-                                          }
-                                          return value;
+                                      String phoneget() {
+                                        String value = '';
+                                        if (phonechange == true) {
+                                          value = phone;
+                                        } else {
+                                          value = Provider.of<checkcart>(
+                                                  context,
+                                                  listen: false)
+                                              .number;
                                         }
-
-                                        await context
-                                            .read<checkstate>()
-                                            .changeadress(phoneget(),
-                                                items[index], address);
-
-                                        if (value.success == true) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: CustomeSnackbar(
-                                              topic: 'Great!',
-                                              msg: value.msg,
-                                              color1: const Color.fromARGB(
-                                                  255, 25, 107, 52),
-                                              color2: const Color.fromARGB(
-                                                  255, 19, 95, 40),
-                                            ),
-                                            behavior: SnackBarBehavior.floating,
-                                            backgroundColor: Colors.transparent,
-                                            elevation: 0,
-                                          ));
-                                        } else if (value.success == false) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: CustomeSnackbar(
-                                              topic: 'Oh Snap!',
-                                              msg: value.msg,
-                                              color1: const Color.fromARGB(
-                                                  255, 171, 51, 42),
-                                              color2: const Color.fromARGB(
-                                                  255, 127, 39, 33),
-                                            ),
-                                            behavior: SnackBarBehavior.floating,
-                                            backgroundColor: Colors.transparent,
-                                            elevation: 0,
-                                          ));
-                                        }
-                                        SmartDialog.dismiss();
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute<void>(
-                                              builder: (BuildContext context) =>
-                                                  const homelanding(),
-                                            ),
-                                            (Route<dynamic> route) => false);
-                                      } else if (token == null &&
-                                          value.notloggedaddress == '') {
-                                        context.read<checkstate>().saveaddress(
-                                            address,
-                                            email,
-                                            phone,
-                                            fullname,
-                                            items[index]);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: CustomeSnackbar(
-                                            topic: 'Great!',
-                                            msg: 'Saved successfully',
-                                            color1: const Color.fromARGB(
-                                                255, 25, 107, 52),
-                                            color2: const Color.fromARGB(
-                                                255, 19, 95, 40),
-                                          ),
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: Colors.transparent,
-                                          elevation: 0,
-                                        ));
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute<void>(
-                                              builder: (BuildContext context) =>
-                                                  const homelanding(),
-                                            ),
-                                            (Route<dynamic> route) => false);
-                                      } else {
-                                        String phoneget() {
-                                          String value = '';
-                                          if (phonechange == true) {
-                                            value = phone;
-                                          } else {
-                                            value = Provider.of<checkcart>(
-                                                    context,
-                                                    listen: false)
-                                                .number;
-                                          }
-                                          return value;
-                                        }
-
-                                        String addressget() {
-                                          String value = '';
-                                          if (addresschange == true) {
-                                            value = address;
-                                          } else {
-                                            value = Provider.of<checkcart>(
-                                                    context,
-                                                    listen: false)
-                                                .address;
-                                          }
-                                          return value;
-                                        }
-
-                                        String nameget() {
-                                          String value = '';
-                                          if (addresschange == true) {
-                                            value = fullname;
-                                          } else {
-                                            value = Provider.of<checkcart>(
-                                                    context,
-                                                    listen: false)
-                                                .fullname;
-                                          }
-                                          return value;
-                                        }
-
-                                        context
-                                            .read<checkcart>()
-                                            .gettempaddress(
-                                                nameget(),
-                                                phoneget(),
-                                                addressget(),
-                                                items[index]);
-                                        context.read<checkcart>().locationa();
-                                        Navigator.pop(context);
+                                        return value;
                                       }
+
+                                      String addressget() {
+                                        String value = '';
+                                        if (addresschange == true) {
+                                          value = address;
+                                        } else {
+                                          value = Provider.of<checkcart>(
+                                                  context,
+                                                  listen: false)
+                                              .address;
+                                        }
+                                        return value;
+                                      }
+
+                                      String nameget() {
+                                        String value = '';
+                                        if (addresschange == true) {
+                                          value = fullname;
+                                        } else {
+                                          value = Provider.of<checkcart>(
+                                                  context,
+                                                  listen: false)
+                                              .fullname;
+                                        }
+                                        return value;
+                                      }
+
+                                      context.read<checkcart>().gettempaddress(
+                                          nameget().trim(),
+                                          phoneget().trim(),
+                                          addressget().trim(),
+                                          items[index]);
+                                      context.read<checkcart>().locationa();
+                                      Navigator.pop(context);
                                     }
                                   },
                                   child: Text(

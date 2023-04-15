@@ -17,6 +17,7 @@ class checkcart extends ChangeNotifier {
   List sumadd = [];
   bool loaded = false;
   List getTotal = [];
+  int totalcartcall = 0;
   Timer? t;
   int sumget = 0;
   double moneytopay = 0.00;
@@ -276,6 +277,18 @@ class checkcart extends ChangeNotifier {
         cartresult =
             fetchresult.where((element) => element.order == false).toList();
       }
+      List multiadd = [];
+      for (var i = 0; i < cartresult.length; i++) {
+        if (cartresult[i].multiple.runtimeType == String) {
+          multiadd.add(int.parse(cartresult[i].multiple));
+        } else {
+          multiadd.add(cartresult[i].multiple);
+        }
+      }
+      if (multiadd.isNotEmpty) {
+        final limitcart = multiadd.reduce((a, b) => a + b);
+        totalcartcall = ((limitcart / 5) + 1).floor();
+      }
 
       checkempty();
       totalcart();
@@ -326,7 +339,7 @@ class checkcart extends ChangeNotifier {
           });
 
       final data = jsonDecode(response.body);
-      delivery = data['msg'];
+      delivery = data['msg'] * totalcartcall;
       moneytopay = (sumget + delivery).toDouble();
       stringmoney = moneytopay.toString();
     } catch (e) {
@@ -357,7 +370,7 @@ class checkcart extends ChangeNotifier {
   }
 
   Future<void> verifycoupon(code) async {
-    moneytopay = (sumget + delivery).toDouble();
+    moneytopay = (sumget + (delivery * totalcartcall)).toDouble();
     stringmoney = moneytopay.toString();
     try {
       loading = true;

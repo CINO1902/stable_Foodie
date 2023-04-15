@@ -266,7 +266,7 @@ class _OtpState extends State<Otp> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            print(currentText);
+                           
                             sendToserver();
                           },
                           style: ButtonStyle(

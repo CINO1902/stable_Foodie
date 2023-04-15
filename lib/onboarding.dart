@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -79,21 +80,21 @@ class _onBoardingState extends State<onBoarding> {
               children: const [
                 buildPage2(
                   title: "EAT MORE AND SAVE MORE",
-                  getImage: "images/logo.png",
+                  getImage: "images/svg/food.svg",
                   subText:
-                      "With our subscription plan, foodie gives you the opportunity to eat enough without spending much",
+                      "Foodie provides you with various reward when you order a meal",
                 ),
                 buildPage2(
-                  title: "MANAGE & ARRANGE HOW YOU EAT",
-                  getImage: "images/logo.png",
+                  title: "Swift Delivery",
+                  getImage: "images/svg/delivery.svg",
                   subText:
-                      "Foodie gives vairiety options of foods that will be best for your health",
+                      "Enjoy fast delivery with status update on the processing of your meal",
                 ),
                 buildPage2(
-                  title: "MANAGE YOUR NOTIFICATION",
-                  getImage: "images/logo.png",
+                  title: "Easy Payment",
+                  getImage: "images/svg/payment.svg",
                   subText:
-                      "Allow foodie send you notification so you can see incoming messages.",
+                      "With the intergration of PayStack, enjoy quick and trusted payment with any method of your choice",
                 ),
               ],
             ),
@@ -153,7 +154,11 @@ class _onBoardingState extends State<onBoarding> {
                   islastPage
                       ? ElevatedButton(
                           onPressed: () async {
-                            performmagic();
+                            if (loading == true) {
+                              SmartDialog.showToast('system is busy');
+                            } else {
+                              performmagic();
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -168,7 +173,10 @@ class _onBoardingState extends State<onBoarding> {
                                     color: Theme.of(context).primaryColor,
                                     backgroundColor: Colors.white,
                                   ))
-                              : const Text("Get Started"),
+                              : const Text(
+                                  "Get Started",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                         )
                       : ElevatedButton(
                           onPressed: () {
@@ -219,7 +227,8 @@ class _onBoardingState extends State<onBoarding> {
         elevation: 0,
       ));
       context.read<checkstate>().gethome(token);
-      Navigator.pushNamedAndRemoveUntil(context, '/landingpage', (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/landingpage', (Route<dynamic> route) => false);
     }
   }
 }
@@ -257,8 +266,9 @@ class buildPage2 extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.20,
                       width: MediaQuery.of(context).size.height * 0.6,
                       //color: Colors.blue,
-                      child: Image.asset(
+                      child: SvgPicture.asset(
                         getImage,
+                        color: Theme.of(context).primaryColorDark,
 
                         //height: MediaQuery.of(context).size.height * 0.25,
                         //width: MediaQuery.of(context).size.width * 1.5,
