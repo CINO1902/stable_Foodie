@@ -49,7 +49,6 @@ class addTocart extends ChangeNotifier {
 
     cartList.addAll(cart);
 
-    sendcart();
     notifyListeners();
   }
 
@@ -105,11 +104,12 @@ class addTocart extends ChangeNotifier {
       waitresponse = true;
       notifyListeners();
     } catch (e) {
+      success == 'false';
       print(e);
     } finally {
       loading = false;
       buynow = true;
-      success == 'falsex';
+
       waitresponse = false;
     }
     notifyListeners();

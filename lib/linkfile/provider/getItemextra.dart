@@ -57,7 +57,7 @@ class getiItemExtra extends ChangeNotifier {
       notifyListeners();
       ExtrasModelFetch fetch = ExtrasModelFetch(id: id);
       var response = await dio.post(
-          'https://faithful-beanie-lamb.cyclic.app/route/getItemsExtra',
+          'https://foodie1902.herokuapp.com/route/getItemsExtra',
           data: extrasModelFetchToJson(fetch),
           options: Options(
               headers: {'content-Type': 'application/json; charset=UTF-8'}),

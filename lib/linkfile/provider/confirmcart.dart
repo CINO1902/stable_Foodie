@@ -13,11 +13,12 @@ class confirmcart extends ChangeNotifier {
   String name1 = '';
   String number1 = '';
   String address1 = '';
+  String code = '';
   String location1 = '';
   bool verified = false;
   bool error = false;
   double discount = 0.0;
-  Future<void> checkcarts( amount, ref) async {
+  Future<void> checkcarts(amount, ref) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -44,11 +45,21 @@ class confirmcart extends ChangeNotifier {
       return id;
     }
 
+    print(verified);
+    String setcoupon() {
+      String id = '';
+      if (verified == false) {
+        id = '';
+      } else {
+        id = code;
+      }
+      return id;
+    }
+
     try {
       loading = true;
       error = false;
       Confirmmodel confirmmodel = Confirmmodel(
-        
           email: getmail(),
           id: getid(),
           verified: verified,
@@ -56,6 +67,7 @@ class confirmcart extends ChangeNotifier {
           name: name1,
           number: number1,
           address: address1,
+          code: setcoupon(),
           location: location1,
           ref: ref);
       var response = await networkHandler.client.post(
@@ -90,5 +102,6 @@ class confirmcart extends ChangeNotifier {
   void update(checkcart checkcat) {
     verified = checkcat.verified;
     discount = checkcat.moneytopay;
+    code = checkcat.coupon;
   }
 }

@@ -86,9 +86,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
 
     if (token != null) {
       context.read<checkstate>().getregisterdID();
-      context.read<getmostcommon>().getcommon();
-      context.read<getsubhistory>().getordersub();
-      context.read<subscribed>().getsubscribed();
     }
   }
 
@@ -387,7 +384,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
               },
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.86,
-                height: 170,
+                height: 190,
                 child: Card(
                   elevation: 2.7,
                   color: Colors.white,
@@ -762,21 +759,21 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                             const Reviewspecial()));
 
                                 context.read<meal_calculate>().itemclick(
-                                      data[index].offerName,
-                                      data[index].image,
-                                      data[index].description,
-                                      data[index].time,
-                                      data[index].value,
-                                      data[index].side,
-                                      data[index].food,
-                                      data[index].drink,
-                                      data[index].extras,
-                                      data[index].foodTras,
-                                      data[index].drinksTras,
-                                      data[index].offerId,
-                                      data[index].availability,
-                                      data[index].remainingvalue,
-                                    );
+                                    data[index].offerName,
+                                    data[index].image,
+                                    data[index].description,
+                                    data[index].time,
+                                    data[index].value,
+                                    data[index].side,
+                                    data[index].food,
+                                    data[index].drink,
+                                    data[index].extras,
+                                    data[index].foodTras,
+                                    data[index].drinksTras,
+                                    data[index].offerId,
+                                    data[index].availability,
+                                    data[index].remainingvalue,
+                                    data[index].drinktype);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 20),

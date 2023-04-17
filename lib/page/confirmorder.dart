@@ -19,6 +19,7 @@ import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/page/addnewaddress.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
+import 'package:foodie_ios/page/verifyquickbuy.dart';
 import 'package:foodie_ios/page/webpage.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +51,7 @@ class _confirmorderState extends State<confirmorder> {
     });
   }
 
+  bool proceed = false;
   List delete = [];
   collectdetails() {
     String addressget() {
@@ -127,7 +129,21 @@ class _confirmorderState extends State<confirmorder> {
       String successmark = decodedres['status'];
 
       if (successmark == 'success') {
-        taketoweb();
+        setState(() {
+          proceed = true;
+        });
+        Provider.of<checkcart>(context, listen: false).moneytopay < 0
+            ? Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => verifyquickbuy(
+                          price: int.parse((context.watch<checkcart>().sumget +
+                                  context.watch<checkcart>().delivery)
+                              .toString()),
+                          ref: 'free',
+                        )),
+                (Route<dynamic> route) => false)
+            : taketoweb();
       } else if (successmark == 'fail') {
         SmartDialog.showToast('Something went wrong');
       }
@@ -150,13 +166,17 @@ class _confirmorderState extends State<confirmorder> {
     checkregistered();
 
     context.read<checkcart>().locationa();
+    context.read<checkcart>().disposediscount();
   }
 
   @override
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    context.read<checkcart>().disposediscount();
+    if (proceed == false) {
+      context.read<checkcart>().disposediscount();
+      print('deact');
+    }
   }
 
   @override

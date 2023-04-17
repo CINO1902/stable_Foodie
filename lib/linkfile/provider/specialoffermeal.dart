@@ -5,6 +5,7 @@ import 'package:foodie_ios/linkfile/Model/extra_specialoffer.dart';
 import 'package:foodie_ios/linkfile/Model/send_offer.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 class meal_calculate extends ChangeNotifier {
   List item_clicked = [];
@@ -23,8 +24,9 @@ class meal_calculate extends ChangeNotifier {
   List<Drink> side = [];
   List<Drink> drink = [];
   List<Drink> food = [];
+
   void itemclick(name, image, desc, time, value, side, food, drink, extra,
-      foodtras, drinktras, id, available, remaingamount) {
+      foodtras, drinktras, id, available, remaingamount, seg) {
     item_clicked.addAll([
       name,
       image,
@@ -38,11 +40,13 @@ class meal_calculate extends ChangeNotifier {
       extra,
       foodtras,
       drinktras,
-      id
+      id,
+      seg
     ]);
+    print(extra);
     available1 = available;
     remains = remaingamount;
-    print(item_clicked[11][0]);
+    //print(item_clicked[11][0]);
   }
 
   addside(id, name) {
@@ -170,15 +174,21 @@ class meal_calculate extends ChangeNotifier {
     notifyListeners();
   }
 
+  CancelToken cancelToken1 = CancelToken();
   Future<void> extracall() async {
-    loading_extra = true;
-    try {
-      var response = await networkHandler.client
-          .post(networkHandler.builderUrl('/call_extra_offer'), headers: {
-        'content-Type': 'application/json; charset=UTF-8',
-      });
+    String seg = item_clicked[13];
 
-      var msg = extraSpecialofferFromJson(response.body);
+    loading_extra = true;
+    cancelToken1 = CancelToken();
+    try {
+      final dio = Dio();
+      var response = await dio.post(
+          'https://foodie1902.herokuapp.com/route/call_extra_offer',
+          data: jsonEncode(<String, String>{'seg': seg}),
+          options: Options(
+              headers: {'content-Type': 'application/json; charset=UTF-8'}),
+          cancelToken: cancelToken1);
+      var msg = extraSpecialofferFromJson(response.toString());
 
       side = msg.side
           .where((element) =>
@@ -188,6 +198,7 @@ class meal_calculate extends ChangeNotifier {
           .where((element) =>
               element.availability == true || element.remaining == true)
           .toList();
+
       food = msg.food
           .where((element) =>
               element.availability == true || element.remaining == true)
@@ -200,6 +211,7 @@ class meal_calculate extends ChangeNotifier {
     notifyListeners();
   }
 
+  CancelToken cancelToken = CancelToken();
   Future<void> sendtocart() async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
@@ -216,6 +228,7 @@ class meal_calculate extends ChangeNotifier {
       return id;
     }
 
+    cancelToken = CancelToken();
     SendextraSpecialoffer send = SendextraSpecialoffer(
         id: getid(),
         specialName: item_clicked[0],
@@ -226,16 +239,18 @@ class meal_calculate extends ChangeNotifier {
         foods: mapfood,
         drinks: mapdrink,
         sides: mapside);
-    notifyListeners();
-    try {
-      var response = await networkHandler.client.post(
-          networkHandler.builderUrl('/addTocart_offer'),
-          body: sendextraSpecialofferToJson(send),
-          headers: {
-            'content-Type': 'application/json; charset=UTF-8',
-          });
 
-      var msg = jsonDecode(response.body);
+    notifyListeners();
+
+    try {
+      final dio = Dio();
+      var response = await dio.post(
+          'https://foodie1902.herokuapp.com/route/addTocart_offer',
+          data: sendextraSpecialofferToJson(send),
+          options: Options(
+              headers: {'content-Type': 'application/json; charset=UTF-8'}),
+          cancelToken: cancelToken);
+      var msg = jsonDecode(response.toString());
       status = msg["status"];
       report = msg["msg"];
       print(msg);
@@ -251,5 +266,10 @@ class meal_calculate extends ChangeNotifier {
       sendload = false;
     }
     notifyListeners();
+  }
+
+  cancelresquest() {
+    cancelToken.cancel();
+    cancelToken1.cancel();
   }
 }

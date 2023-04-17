@@ -31,8 +31,6 @@ class Specialoffer {
 class Msg {
     Msg({
         required this.extras,
-        required this.foodTras,
-        required this.drinksTras,
         required this.id,
         required this.offerId,
         required this.offerName,
@@ -48,11 +46,12 @@ class Msg {
         required this.side,
         required this.drink,
         required this.food,
+        required this.drinksTras,
+        required this.foodTras,
+        required this.drinktype,
     });
 
     List<Map<String, dynamic>> extras;
-    List<Map<String, dynamic>> foodTras;
-    List<Map<String, dynamic>> drinksTras;
     String id;
     int offerId;
     String offerName;
@@ -68,11 +67,12 @@ class Msg {
     bool side;
     bool drink;
     bool food;
+    List<Map<String, dynamic>> drinksTras;
+    List<Map<String, dynamic>> foodTras;
+    String drinktype;
 
     factory Msg.fromJson(Map<String, dynamic> json) => Msg(
         extras: List<Map<String, dynamic>>.from(json["extras"].map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
-        foodTras: List<Map<String, dynamic>>.from(json["food_tras"].map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
-        drinksTras: List<Map<String, dynamic>>.from(json["drinks_tras"].map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
         id: json["_id"],
         offerId: json["offer_id"],
         offerName: json["offer_name"],
@@ -88,12 +88,13 @@ class Msg {
         side: json["side"],
         drink: json["drink"],
         food: json["food"],
+        drinksTras: List<Map<String, dynamic>>.from(json["drinks_tras"].map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        foodTras: List<Map<String, dynamic>>.from(json["food_tras"].map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        drinktype: json["drinktype"],
     );
 
     Map<String, dynamic> toJson() => {
         "extras": List<dynamic>.from(extras.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
-        "food_tras": List<dynamic>.from(foodTras.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
-        "drinks_tras": List<dynamic>.from(drinksTras.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
         "_id": id,
         "offer_id": offerId,
         "offer_name": offerName,
@@ -109,5 +110,8 @@ class Msg {
         "side": side,
         "drink": drink,
         "food": food,
+        "drinks_tras": List<dynamic>.from(drinksTras.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        "food_tras": List<dynamic>.from(foodTras.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
+        "drinktype": drinktype,
     };
 }

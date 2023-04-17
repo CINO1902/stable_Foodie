@@ -735,7 +735,7 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  void addTocarts(value) {
+  void addTocarts(value) async {
     if (value.loading != true) {
       if (context.read<calculatemeal>().foodtotal() < 499) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -751,27 +751,7 @@ class _ReviewState extends State<Review> {
         ));
       } else {
         context.read<addTocart>().getClickedfood();
-
-        context.read<calculatemeal>().reset();
-
-        popupscaffold();
-        setState(() {
-          _selecteCategorys.clear();
-          for (var i = 0; i < itemsquote.length; i++) {
-            final thisquote = itemsquote[i];
-            thisquote.contains(thisquote[2])
-                ? thisquote[thisquote.indexWhere((v) => v == thisquote[2])] = 1
-                : thisquote;
-            thisquote.contains(thisquote[1])
-                ? thisquote[thisquote.indexWhere((v) => v == thisquote[1])] =
-                    thisquote[3]
-                : thisquote;
-          }
-          multiplier = 1;
-        });
-      }
-      print(value.success);
-      if (value.loading == false) {
+        await context.read<addTocart>().sendcart();
         if (value.success == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: CustomeSnackbar(
@@ -797,6 +777,23 @@ class _ReviewState extends State<Review> {
             elevation: 0,
           ));
         }
+        context.read<calculatemeal>().reset();
+
+        popupscaffold();
+        setState(() {
+          _selecteCategorys.clear();
+          for (var i = 0; i < itemsquote.length; i++) {
+            final thisquote = itemsquote[i];
+            thisquote.contains(thisquote[2])
+                ? thisquote[thisquote.indexWhere((v) => v == thisquote[2])] = 1
+                : thisquote;
+            thisquote.contains(thisquote[1])
+                ? thisquote[thisquote.indexWhere((v) => v == thisquote[1])] =
+                    thisquote[3]
+                : thisquote;
+          }
+          multiplier = 1;
+        });
       }
     }
   }

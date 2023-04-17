@@ -18,6 +18,7 @@ class Confirmmodel {
       required this.name,
       required this.number,
       required this.address,
+      required this.code,
       required this.location,
       required this.ref});
 
@@ -26,6 +27,7 @@ class Confirmmodel {
   bool verified;
   String email;
   String name;
+  String code;
   String number;
   String address;
   String location;
@@ -37,6 +39,7 @@ class Confirmmodel {
       verified: json["verified"],
       email: json["email"],
       name: json["name"],
+      code: json["code"],
       number: json["number"],
       address: json["address"],
       location: json["location"],
@@ -48,6 +51,7 @@ class Confirmmodel {
         "verified": verified,
         "email": email,
         "name": name,
+        "code":code,
         "number": number,
         "address": address,
         "location": location,

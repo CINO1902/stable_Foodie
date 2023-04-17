@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/Model/requestotp.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
+import 'package:foodie_ios/page/nonetwork.dart';
 import 'package:foodie_ios/page/verifyquickbuy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,9 +49,9 @@ class _webpageState extends State<webpage> {
         NavigationDelegate(
           onProgress: (int progress) {
             SmartDialog.showLoading(
-              clickMaskDismiss: false,
-              backDismiss: false,
-            );
+                clickMaskDismiss: false,
+                backDismiss: false,
+                msg: 'loading... $progress%');
             if (progress == 100) {
               SmartDialog.dismiss();
             }

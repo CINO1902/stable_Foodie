@@ -11,7 +11,7 @@ import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
-
+import 'package:text_scroll/text_scroll.dart';
 import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
@@ -87,7 +87,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-
+    context.read<meal_calculate>().cancelresquest();
     context.read<meal_calculate>().clearclick();
   }
 
@@ -114,6 +114,7 @@ class _ReviewspecialState extends State<Reviewspecial> {
   }
 
   bool network = false;
+
   @override
   Widget build(BuildContext context) {
     if (Provider.of<ConnectivityStatus>(context) ==
@@ -369,26 +370,86 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Align(
-                                                                alignment: Alignment
-                                                                    .centerLeft,
-                                                                child: Text(
-                                                                  context
+                                                              LayoutBuilder(
+                                                                  builder:
+                                                                      (context,
+                                                                          size) {
+                                                                // Build the textspan
+                                                                var span =
+                                                                    TextSpan(
+                                                                  text: context
                                                                       .watch<
                                                                           meal_calculate>()
                                                                       .side[
                                                                           index]
                                                                       .extraName,
                                                                   style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
                                                                       fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ),
-                                                              ),
+                                                                          18),
+                                                                );
+
+                                                                // Use a textpainter to determine if it will exceed max lines
+                                                                var tp =
+                                                                    TextPainter(
+                                                                  maxLines: 1,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  textDirection:
+                                                                      TextDirection
+                                                                          .ltr,
+                                                                  text: span,
+                                                                );
+
+                                                                // trigger it to layout
+                                                                tp.layout(
+                                                                    maxWidth:
+                                                                        80);
+
+                                                                // whether the text overflowed or not
+                                                                var exceeded = tp
+                                                                    .didExceedMaxLines;
+
+                                                                return exceeded
+                                                                    ? SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        child: Align(
+                                                                            alignment: Alignment.centerLeft,
+                                                                            child: TextScroll(
+                                                                              context.watch<meal_calculate>().side[index].extraName,
+                                                                              mode: TextScrollMode.bouncing,
+                                                                              velocity: Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                              delayBefore: Duration(milliseconds: 500),
+                                                                              numberOfReps: 20,
+                                                                              pauseBetween: Duration(milliseconds: 50),
+                                                                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
+                                                                              textAlign: TextAlign.right,
+                                                                              selectable: true,
+                                                                            )),
+                                                                      )
+                                                                    : SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        child:
+                                                                            Align(
+                                                                          alignment:
+                                                                              Alignment.centerLeft,
+                                                                          child:
+                                                                              Text(
+                                                                            context.watch<meal_calculate>().side[index].extraName,
+                                                                            maxLines:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style: TextStyle(
+                                                                                color: Colors.black,
+                                                                                fontSize: 18,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                              }),
                                                               SizedBox(
                                                                 child: Text(
                                                                   'Remaining : ${context.watch<meal_calculate>().side[index].remainingvalue}',
@@ -399,24 +460,98 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                               )
                                                             ],
                                                           )
-                                                        : Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              context
+                                                        : LayoutBuilder(builder:
+                                                            (context, size) {
+                                                            // Build the textspan
+                                                            var span = TextSpan(
+                                                              text: context
                                                                   .watch<
                                                                       meal_calculate>()
                                                                   .side[index]
                                                                   .extraName,
                                                               style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ),
+                                                                  fontSize: 18),
+                                                            );
+
+                                                            // Use a textpainter to determine if it will exceed max lines
+                                                            var tp =
+                                                                TextPainter(
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .ltr,
+                                                              text: span,
+                                                            );
+
+                                                            // trigger it to layout
+                                                            tp.layout(
+                                                                maxWidth: 80);
+
+                                                            // whether the text overflowed or not
+                                                            var exceeded = tp
+                                                                .didExceedMaxLines;
+
+                                                            return exceeded
+                                                                ? SizedBox(
+                                                                    width: 90,
+                                                                    child: Align(
+                                                                        alignment: Alignment.centerLeft,
+                                                                        child: TextScroll(
+                                                                          context
+                                                                              .watch<meal_calculate>()
+                                                                              .side[index]
+                                                                              .extraName,
+                                                                          mode:
+                                                                              TextScrollMode.bouncing,
+                                                                          velocity:
+                                                                              Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                          delayBefore:
+                                                                              Duration(milliseconds: 500),
+                                                                          numberOfReps:
+                                                                              20,
+                                                                          pauseBetween:
+                                                                              Duration(milliseconds: 50),
+                                                                          style: TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500),
+                                                                          textAlign:
+                                                                              TextAlign.right,
+                                                                          selectable:
+                                                                              true,
+                                                                        )),
+                                                                  )
+                                                                : SizedBox(
+                                                                    width: 90,
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          Text(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .side[index]
+                                                                            .extraName,
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                          }),
                                                     InkWell(
                                                       onTap: () {
                                                         if (Provider.of<meal_calculate>(
@@ -579,100 +714,185 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                 .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: context
-                                            .watch<meal_calculate>()
-                                            .sidecollect
-                                            .isEmpty
-                                        ? Center(
-                                            child: Text(
-                                              'Add Side',
-                                              style: TextStyle(
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        : ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount: context
+                                    child:
+                                        context
                                                 .watch<meal_calculate>()
                                                 .sidecollect
-                                                .length,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                height: 30,
-                                                width: 60,
-                                                margin: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        context
-                                                            .watch<
-                                                                meal_calculate>()
-                                                            .sidecollect[index][1],
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                meal_calculate>()
-                                                            .removeside(index);
-                                                        if (value.item_clicked[
-                                                                9][0]['0'] !=
-                                                            value.sidecollect
-                                                                .length) {
-                                                          setState(() {
-                                                            check[check
-                                                                .indexWhere((v) =>
-                                                                    v ==
-                                                                    check[
-                                                                        0])] = [
-                                                              3
-                                                            ];
-                                                          });
-                                                        }
-                                                      },
-                                                      child: Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                        child: FittedBox(
-                                                            child: SvgPicture
-                                                                .asset(
-                                                          'images/svg/cancel1.svg',
-                                                          color: Colors.red,
-                                                        )),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                .isEmpty
+                                            ? Center(
+                                                child: Text(
+                                                  'Add Side',
+                                                  style: TextStyle(
+                                                      fontSize: 19,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              )
+                                            : ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                itemCount: context
+                                                    .watch<meal_calculate>()
+                                                    .sidecollect
+                                                    .length,
+                                                itemBuilder: (context, index) {
+                                                  return Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    height: 30,
+                                                    width: 60,
+                                                    margin: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        LayoutBuilder(builder:
+                                                            (context, size) {
+                                                          // Build the textspan
+                                                          var span = TextSpan(
+                                                            text: context
+                                                                    .watch<
+                                                                        meal_calculate>()
+                                                                    .sidecollect[
+                                                                index][1],
+                                                            style: TextStyle(
+                                                                fontSize: 18),
+                                                          );
+
+                                                          // Use a textpainter to determine if it will exceed max lines
+                                                          var tp = TextPainter(
+                                                            maxLines: 1,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            textDirection:
+                                                                TextDirection
+                                                                    .ltr,
+                                                            text: span,
+                                                          );
+
+                                                          // trigger it to layout
+                                                          tp.layout(
+                                                              maxWidth: 80);
+
+                                                          // whether the text overflowed or not
+                                                          var exceeded = tp
+                                                              .didExceedMaxLines;
+
+                                                          return exceeded
+                                                              ? SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          TextScroll(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .sidecollect[index][1],
+                                                                        mode: TextScrollMode
+                                                                            .bouncing,
+                                                                        velocity:
+                                                                            Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                        delayBefore:
+                                                                            Duration(milliseconds: 500),
+                                                                        numberOfReps:
+                                                                            20,
+                                                                        pauseBetween:
+                                                                            Duration(milliseconds: 50),
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                        textAlign:
+                                                                            TextAlign.right,
+                                                                        selectable:
+                                                                            true,
+                                                                      )),
+                                                                )
+                                                              : SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      context
+                                                                          .watch<
+                                                                              meal_calculate>()
+                                                                          .sidecollect[index][1],
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                        }),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            context
+                                                                .read<
+                                                                    meal_calculate>()
+                                                                .removeside(
+                                                                    index);
+                                                            if (value.item_clicked[
+                                                                        9][0]
+                                                                    ['0'] !=
+                                                                value
+                                                                    .sidecollect
+                                                                    .length) {
+                                                              setState(() {
+                                                                check[check
+                                                                    .indexWhere(
+                                                                        (v) =>
+                                                                            v ==
+                                                                            check[0])] = [
+                                                                  3
+                                                                ];
+                                                              });
+                                                            }
+                                                          },
+                                                          child: Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
+                                                            child: FittedBox(
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                              'images/svg/cancel1.svg',
+                                                              color: Colors.red,
+                                                            )),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                   )
                                 ],
                               ),
@@ -769,24 +989,98 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                               )
                                                             ],
                                                           )
-                                                        : Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              context
+                                                        : LayoutBuilder(builder:
+                                                            (context, size) {
+                                                            // Build the textspan
+                                                            var span = TextSpan(
+                                                              text: context
                                                                   .watch<
                                                                       meal_calculate>()
                                                                   .food[index]
                                                                   .extraName,
                                                               style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ),
+                                                                  fontSize: 18),
+                                                            );
+
+                                                            // Use a textpainter to determine if it will exceed max lines
+                                                            var tp =
+                                                                TextPainter(
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .ltr,
+                                                              text: span,
+                                                            );
+
+                                                            // trigger it to layout
+                                                            tp.layout(
+                                                                maxWidth: 80);
+
+                                                            // whether the text overflowed or not
+                                                            var exceeded = tp
+                                                                .didExceedMaxLines;
+
+                                                            return exceeded
+                                                                ? SizedBox(
+                                                                    width: 90,
+                                                                    child: Align(
+                                                                        alignment: Alignment.centerLeft,
+                                                                        child: TextScroll(
+                                                                          context
+                                                                              .watch<meal_calculate>()
+                                                                              .food[index]
+                                                                              .extraName,
+                                                                          mode:
+                                                                              TextScrollMode.bouncing,
+                                                                          velocity:
+                                                                              Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                          delayBefore:
+                                                                              Duration(milliseconds: 500),
+                                                                          numberOfReps:
+                                                                              20,
+                                                                          pauseBetween:
+                                                                              Duration(milliseconds: 50),
+                                                                          style: TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500),
+                                                                          textAlign:
+                                                                              TextAlign.right,
+                                                                          selectable:
+                                                                              true,
+                                                                        )),
+                                                                  )
+                                                                : SizedBox(
+                                                                    width: 90,
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          Text(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .food[index]
+                                                                            .extraName,
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                          }),
                                                     InkWell(
                                                       onTap: () {
                                                         setState(() {
@@ -870,100 +1164,185 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                 .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: context
-                                            .watch<meal_calculate>()
-                                            .foodcollect
-                                            .isEmpty
-                                        ? Center(
-                                            child: Text(
-                                              'Add Food',
-                                              style: TextStyle(
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        : ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount: context
+                                    child:
+                                        context
                                                 .watch<meal_calculate>()
                                                 .foodcollect
-                                                .length,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                height: 30,
-                                                width: 60,
-                                                margin: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        context
-                                                            .watch<
-                                                                meal_calculate>()
-                                                            .foodcollect[index][1],
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                meal_calculate>()
-                                                            .removefood(index);
-                                                        if (value.item_clicked[
-                                                                10][0]['0'] !=
-                                                            value.foodcollect
-                                                                .length) {
-                                                          setState(() {
-                                                            check[check
-                                                                .indexWhere((v) =>
-                                                                    v ==
-                                                                    check[
-                                                                        1])] = [
-                                                              3
-                                                            ];
-                                                          });
-                                                        }
-                                                      },
-                                                      child: Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                        child: FittedBox(
-                                                            child: SvgPicture
-                                                                .asset(
-                                                          'images/svg/cancel1.svg',
-                                                          color: Colors.red,
-                                                        )),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                .isEmpty
+                                            ? Center(
+                                                child: Text(
+                                                  'Add Food',
+                                                  style: TextStyle(
+                                                      fontSize: 19,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              )
+                                            : ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                itemCount: context
+                                                    .watch<meal_calculate>()
+                                                    .foodcollect
+                                                    .length,
+                                                itemBuilder: (context, index) {
+                                                  return Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    height: 30,
+                                                    width: 60,
+                                                    margin: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        LayoutBuilder(builder:
+                                                            (context, size) {
+                                                          // Build the textspan
+                                                          var span = TextSpan(
+                                                            text: context
+                                                                    .watch<
+                                                                        meal_calculate>()
+                                                                    .foodcollect[
+                                                                index][1],
+                                                            style: TextStyle(
+                                                                fontSize: 18),
+                                                          );
+
+                                                          // Use a textpainter to determine if it will exceed max lines
+                                                          var tp = TextPainter(
+                                                            maxLines: 1,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            textDirection:
+                                                                TextDirection
+                                                                    .ltr,
+                                                            text: span,
+                                                          );
+
+                                                          // trigger it to layout
+                                                          tp.layout(
+                                                              maxWidth: 80);
+
+                                                          // whether the text overflowed or not
+                                                          var exceeded = tp
+                                                              .didExceedMaxLines;
+
+                                                          return exceeded
+                                                              ? SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          TextScroll(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .foodcollect[index][1],
+                                                                        mode: TextScrollMode
+                                                                            .bouncing,
+                                                                        velocity:
+                                                                            Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                        delayBefore:
+                                                                            Duration(milliseconds: 500),
+                                                                        numberOfReps:
+                                                                            20,
+                                                                        pauseBetween:
+                                                                            Duration(milliseconds: 50),
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                        textAlign:
+                                                                            TextAlign.right,
+                                                                        selectable:
+                                                                            true,
+                                                                      )),
+                                                                )
+                                                              : SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      context
+                                                                          .watch<
+                                                                              meal_calculate>()
+                                                                          .foodcollect[index][1],
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                        }),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            context
+                                                                .read<
+                                                                    meal_calculate>()
+                                                                .removefood(
+                                                                    index);
+                                                            if (value.item_clicked[
+                                                                        10][0]
+                                                                    ['0'] !=
+                                                                value
+                                                                    .foodcollect
+                                                                    .length) {
+                                                              setState(() {
+                                                                check[check
+                                                                    .indexWhere(
+                                                                        (v) =>
+                                                                            v ==
+                                                                            check[1])] = [
+                                                                  3
+                                                                ];
+                                                              });
+                                                            }
+                                                          },
+                                                          child: Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
+                                                            child: FittedBox(
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                              'images/svg/cancel1.svg',
+                                                              color: Colors.red,
+                                                            )),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                   )
                                 ],
                               ),
@@ -1060,24 +1439,98 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                               )
                                                             ],
                                                           )
-                                                        : Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              context
+                                                        : LayoutBuilder(builder:
+                                                            (context, size) {
+                                                            // Build the textspan
+                                                            var span = TextSpan(
+                                                              text: context
                                                                   .watch<
                                                                       meal_calculate>()
                                                                   .drink[index]
                                                                   .extraName,
                                                               style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ),
+                                                                  fontSize: 18),
+                                                            );
+
+                                                            // Use a textpainter to determine if it will exceed max lines
+                                                            var tp =
+                                                                TextPainter(
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .ltr,
+                                                              text: span,
+                                                            );
+
+                                                            // trigger it to layout
+                                                            tp.layout(
+                                                                maxWidth: 80);
+
+                                                            // whether the text overflowed or not
+                                                            var exceeded = tp
+                                                                .didExceedMaxLines;
+
+                                                            return exceeded
+                                                                ? SizedBox(
+                                                                    width: 90,
+                                                                    child: Align(
+                                                                        alignment: Alignment.centerLeft,
+                                                                        child: TextScroll(
+                                                                          context
+                                                                              .watch<meal_calculate>()
+                                                                              .drink[index]
+                                                                              .extraName,
+                                                                          mode:
+                                                                              TextScrollMode.bouncing,
+                                                                          velocity:
+                                                                              Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                          delayBefore:
+                                                                              Duration(milliseconds: 500),
+                                                                          numberOfReps:
+                                                                              20,
+                                                                          pauseBetween:
+                                                                              Duration(milliseconds: 50),
+                                                                          style: TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500),
+                                                                          textAlign:
+                                                                              TextAlign.right,
+                                                                          selectable:
+                                                                              true,
+                                                                        )),
+                                                                  )
+                                                                : SizedBox(
+                                                                    width: 90,
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          Text(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .drink[index]
+                                                                            .extraName,
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                          }),
                                                     InkWell(
                                                       onTap: () {
                                                         setState(() {
@@ -1161,100 +1614,202 @@ class _ReviewspecialState extends State<Reviewspecial> {
                                                 .withOpacity(.8),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: context
-                                            .watch<meal_calculate>()
-                                            .drinkcollect
-                                            .isEmpty
-                                        ? Center(
-                                            child: Text(
-                                              'Add Drink',
-                                              style: TextStyle(
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        : ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount: context
+                                    child:
+                                        context
                                                 .watch<meal_calculate>()
                                                 .drinkcollect
-                                                .length,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                height: 30,
-                                                width: 60,
-                                                margin: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        context
-                                                            .watch<
-                                                                meal_calculate>()
-                                                            .drinkcollect[index][1],
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                meal_calculate>()
-                                                            .removedrink(index);
-                                                        if (value.item_clicked[
-                                                                11][0]['0'] !=
-                                                            value.drinkcollect
-                                                                .length) {
-                                                          setState(() {
-                                                            check[check
-                                                                .indexWhere((v) =>
-                                                                    v ==
-                                                                    check[
-                                                                        2])] = [
-                                                              3
-                                                            ];
-                                                          });
-                                                        }
-                                                      },
-                                                      child: Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                        child: FittedBox(
-                                                            child: SvgPicture
-                                                                .asset(
-                                                          'images/svg/cancel1.svg',
-                                                          color: Colors.red,
-                                                        )),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                .isEmpty
+                                            ? Center(
+                                                child: Text(
+                                                  'Add Drink',
+                                                  style: TextStyle(
+                                                      fontSize: 19,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              )
+                                            : ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                itemCount: context
+                                                    .watch<meal_calculate>()
+                                                    .drinkcollect
+                                                    .length,
+                                                itemBuilder: (context, index) {
+                                                  return Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    height: 30,
+                                                    width: 60,
+                                                    margin: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        LayoutBuilder(builder:
+                                                            (context, size) {
+                                                          // Build the textspan
+                                                          var span = TextSpan(
+                                                            text: context
+                                                                    .watch<
+                                                                        meal_calculate>()
+                                                                    .drinkcollect[
+                                                                index][1],
+                                                            style: TextStyle(
+                                                                fontSize: 18),
+                                                          );
+
+                                                          // Use a textpainter to determine if it will exceed max lines
+                                                          var tp = TextPainter(
+                                                            maxLines: 1,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            textDirection:
+                                                                TextDirection
+                                                                    .ltr,
+                                                            text: span,
+                                                          );
+
+                                                          // trigger it to layout
+                                                          tp.layout(
+                                                              maxWidth: 80);
+
+                                                          // whether the text overflowed or not
+                                                          var exceeded = tp
+                                                              .didExceedMaxLines;
+
+                                                          return exceeded
+                                                              ? SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          TextScroll(
+                                                                        context
+                                                                            .watch<meal_calculate>()
+                                                                            .drinkcollect[index][1],
+                                                                        mode: TextScrollMode
+                                                                            .bouncing,
+                                                                        velocity:
+                                                                            Velocity(pixelsPerSecond: Offset(10, 0)),
+                                                                        delayBefore:
+                                                                            Duration(milliseconds: 500),
+                                                                        numberOfReps:
+                                                                            20,
+                                                                        pauseBetween:
+                                                                            Duration(milliseconds: 50),
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                        textAlign:
+                                                                            TextAlign.right,
+                                                                        selectable:
+                                                                            true,
+                                                                      )),
+                                                                )
+                                                              : SizedBox(
+                                                                  width: 90,
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      context
+                                                                          .watch<
+                                                                              meal_calculate>()
+                                                                          .drinkcollect[index][1],
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                        }),
+
+                                                        // Align(
+                                                        //   alignment:
+                                                        //       Alignment.centerLeft,
+                                                        //   child: Text(
+                                                        //     context
+                                                        //         .watch<
+                                                        //             meal_calculate>()
+                                                        //         .drinkcollect[index][1],
+                                                        //     style: TextStyle(
+                                                        //         color: Colors.black,
+                                                        //         fontSize: 18,
+                                                        //         fontWeight:
+                                                        //             FontWeight
+                                                        //                 .w500),
+                                                        //   ),
+                                                        // ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            context
+                                                                .read<
+                                                                    meal_calculate>()
+                                                                .removedrink(
+                                                                    index);
+                                                            if (value.item_clicked[
+                                                                        11][0]
+                                                                    ['0'] !=
+                                                                value
+                                                                    .drinkcollect
+                                                                    .length) {
+                                                              setState(() {
+                                                                check[check
+                                                                    .indexWhere(
+                                                                        (v) =>
+                                                                            v ==
+                                                                            check[2])] = [
+                                                                  3
+                                                                ];
+                                                              });
+                                                            }
+                                                          },
+                                                          child: Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
+                                                            child: FittedBox(
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                              'images/svg/cancel1.svg',
+                                                              color: Colors.red,
+                                                            )),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                   )
                                 ],
                               ),

@@ -17,6 +17,7 @@ class checkcart extends ChangeNotifier {
   List sumadd = [];
   bool loaded = false;
   List getTotal = [];
+  String coupon = '';
   int totalcartcall = 0;
   Timer? t;
   int sumget = 0;
@@ -373,6 +374,7 @@ class checkcart extends ChangeNotifier {
     moneytopay = (sumget + (delivery * totalcartcall)).toDouble();
     stringmoney = moneytopay.toString();
     try {
+      coupon = code;
       loading = true;
       Sendcoupon send = Sendcoupon(code: code);
       var response = await networkHandler.client.post(
