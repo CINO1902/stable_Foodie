@@ -18,6 +18,7 @@ class checkcart extends ChangeNotifier {
   bool loaded = false;
   List getTotal = [];
   String coupon = '';
+  String whatsappnumber = '';
   int totalcartcall = 0;
   Timer? t;
   int sumget = 0;
@@ -340,6 +341,7 @@ class checkcart extends ChangeNotifier {
           });
 
       final data = jsonDecode(response.body);
+      whatsappnumber = data["number"];
       delivery = data['msg'] * totalcartcall;
       moneytopay = (sumget + delivery).toDouble();
       stringmoney = moneytopay.toString();

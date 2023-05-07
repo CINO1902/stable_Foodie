@@ -2362,7 +2362,7 @@ class _confirmorderState extends State<confirmorder> {
   }
 
   whatsapp(ordernum) async {
-    var contact = "+2348124485527";
+    var contact = Provider.of<checkcart>(context, listen: false).whatsappnumber;
     var androidUrl =
         "whatsapp://send?phone=$contact&text=ORDER FROM FOODIE %0a ORDER DETAILS %0a ----- %0a ${note()}";
     var iosUrl =
