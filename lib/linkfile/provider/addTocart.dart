@@ -88,6 +88,7 @@ class addTocart extends ChangeNotifier {
         extras: extras,
         multiple: multiple.toString(),
         total: total.toString(),
+        version: 1,
         image: image);
 
     try {

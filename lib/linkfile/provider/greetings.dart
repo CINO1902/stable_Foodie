@@ -15,7 +15,7 @@ class greetings extends ChangeNotifier {
   void gettime() {
     var time1 = time.toString().split(' ')[1];
     var hour = time1.split(':')[0];
-    var minute = time1.split(':')[1];
+
 
     var inthour = int.parse(hour);
 

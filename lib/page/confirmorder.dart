@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:foodie_ios/linkfile/Model/cartrecieve.dart';
+import 'package:foodie_ios/linkfile/Model/confrimmodel.dart';
 import 'package:foodie_ios/linkfile/Model/fetchcart.dart';
-import 'package:foodie_ios/linkfile/cartbox.dart';
+
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
-import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
-import 'package:foodie_ios/linkfile/payment/paystack_payment.dart';
+
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 import 'package:foodie_ios/linkfile/provider/confirmcart.dart';
 import 'package:foodie_ios/linkfile/provider/greetings.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/page/addnewaddress.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
@@ -25,7 +25,7 @@ import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
-import 'overlay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class confirmorder extends StatefulWidget {
   const confirmorder({super.key});
@@ -73,7 +73,7 @@ class _confirmorderState extends State<confirmorder> {
               ? add = context.watch<checkstate>().phone
               : add = context.watch<checkcart>().number
           : Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = '${context.watch<checkstate>().notloggednumber ?? ''}'
+              ? add = '${context.watch<checkstate>().notloggednumber}'
               : add = context.watch<checkcart>().number;
       return add;
     }
@@ -108,20 +108,126 @@ class _confirmorderState extends State<confirmorder> {
   }
 
   bool loadingpaid = false;
+  bool loadingpaidwhatsapp = false;
+  List<Pagnited> cartresults = [];
+
+  String note() {
+    // String wholeorder = '';
+    String pack = '';
+    List amount = [];
+    for (var i = 0; i < cartresults.length; i++) {
+      if (cartresults[i].specialName != null) {
+        amount.add(cartresults[i].amount);
+        amount = amount.reduce((a, b) => a + b);
+        setState(() {
+          pack = pack + '\n \nPack ${i + 1}';
+          pack =
+              '$pack \n ${cartresults[i].multiple}X ${cartresults[i].specialName!}';
+        });
+        if (cartresults[i].foods != null) {
+          for (var g = 0; g < cartresults[i].foods!.length; g++) {
+            pack = '$pack \n  ${cartresults[i].foods![g]["1"]}';
+          }
+        }
+        if (cartresults[i].sides != null) {
+          for (var g = 0; g < cartresults[i].sides!.length; g++) {
+            pack = '$pack \n  ${cartresults[i].sides![g]["1"]}';
+          }
+        }
+        if (cartresults[i].drinks != null) {
+          for (var g = 0; g < cartresults[i].drinks!.length; g++) {
+            pack = '$pack \n  ${cartresults[i].drinks![g]["1"]}';
+          }
+        }
+      } else {
+        setState(() {
+          pack = pack + '\nPack ${i + 1}';
+          pack =
+              '$pack \n ${cartresults[i].multiple}X \n ${cartresults[i].food} ${cartresults[i].amount}';
+        });
+        for (var g = 0; g < cartresults[i].extras!.length; g++) {
+          pack =
+              '$pack \n  ${cartresults[i].extras![g].the5} ${cartresults[i].extras![g].the2} pcs';
+        }
+      }
+    }
+    pack = pack +
+        "\n \n Sub Total: ${Provider.of<checkcart>(context, listen: false).sumget}.";
+    pack = pack +
+        "\n Delivery Total: ${Provider.of<checkcart>(context, listen: false).delivery.toString()}.";
+    pack = pack +
+        "\n Total Cost: ${Provider.of<checkcart>(context, listen: false).moneytopay.toString()}.";
+    pack = pack +
+        "\n Coupon Code: ${Provider.of<checkcart>(context, listen: false).coupon.toString()}.";
+    pack = pack + "\n Order Num: $ordernum.";
+    pack = pack + "\n \n Customers Details";
+    pack = pack +
+        "\n Name: ${Provider.of<confirmcart>(context, listen: false).name1}.";
+    pack = pack +
+        "\n Location: ${Provider.of<confirmcart>(context, listen: false).location1}.";
+    pack = pack +
+        "\n Address: ${Provider.of<confirmcart>(context, listen: false).address1}.";
+    pack = pack +
+        "\n Phone Number: ${Provider.of<confirmcart>(context, listen: false).number1}.";
+
+    return pack;
+  }
+
   Future<void> markpaid() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token1 = prefs.getString("tokenregistered");
+    String getmail() {
+      String emailsent = '';
+      if (token1 == null) {
+        emailsent = prefs.getString('notloggedemail') ?? '';
+      } else {
+        emailsent = prefs.getString("email") ?? '';
+      }
+      return emailsent;
+    }
+
+    String getid() {
+      String id = '';
+      if (token1 == null) {
+        final intid = prefs.getInt('ID') ?? 0;
+        id = intid.toString();
+      } else {
+        id = prefs.getString("email") ?? '';
+      }
+      return id;
+    }
+
+    String setcoupon() {
+      String id = '';
+      if (Provider.of<confirmcart>(context, listen: false).verified == false) {
+        id = '';
+      } else {
+        id = code;
+      }
+      return id;
+    }
+
     try {
       setState(() {
         loadingpaid = true;
       });
-
-      var response = await networkHandler.client
-          .post(networkHandler.builderUrl('/markpaid'),
-              body: jsonEncode(<String, String>{
-                'id': token != null
-                    ? Provider.of<checkstate>(context, listen: false).email
-                    : '${Provider.of<checkstate>(context, listen: false).ID}'
-              }),
-              headers: {
+      Confirmmodel confirmmodel = Confirmmodel(
+        email: getmail(),
+        id: getid(),
+        verified: Provider.of<confirmcart>(context, listen: false).verified,
+        amount:
+            // ignore: use_build_context_synchronously
+            Provider.of<checkcart>(context, listen: false).moneytopay.toInt(),
+        name: Provider.of<confirmcart>(context, listen: false).name1,
+        number: Provider.of<confirmcart>(context, listen: false).number1,
+        address: Provider.of<confirmcart>(context, listen: false).address1,
+        code: setcoupon(),
+        location: Provider.of<confirmcart>(context, listen: false).location1,
+      );
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/markpaid2'),
+          body: confirmmodelToJson(confirmmodel),
+          headers: {
             'content-Type': 'application/json; charset=UTF-8',
           });
       final decodedres = jsonDecode(response.body);
@@ -131,7 +237,9 @@ class _confirmorderState extends State<confirmorder> {
       if (successmark == 'success') {
         setState(() {
           proceed = true;
+          ordernum = decodedres['ordernum'];
         });
+
         Provider.of<checkcart>(context, listen: false).moneytopay < 0
             ? Navigator.pushAndRemoveUntil(
                 context,
@@ -141,6 +249,7 @@ class _confirmorderState extends State<confirmorder> {
                                   context.watch<checkcart>().delivery)
                               .toString()),
                           ref: 'free',
+                          ordernum: ordernum,
                         )),
                 (Route<dynamic> route) => false)
             : taketoweb();
@@ -154,6 +263,102 @@ class _confirmorderState extends State<confirmorder> {
     } finally {
       setState(() {
         loadingpaid = false;
+      });
+    }
+  }
+
+  String ordernum = '';
+  Future<void> markpaidwhatsapp() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token1 = prefs.getString("tokenregistered");
+    try {
+      setState(() {
+        loadingpaidwhatsapp = true;
+      });
+      String getmail() {
+        String emailsent = '';
+        if (token1 == null) {
+          emailsent = prefs.getString('notloggedemail') ?? '';
+        } else {
+          emailsent = prefs.getString("email") ?? '';
+        }
+        return emailsent;
+      }
+
+      String getid() {
+        String id = '';
+        if (token1 == null) {
+          final intid = prefs.getInt('ID') ?? 0;
+          id = intid.toString();
+        } else {
+          id = prefs.getString("email") ?? '';
+        }
+        return id;
+      }
+
+      String setcoupon() {
+        String id = '';
+        if (Provider.of<confirmcart>(context, listen: false).verified ==
+            false) {
+          id = '';
+        } else {
+          id = code;
+        }
+        return id;
+      }
+
+      Confirmmodel confirmmodel = Confirmmodel(
+        email: getmail(),
+        id: getid(),
+        verified: Provider.of<confirmcart>(context, listen: false).verified,
+        amount:
+            // ignore: use_build_context_synchronously
+            Provider.of<checkcart>(context, listen: false).moneytopay.toInt(),
+        name: Provider.of<confirmcart>(context, listen: false).name1,
+        number: Provider.of<confirmcart>(context, listen: false).number1,
+        address: Provider.of<confirmcart>(context, listen: false).address1,
+        code: setcoupon(),
+        location: Provider.of<confirmcart>(context, listen: false).location1,
+      );
+      var response = await networkHandler.client.post(
+          networkHandler.builderUrl('/markpaid2'),
+          body: confirmmodelToJson(confirmmodel),
+          headers: {
+            'content-Type': 'application/json; charset=UTF-8',
+          });
+      final decodedres = jsonDecode(response.body);
+
+      String successmark = decodedres['status'];
+
+      if (successmark == 'success') {
+        setState(() {
+          proceed = true;
+          ordernum = decodedres['ordernum'];
+        });
+        print(ordernum);
+        Provider.of<checkcart>(context, listen: false).moneytopay < 0
+            ? Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => verifyquickbuy(
+                          price: int.parse((context.watch<checkcart>().sumget +
+                                  context.watch<checkcart>().delivery)
+                              .toString()),
+                          ref: 'free',
+                          ordernum: ordernum,
+                        )),
+                (Route<dynamic> route) => false)
+            : whatsapp(ordernum);
+      } else if (successmark == 'fail') {
+        SmartDialog.showToast('Something went wrong');
+      }
+
+      // print(decodedres);
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        loadingpaidwhatsapp = false;
       });
     }
   }
@@ -316,7 +521,7 @@ class _confirmorderState extends State<confirmorder> {
                                             : Provider.of<checkcart>(context,
                                                         listen: false)
                                                     .usedefault
-                                                ? '${context.watch<checkstate>().notloggednumber ?? ''}'
+                                                ? '${context.watch<checkstate>().notloggednumber}'
                                                 : context
                                                     .watch<checkcart>()
                                                     .number,
@@ -341,8 +546,8 @@ class _confirmorderState extends State<confirmorder> {
                                             : Provider.of<checkcart>(context,
                                                         listen: false)
                                                     .usedefault
-                                                ? '${context.watch<checkstate>().notloggedemail ?? ''}'
-                                                : '${context.watch<checkstate>().notloggedemail ?? ''}',
+                                                ? '${context.watch<checkstate>().notloggedemail}'
+                                                : '${context.watch<checkstate>().notloggedemail}',
                                         style: TextStyle(
                                           fontSize: 17,
                                         ),
@@ -351,8 +556,6 @@ class _confirmorderState extends State<confirmorder> {
                                         height: 5,
                                       ),
                                       SizedBox(
-                                        //color: Colors.white,
-
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.8,
@@ -413,13 +616,14 @@ class _confirmorderState extends State<confirmorder> {
                 ),
               ),
               Consumer<checkcart>(builder: (context, value, child) {
-                List<Pagnited> cartresults = [];
                 return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: value.cartresult.length,
                     itemBuilder: (context, index) {
                       cartresults = value.cartresult;
+
+                      // print(note());
                       final cart = cartresults[index];
                       final image = cartresults[index].image;
                       final multiple = cartresults[index].multiple;
@@ -562,103 +766,247 @@ class _confirmorderState extends State<confirmorder> {
                               ),
                       ],
                     ),
-                    InkWell(
-                      onTap: () async {
-                        if (Provider.of<checkcart>(context, listen: false)
-                                .error ==
-                            true) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: CustomeSnackbar(
-                              topic: 'Oh Snap!',
-                              msg: 'Payment cannot proceed',
-                              color1: const Color.fromARGB(255, 171, 51, 42),
-                              color2: const Color.fromARGB(255, 127, 39, 33),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ));
-                        } else if (Provider.of<checkcart>(context,
-                                    listen: false)
-                                .loading ==
-                            true) {
-                          SmartDialog.showToast('System is busy');
-                        } else if (context
-                                    .read<checkstate>()
-                                    .notloggedaddress ==
-                                '' &&
-                            token == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: CustomeSnackbar(
-                              topic: 'Oh Snap!',
-                              msg: "You haven't set a location yet",
-                              color1: const Color.fromARGB(255, 171, 51, 42),
-                              color2: const Color.fromARGB(255, 127, 39, 33),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ));
-                        } else if (context.read<checkstate>().address == '' &&
-                            token != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: CustomeSnackbar(
-                              topic: 'Oh Snap!',
-                              msg: "You haven't set a location yet",
-                              color1: const Color.fromARGB(255, 171, 51, 42),
-                              color2: const Color.fromARGB(255, 127, 39, 33),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ));
-                        } else if (Provider.of<checkcart>(context,
-                                    listen: false)
-                                .error !=
-                            true) {
-                          if (delete.isNotEmpty) {
-                            SmartDialog.showToast(
-                                'Please delete the marked item');
-                          } else {
-                            await markpaid();
-                          }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: CustomeSnackbar(
-                              topic: 'Oh Snap!',
-                              msg: 'Something Went wrong',
-                              color1: const Color.fromARGB(255, 171, 51, 42),
-                              color2: const Color.fromARGB(255, 127, 39, 33),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ));
-                        }
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).size.height * 0.02),
-                        width: double.infinity,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: loadingpaid
-                                ? CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 3,
-                                  )
-                                : Text(
-                                    'Place Order',
-                                    style: TextStyle(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            if (Provider.of<checkcart>(context, listen: false)
+                                    .error ==
+                                true) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: 'Payment cannot proceed',
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (Provider.of<checkcart>(context,
+                                        listen: false)
+                                    .loading ==
+                                true) {
+                              SmartDialog.showToast('System is busy');
+                            } else if (context
+                                        .read<checkstate>()
+                                        .notloggedaddress ==
+                                    '' &&
+                                token == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: "You haven't set a location yet",
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (context.read<checkstate>().address ==
+                                    '' &&
+                                token != null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: "You haven't set a location yet",
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (Provider.of<checkcart>(context,
+                                        listen: false)
+                                    .error !=
+                                true) {
+                              if (delete.isNotEmpty) {
+                                SmartDialog.showToast(
+                                    'Please delete the marked item');
+                              } else {
+                                if (loadingpaidwhatsapp != true) {
+                                  print(note());
+                                  await markpaidwhatsapp();
+                                }
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: 'Something Went wrong',
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: loadingpaidwhatsapp
+                                    ? CircularProgressIndicator(
                                         color: Colors.white,
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                      ),
+                                        strokeWidth: 3,
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            'Pay via WhatsApp',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SvgPicture.asset(
+                                            'images/svg/whatsapp.svg',
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                      )),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            if (Provider.of<checkcart>(context, listen: false)
+                                    .error ==
+                                true) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: 'Payment cannot proceed',
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (Provider.of<checkcart>(context,
+                                        listen: false)
+                                    .loading ==
+                                true) {
+                              SmartDialog.showToast('System is busy');
+                            } else if (context
+                                        .read<checkstate>()
+                                        .notloggedaddress ==
+                                    '' &&
+                                token == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: "You haven't set a location yet",
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (context.read<checkstate>().address ==
+                                    '' &&
+                                token != null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: "You haven't set a location yet",
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            } else if (Provider.of<checkcart>(context,
+                                        listen: false)
+                                    .error !=
+                                true) {
+                              if (delete.isNotEmpty) {
+                                SmartDialog.showToast(
+                                    'Please delete the marked item');
+                              } else {
+                                await markpaid();
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: CustomeSnackbar(
+                                  topic: 'Oh Snap!',
+                                  msg: 'Something Went wrong',
+                                  color1:
+                                      const Color.fromARGB(255, 171, 51, 42),
+                                  color2:
+                                      const Color.fromARGB(255, 127, 39, 33),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                              ));
+                            }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: loadingpaid
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 3,
+                                      )
+                                    : Text(
+                                        'Pay via PayStack',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 )),
@@ -795,74 +1143,14 @@ class _confirmorderState extends State<confirmorder> {
         });
   }
 
-  void checkpayment() {
-    MakePayment(
-      context: context,
-      price:
-          (Provider.of<checkcart>(context, listen: false).moneytopay).round(),
-      email: token != null
-          ? Provider.of<checkstate>(context, listen: false).email
-          : '${Provider.of<checkstate>(context, listen: false).notloggedemail}',
-    ).chargeCardAndMakePayment();
-  }
-
   taketoweb() async {
-    String addressget() {
-      String add = '';
-      token != null
-          ? Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = context.watch<checkstate>().address
-              : add = context.watch<checkcart>().address
-          : Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = '${context.watch<checkstate>().notloggedaddress}'
-              : add = context.watch<checkcart>().address;
-      return add;
-    }
-
-    String number() {
-      String add = '';
-      token != null
-          ? Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = context.watch<checkstate>().phone
-              : add = context.watch<checkcart>().number
-          : Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = '${context.watch<checkstate>().notloggednumber ?? ''}'
-              : add = context.watch<checkcart>().number;
-      return add;
-    }
-
-    String name() {
-      String add = '';
-      token != null
-          ? Provider.of<checkcart>(context, listen: false).usedefault
-              ? add =
-                  '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}'
-              : add = context.watch<checkcart>().fullname
-          : Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = '${context.watch<checkstate>().notloggedname}'
-              : add = context.watch<checkcart>().fullname;
-      return add;
-    }
-
-    String getlocation() {
-      String add = '';
-      token != null
-          ? Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = context.watch<checkstate>().location
-              : add = context.watch<checkcart>().location
-          : Provider.of<checkcart>(context, listen: false).usedefault
-              ? add = '${context.watch<checkstate>().notloggedlocation ?? ''}'
-              : add = context.watch<checkcart>().location;
-      return add;
-    }
-
     Future<String> getReference() async {
       await context.read<greetings>().gettim();
       String platform;
       if (Platform.isIOS) {
         platform = 'iOS';
       } else {
-        platform = 'Android';
+        platform = 'android';
       }
 
       return 'ChargedFrom${platform}_${Provider.of<greetings>(context, listen: false).time.millisecondsSinceEpoch}';
@@ -893,6 +1181,7 @@ class _confirmorderState extends State<confirmorder> {
                         ? Provider.of<checkstate>(context, listen: false).email
                         : '${Provider.of<checkstate>(context, listen: false).ID}',
                     ref: ref,
+                    ordernum: ordernum,
                     type: 'quickbuycheck',
                   )),
           (Route<dynamic> route) => false);
@@ -2070,5 +2359,61 @@ class _confirmorderState extends State<confirmorder> {
             ],
           );
         });
+  }
+
+  whatsapp(ordernum) async {
+    var contact = "+2348124485527";
+    var androidUrl =
+        "whatsapp://send?phone=$contact&text=ORDER FROM FOODIE %0a ORDER DETAILS %0a ----- %0a ${note()}";
+    var iosUrl =
+        "https://wa.me/$contact?text=ORDER FROM FOODIE %0a ORDER DETAILS %0a ----- %0a ${note()}";
+
+    try {
+      if (Platform.isIOS) {
+        if (await canLaunchUrl(Uri.parse(iosUrl))) {
+          await launchUrl(Uri.parse(iosUrl));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomeSnackbar(
+              topic: 'Oh Snap!',
+              msg: 'Something went wrong',
+              color1: const Color.fromARGB(255, 171, 51, 42),
+              color2: const Color.fromARGB(255, 127, 39, 33),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
+        }
+      } else {
+        if (await canLaunchUrl(Uri.parse(androidUrl))) {
+          await launchUrl(Uri.parse(androidUrl));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomeSnackbar(
+              topic: 'Oh Snap!',
+              msg: 'Something went wrong',
+              color1: const Color.fromARGB(255, 171, 51, 42),
+              color2: const Color.fromARGB(255, 127, 39, 33),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
+        }
+      }
+    } on Exception {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: CustomeSnackbar(
+          topic: 'Oh Snap!',
+          msg: 'Whatsapp is not installed',
+          color1: const Color.fromARGB(255, 171, 51, 42),
+          color2: const Color.fromARGB(255, 127, 39, 33),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ));
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
 
+// ignore: must_be_immutable
 class CustomeSnackbar extends StatelessWidget {
   CustomeSnackbar({
     Key? key,

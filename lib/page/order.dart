@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -7,19 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodie_ios/linkfile/Model/cartrecieve.dart';
-import 'package:foodie_ios/linkfile/Model/sendNotificationModel.dart';
-import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 import 'package:foodie_ios/linkfile/provider/greetings.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
-import 'package:foodie_ios/linkfile/refresh.dart';
-import 'package:foodie_ios/onboarding.dart';
-import 'package:foodie_ios/page/overlay.dart';
+
 import 'package:grouped_list/grouped_list.dart';
 
 import 'package:provider/provider.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class Order extends StatefulWidget {
   const Order({super.key});

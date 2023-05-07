@@ -8,11 +8,11 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/getsubdetails.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/sellectbucket.dart';
 import 'package:foodie_ios/page/overlay.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:provider/provider.dart';
 
 class frequency extends StatefulWidget {

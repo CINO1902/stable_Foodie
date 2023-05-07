@@ -50,7 +50,7 @@ class getsubhistory extends ChangeNotifier {
         }
 
         fetchresult.sort((b, a) => a.date.compareTo(b.date));
-        String day = DateFormat('d').format(data.date);
+       
 
         fullresult.addAll(fetchresult);
         historylenght = fullresult.length.toString();

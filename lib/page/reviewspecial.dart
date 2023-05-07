@@ -1,21 +1,19 @@
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:foodie_ios/linkfile/Model/Extra_model.dart';
+
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
-import 'package:foodie_ios/linkfile/provider/checkcart.dart';
+
 import 'package:text_scroll/text_scroll.dart';
-import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
-import 'package:foodie_ios/linkfile/refresh.dart';
+
 import 'package:foodie_ios/linkfile/snackbar.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foodie_ios/linkfile/Model/extra_specialoffer.dart';
 import 'package:foodie_ios/linkfile/Model/send_offer.dart';
-import 'package:foodie_ios/linkfile/networkhandler.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -214,7 +214,7 @@ class meal_calculate extends ChangeNotifier {
   CancelToken cancelToken = CancelToken();
   Future<void> sendtocart() async {
     final prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("token");
+
     sendload = true;
     String? token1 = prefs.getString("tokenregistered");
     String getid() {
@@ -238,6 +238,7 @@ class meal_calculate extends ChangeNotifier {
         image: item_clicked[1],
         foods: mapfood,
         drinks: mapdrink,
+        version: 1,
         sides: mapside);
 
     notifyListeners();

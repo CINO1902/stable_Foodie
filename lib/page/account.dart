@@ -7,21 +7,21 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_launcher_icons/ios.dart';
+
 import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
-import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
+
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
-import 'package:foodie_ios/page/landingpage.dart';
+
 import 'package:foodie_ios/page/otpverify.dart';
-import 'package:foodie_ios/page/overlay.dart';
+
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart';
@@ -435,7 +435,7 @@ class _AccountState extends State<Account> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.025,
+                        height: MediaQuery.of(context).size.height * 0.2,
                       ),
                       Center(
                         child: InkWell(

@@ -4,7 +4,6 @@ import 'package:foodie_ios/linkfile/Model/requestotp.dart';
 import 'package:foodie_ios/linkfile/Model/verifyotp.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +46,7 @@ class _OtpState extends State<Otp> {
   }
 
   Future<void> requesto() async {
+    print(widget.email);
     Requestotp requestotp = Requestotp(
       email: widget.email,
     );
@@ -58,13 +58,12 @@ class _OtpState extends State<Otp> {
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
           });
-
+      print(response.body);
       final decodedresponse = jsonDecode(response.body);
       setState(() {
         success = decodedresponse['success'];
         msg = decodedresponse['msg'];
       });
-      print(decodedresponse);
     } catch (e) {
       print(e);
     } finally {}
@@ -266,7 +265,6 @@ class _OtpState extends State<Otp> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                           
                             sendToserver();
                           },
                           style: ButtonStyle(

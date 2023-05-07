@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:foodie_ios/linkfile/Model/calculateplan.dart';
 import 'package:foodie_ios/linkfile/Model/checkoutsub.dart';
 import 'package:foodie_ios/linkfile/Model/fetchpackage.dart';
-import 'package:collection/collection.dart';
 import 'package:foodie_ios/linkfile/Model/sendcoupon.dart';
 import 'package:foodie_ios/linkfile/Model/subscription.dart';
 import 'package:foodie_ios/linkfile/Model/verifycoupon.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
-import 'package:foodie_ios/page/subscription.dart';
-import 'package:quiver/iterables.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 
@@ -143,7 +141,7 @@ class sellectbucket extends ChangeNotifier {
   String msg = '';
 
   void savelistfinal(int inf, int page) {
-    Function unOrdDeepEq = const DeepCollectionEquality.unordered().equals;
+  
     ID.clear();
     ID.add(inf);
 
@@ -1146,7 +1144,7 @@ class sellectbucket extends ChangeNotifier {
         outstanddrink = thisresponse['outstandingdrink'];
         outstandfood = thisresponse['outstandingfood'];
         outstandtotal = thisresponse['outstandingtotal'];
-        final doublemoney = int.parse(calculated);
+     
 
         stringmoney = calculated;
         success = true;

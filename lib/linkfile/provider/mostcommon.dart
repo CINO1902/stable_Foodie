@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter_launcher_icons/logger.dart';
 import 'package:foodie_ios/linkfile/Model/fetchmostcommon.dart';
 import 'package:foodie_ios/linkfile/Model/getsoup.dart';
 import 'package:foodie_ios/linkfile/Model/mostcommon.dart';
@@ -9,15 +7,11 @@ import 'package:foodie_ios/linkfile/Model/submitsuborder.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:flutter/material.dart';
 
-import 'package:foodie_ios/linkfile/Model/Extra_fetch_model.dart';
-import 'package:foodie_ios/linkfile/Model/Extra_model.dart';
-import 'package:foodie_ios/linkfile/provider/addTocart.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class getmostcommon extends ChangeNotifier {
-  List<List<ItemExtra>> _items = [];
   List<Detail> subcart = [];
   List<String> swallow = [];
   List<Soup> soup = [];
@@ -25,7 +19,7 @@ class getmostcommon extends ChangeNotifier {
   List sellectedsoup = [];
   bool _data = false;
   bool sucartdata = false;
-  String _id = '';
+
   bool loadingdelete = false;
   bool errorsoup = false;
   bool error = false;
@@ -81,7 +75,7 @@ class getmostcommon extends ChangeNotifier {
           longthroatcheck = decodedresponse.longthroat;
           odogwucheck = decodedresponse.odogwu;
           swallow = decodedresponse.swallow;
-         
+
           _data = true;
           mostcommon = getr.where((element) => element.common == true).toList();
           notcommon = getr.where((element) => element.common == false).toList();
@@ -196,7 +190,6 @@ class getmostcommon extends ChangeNotifier {
           body: submitsuborderToJson(fetch),
           headers: {'content-Type': 'application/json; charset=UTF-8'});
 
-      final decodedresponse = response.body;
       if (response.statusCode == 200) {
         notifyListeners();
       } else {
@@ -253,7 +246,7 @@ class getmostcommon extends ChangeNotifier {
       Fetchmostcommon fetch = Fetchmostcommon(
         email: email,
       );
-     
+
       Response response = await networkHandler.client.post(
           networkHandler.builderUrl('/getcartsub'),
           body: fetchmostcommonToJson(fetch),
@@ -302,7 +295,7 @@ class getmostcommon extends ChangeNotifier {
       subcart = decodedresponse.details;
 
       sucartdata = true;
-     
+
       notifyListeners();
     } catch (e) {
       print(e);

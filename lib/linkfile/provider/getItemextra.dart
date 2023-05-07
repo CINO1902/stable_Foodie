@@ -1,16 +1,16 @@
-import 'package:foodie_ios/linkfile/networkhandler.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:foodie_ios/linkfile/Model/Extra_fetch_model.dart';
 import 'package:foodie_ios/linkfile/Model/Extra_model.dart';
-import 'package:foodie_ios/linkfile/provider/addTocart.dart';
+
 import 'package:dio/dio.dart';
 
 class getiItemExtra extends ChangeNotifier {
   List<List<ItemExtra>> souplist = [];
   bool _data = false;
   List<String> soupid = [];
-  String _id = '';
+
   List<List<dynamic>> itemsquote = [];
   List soupadded = [];
   bool error = false;

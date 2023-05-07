@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:foodie_ios/linkfile/Model/changeaddress.dart';
-import 'package:foodie_ios/linkfile/provider/mostcommon.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 
@@ -26,8 +26,8 @@ class checkstate with ChangeNotifier {
   bool success = false;
   String msg = '';
   String notloggedaddress = '';
-  String? notloggedemail;
-  String? notloggednumber;
+  String notloggedemail = '';
+  String notloggednumber = '';
   String notloggedname = '';
   String? notloggedlocation;
   bool logoutout = true;
@@ -125,8 +125,7 @@ class checkstate with ChangeNotifier {
   }
 
   runcode() {
-    Timer t;
-    t = Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 5), () {
       getstat();
     });
   }
@@ -192,6 +191,7 @@ class checkstate with ChangeNotifier {
 
   void saveaddress(address, email1, number, name, location1) async {
     final _pref = await SharedPreferences.getInstance();
+    print(name);
     _pref.setString('address', address);
     _pref.setString('notloggedemail', email1);
     _pref.setString('notloggednumber', number);
@@ -203,8 +203,8 @@ class checkstate with ChangeNotifier {
 
   Future<String?> getaddress() async {
     final _pref = await SharedPreferences.getInstance();
-    notloggedemail = _pref.getString('notloggedemail');
-    notloggednumber = _pref.getString('notloggednumber');
+    notloggedemail = _pref.getString('notloggedemail') ?? '';
+    notloggednumber = _pref.getString('notloggednumber') ?? '';
     notloggedname = _pref.getString('notloggedname') ?? '';
     notloggedlocation = _pref.getString('notloggedlocation');
     notloggedaddress = _pref.getString('address') ?? '';
@@ -238,7 +238,7 @@ class checkstate with ChangeNotifier {
     if (tokenregistered != null) {
       getnum = phone;
     } else {
-      getnum = notloggednumber ?? '';
+      getnum = notloggednumber;
     }
     return getnum;
   }
@@ -248,7 +248,7 @@ class checkstate with ChangeNotifier {
     if (tokenregistered != null) {
       getmail = email;
     } else {
-      getmail = notloggedemail ?? '';
+      getmail = notloggedemail;
     }
     return getmail;
   }

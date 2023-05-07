@@ -1,15 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
-import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foodie_ios/linkfile/networkhandler.dart';
+
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/invisible.dart';
-import 'package:foodie_ios/linkfile/constant/key.dart';
+
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
@@ -33,13 +29,12 @@ import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/linkfile/provider/themeprovider.dart';
 import 'package:foodie_ios/linkfile/services/connectivity_service.dart';
 import 'package:foodie_ios/page/Rollover/frequency.dart';
-import 'package:foodie_ios/page/addnewaddress.dart';
-import 'package:foodie_ios/page/overlay.dart';
+
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:foodie_ios/page/cart.dart';
 import 'package:foodie_ios/page/checkoutpage.dart';
 import 'package:foodie_ios/page/confirmorder.dart';
-import 'package:foodie_ios/page/confirmsuborder.dart';
+
 import 'package:foodie_ios/page/forgotpassword.dart';
 import 'package:foodie_ios/page/fullsubhistory.dart';
 import 'package:foodie_ios/page/home.dart';

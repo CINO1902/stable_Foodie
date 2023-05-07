@@ -18,7 +18,7 @@ class confirmcart extends ChangeNotifier {
   bool verified = false;
   bool error = false;
   double discount = 0.0;
-  Future<void> checkcarts(amount, ref) async {
+  Future<void> checkcarts(amount, ref, ordernum) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -45,7 +45,6 @@ class confirmcart extends ChangeNotifier {
       return id;
     }
 
-    print(verified);
     String setcoupon() {
       String id = '';
       if (verified == false) {
@@ -59,20 +58,10 @@ class confirmcart extends ChangeNotifier {
     try {
       loading = true;
       error = false;
-      Confirmmodel confirmmodel = Confirmmodel(
-          email: getmail(),
-          id: getid(),
-          verified: verified,
-          amount: amount,
-          name: name1,
-          number: number1,
-          address: address1,
-          code: setcoupon(),
-          location: location1,
-          ref: ref);
+      print(ordernum);
       var response = await networkHandler.client.post(
-          networkHandler.builderUrl('/confirmorder'),
-          body: confirmmodelToJson(confirmmodel),
+          networkHandler.builderUrl('/confirmorder2'),
+          body: jsonEncode(<String, String>{'ordernum': ordernum, "ref": ref}),
           headers: {
             'content-Type': 'application/json; charset=UTF-8',
             'authorization': 'Bearer $token'

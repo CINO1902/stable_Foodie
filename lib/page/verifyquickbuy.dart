@@ -8,10 +8,11 @@ import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:provider/provider.dart';
 
 class verifyquickbuy extends StatefulWidget {
-  verifyquickbuy({super.key, required this.price, required this.ref});
+  verifyquickbuy({super.key, required this.price, required this.ref, required this.ordernum});
 
   int price;
   String ref;
+  String ordernum;
   @override
   State<verifyquickbuy> createState() => _verifyquickbuyState();
 }
@@ -26,7 +27,7 @@ class _verifyquickbuyState extends State<verifyquickbuy> {
 
   void performpayment() async {
     SmartDialog.showLoading(msg: 'Processing Purchase... Do not leave the app');
-    await context.read<confirmcart>().checkcarts(widget.price, widget.ref);
+    await context.read<confirmcart>().checkcarts(widget.price, widget.ref, widget.ordernum);
     if (Provider.of<confirmcart>(context, listen: false).success == 'success') {
       SmartDialog.dismiss();
       Navigator.pushNamedAndRemoveUntil(

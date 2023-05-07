@@ -13,8 +13,7 @@ class internetcheck extends ChangeNotifier {
   }
 
   bool getsubscription() {
-    StreamSubscription subscription =
-        InternetConnectionChecker().onStatusChange.listen((event) {
+    InternetConnectionChecker().onStatusChange.listen((event) {
       hasInternet = event == InternetConnectionStatus.connected;
     });
     return hasInternet;

@@ -6,7 +6,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/getsubdetails.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/sellectbucket.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/landingpage.dart';
@@ -15,7 +15,7 @@ import 'package:foodie_ios/survey.dart/bucketlist1.dart';
 import 'package:foodie_ios/survey.dart/bucketlist2.dart';
 import 'package:foodie_ios/survey.dart/bucketlist3.dart';
 import 'package:provider/provider.dart';
-import 'package:collection/collection.dart';
+
 
 class page2 extends StatefulWidget {
   const page2({super.key});
@@ -478,8 +478,7 @@ class _page2State extends State<page2> {
                 shrinkWrap: true,
                 itemCount: question.length,
                 itemBuilder: (context, index) {
-                  Function unOrdDeepEq =
-                      const DeepCollectionEquality.unordered().equals;
+              
                   return InkWell(
                       onTap: () {
                         _onCategorySelected(index, idex);

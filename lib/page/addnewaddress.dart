@@ -29,6 +29,7 @@ class _addAddressState extends State<addAddress> {
   late FixedExtentScrollController _scrollController;
   late TextEditingController _controller;
   final items = [
+    'Select Location',
     'School',
     'Labuta',
     'Agbede',
@@ -38,7 +39,8 @@ class _addAddressState extends State<addAddress> {
     'Accord',
     'Oluwo',
     'Isolu',
-    'Camp'
+    'Camp',
+    'Apakila'
   ];
   String? token;
 
@@ -89,7 +91,7 @@ class _addAddressState extends State<addAddress> {
     } else {
       SmartDialog.dismiss(tag: 'network');
     }
-    print(context.watch<checkcart>().fullname);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
@@ -490,53 +492,65 @@ class _addAddressState extends State<addAddress> {
                                   onPressed: () async {
                                     if (_key4.currentState!.validate()) {
                                       _key4.currentState!.save();
-
-                                      String phoneget() {
-                                        String value = '';
-                                        if (phonechange == true) {
-                                          value = phone;
-                                        } else {
-                                          value = Provider.of<checkcart>(
-                                                  context,
+                                      if (Provider.of<showrecent>(context,
                                                   listen: false)
-                                              .number;
+                                              .index ==
+                                          0) {
+                                        SmartDialog.showToast(
+                                            'Please select a location');
+                                      } else {
+                                        String phoneget() {
+                                          String value = '';
+                                          if (phonechange == true) {
+                                            value = phone;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .number;
+                                          }
+                                          return value;
                                         }
-                                        return value;
-                                      }
 
-                                      String addressget() {
-                                        String value = '';
-                                        if (addresschange == true) {
-                                          value = address;
-                                        } else {
-                                          value = Provider.of<checkcart>(
-                                                  context,
-                                                  listen: false)
-                                              .address;
+                                        String addressget() {
+                                          String value = '';
+                                          if (addresschange == true) {
+                                            value = address;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .address;
+                                          }
+                                          return value;
                                         }
-                                        return value;
-                                      }
 
-                                      String nameget() {
-                                        String value = '';
-                                        if (addresschange == true) {
-                                          value = fullname;
-                                        } else {
-                                          value = Provider.of<checkcart>(
-                                                  context,
-                                                  listen: false)
-                                              .fullname;
+                                        String nameget() {
+                                          String value = '';
+                                          if (addresschange == true) {
+                                            value = fullname;
+                                          } else {
+                                            value = Provider.of<checkcart>(
+                                                    context,
+                                                    listen: false)
+                                                .fullname;
+                                          }
+                                          return value;
                                         }
-                                        return value;
-                                      }
 
-                                      context.read<checkcart>().gettempaddress(
-                                          nameget().trim(),
-                                          phoneget().trim(),
-                                          addressget().trim(),
-                                          items[index]);
-                                      context.read<checkcart>().locationa();
-                                      Navigator.pop(context);
+                                        context
+                                            .read<checkcart>()
+                                            .gettempaddress(
+                                                nameget().trim(),
+                                                phoneget().trim(),
+                                                addressget().trim(),
+                                                items[Provider.of<showrecent>(
+                                                        context,
+                                                        listen: false)
+                                                    .index]);
+                                        context.read<checkcart>().locationa();
+                                        Navigator.pop(context);
+                                      }
                                     }
                                   },
                                   child: Text(

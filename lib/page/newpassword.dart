@@ -8,7 +8,7 @@ import 'package:foodie_ios/linkfile/Model/requestotp.dart';
 import 'package:foodie_ios/linkfile/Model/verifyotp.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_count_down/timer_controller.dart';

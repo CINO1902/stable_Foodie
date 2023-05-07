@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foodie_ios/linkfile/provider/addTocart.dart';
+
 
 class calculatemeal extends ChangeNotifier {
   List clickedfood = [];

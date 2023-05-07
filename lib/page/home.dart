@@ -4,38 +4,33 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/cli_commands.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:foodie_ios/linkfile/Model/getItem_model.dart';
 import 'package:foodie_ios/linkfile/Model/imageside.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
-import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
 import 'package:foodie_ios/linkfile/provider/getItem.dart';
 import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
-import 'package:foodie_ios/linkfile/provider/getsubhistory.dart';
+
 import 'package:foodie_ios/linkfile/provider/greetings.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
-import 'package:foodie_ios/linkfile/provider/mostcommon.dart';
-import 'package:foodie_ios/linkfile/provider/notification.dart';
+
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/linkfile/provider/special_offer.dart';
 import 'package:foodie_ios/linkfile/provider/specialoffermeal.dart';
-import 'package:foodie_ios/linkfile/provider/subscribed.dart';
+
 import 'package:foodie_ios/linkfile/refresh.dart';
-import 'package:foodie_ios/onboarding.dart';
-import 'package:foodie_ios/page/addnewaddress.dart';
+
 import 'package:foodie_ios/page/addperaddress.dart';
-import 'package:foodie_ios/page/notifications.dart';
-import 'package:foodie_ios/page/overlay.dart';
+
 import 'package:foodie_ios/page/review.dart';
 import 'package:foodie_ios/linkfile/networkhandler.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:foodie_ios/page/reviewspecial.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:badges/badges.dart' as badges;
@@ -82,6 +77,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
 
     setState(() {
       token = prefs.getString("tokenregistered");
+      print(token);
     });
 
     if (token != null) {
@@ -224,14 +220,14 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                             height: 10,
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05,
+                            height: MediaQuery.of(context).size.height * 0.06,
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Align(
                               alignment: Alignment.center,
                               child: Text(
                                 'Satisfy your cravings with a few taps - Order now on our food delivery app',
                                 softWrap: true,
-                                style: TextStyle(fontSize: 13),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ),
                           ),
@@ -594,14 +590,12 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
+                                  color: Theme.of(context).primaryColor,
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: Svg.Svg('images/svg/Pattern-7.svg',
+                                    image: const Svg.Svg(
+                                        'images/svg/Pattern-7.svg',
                                         size: Size(400, 200)),
-                                    colorFilter: ColorFilter.mode(
-                                      Theme.of(context).primaryColor,
-                                      BlendMode.difference,
-                                    ),
                                   ),
                                 ),
                                 child: Column(
@@ -781,14 +775,11 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
+                                  color: Theme.of(context).primaryColor,
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: Svg.Svg('images/svg/Pattern-7.svg',
                                         size: Size(400, 200)),
-                                    colorFilter: ColorFilter.mode(
-                                      Theme.of(context).primaryColor,
-                                      BlendMode.difference,
-                                    ),
                                   ),
                                 ),
                                 child: Row(children: [
@@ -835,7 +826,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                         height: 40,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: Text(
                                           data[index].description,
                                           overflow: TextOverflow.ellipsis,
@@ -848,7 +839,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,

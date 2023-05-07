@@ -20,7 +20,7 @@ class Confirmmodel {
       required this.address,
       required this.code,
       required this.location,
-      required this.ref});
+       this.ref});
 
   int amount;
   String id;
@@ -31,7 +31,7 @@ class Confirmmodel {
   String number;
   String address;
   String location;
-  String ref;
+  String? ref;
 
   factory Confirmmodel.fromJson(Map<dynamic, dynamic> json) => Confirmmodel(
       amount: json["amount"],

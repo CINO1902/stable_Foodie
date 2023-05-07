@@ -1,22 +1,20 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:foodie_ios/linkfile/Model/sendNotificationModel.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/greetings.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
-import 'package:foodie_ios/linkfile/provider/mostcommon.dart';
+
 import 'package:foodie_ios/linkfile/provider/notification.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
-import 'package:foodie_ios/linkfile/refresh.dart';
+
 import 'package:foodie_ios/page/overlay.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sticky_grouped_list/sticky_grouped_list.dart';
+
 import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 

@@ -24,6 +24,6 @@ class Loadingwidget2 extends StatelessWidget {
             color: Theme.of(context).primaryColor,
           )),
     );
-    ;
+    
   }
 }

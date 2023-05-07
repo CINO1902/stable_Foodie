@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
+
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
-import 'package:foodie_ios/linkfile/provider/onboarding.dart';
+
 import 'package:foodie_ios/onboarding.dart';
-import 'package:foodie_ios/page/home.dart';
+
 import 'package:foodie_ios/page/landingpage.dart';
-import 'package:foodie_ios/page/nonetwork.dart';
+
 import 'package:provider/provider.dart';
 
 class invisible extends StatefulWidget {

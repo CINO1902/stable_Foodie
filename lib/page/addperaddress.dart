@@ -7,8 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
-import 'package:foodie_ios/linkfile/provider/checkcart.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
+
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/page/landingpage.dart';
 import 'package:foodie_ios/page/overlay.dart';
@@ -30,6 +29,7 @@ class _addAddressperState extends State<addAddressper> {
   late FixedExtentScrollController _scrollController;
   late TextEditingController _controller;
   final items = [
+    'Select Location',
     'School',
     'Labuta',
     'Agbede',
@@ -39,21 +39,22 @@ class _addAddressperState extends State<addAddressper> {
     'Accord',
     'Oluwo',
     'Isolu',
-    'Camp'
+    'Camp',
+    'Apakila'
   ];
   String? token;
   bool namechange = false;
   bool phonechange = false;
+  bool emailchange = false;
   bool addresschange = false;
   int index = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkregistered();
     _controller = TextEditingController(text: items[index]);
     _scrollController = FixedExtentScrollController(initialItem: index);
-
-    checkregistered();
   }
 
   @override
@@ -64,6 +65,7 @@ class _addAddressperState extends State<addAddressper> {
     _scrollController.dispose();
   }
 
+  String initialname = '';
   bool network = false;
   @override
   void deactivate() {
@@ -72,12 +74,19 @@ class _addAddressperState extends State<addAddressper> {
     context.read<showrecent>().disposeint();
   }
 
-  checkregistered() async {
-    final prefs = await SharedPreferences.getInstance();
-
+  checkregistered() {
     setState(() {
-      token = prefs.getString("tokenregistered");
+      token = Provider.of<checkstate>(context, listen: false).token1;
     });
+    if (token == null) {
+      setState(() {
+        initialname =
+            Provider.of<checkstate>(context, listen: false).notloggedname;
+      });
+    } else {
+      initialname =
+          '${Provider.of<checkstate>(context, listen: false).firstname} ${Provider.of<checkstate>(context, listen: false).lastname}';
+    }
   }
 
   final GlobalKey<FormState> _key4 = GlobalKey<FormState>();
@@ -89,7 +98,7 @@ class _addAddressperState extends State<addAddressper> {
     } else {
       SmartDialog.dismiss(tag: 'network');
     }
-    print(context.watch<checkstate>().notloggedname);
+    print(initialname);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
@@ -136,9 +145,7 @@ class _addAddressperState extends State<addAddressper> {
                                 namechange = true;
                               });
                             },
-                            initialValue: token == null
-                                ? context.watch<checkstate>().notloggedname
-                                : '${context.watch<checkstate>().firstname} ${context.watch<checkstate>().lastname}',
+                            initialValue: initialname,
                             validator: _validateName,
                             decoration: InputDecoration(
                               errorBorder: const OutlineInputBorder(
@@ -183,7 +190,7 @@ class _addAddressperState extends State<addAddressper> {
                             phonechange = true;
                           });
                         },
-                        initialValue: token == null
+                        initialValue: context.watch<checkstate>().token1 == null
                             ? context.watch<checkstate>().notloggednumber
                             : context.watch<checkstate>().phone,
                         keyboardType: TextInputType.number,
@@ -231,6 +238,7 @@ class _addAddressperState extends State<addAddressper> {
                                   onChanged: (value) {
                                     setState(() {
                                       email = value;
+                                      emailchange = true;
                                     });
                                   },
                                   initialValue: token == null
@@ -464,50 +472,167 @@ class _addAddressperState extends State<addAddressper> {
                                   ),
                                   onPressed: () async {
                                     if (_key4.currentState!.validate()) {
-                                      if (token != null) {
-                                        SmartDialog.showLoading(
-                                          clickMaskDismiss: false,
-                                          backDismiss: false,
-                                        );
-                                        String phoneget() {
-                                          String value = '';
-                                          if (phonechange == true) {
-                                            value = phone;
-                                          } else {
-                                            value = Provider.of<checkstate>(
-                                                    context,
-                                                    listen: false)
-                                                .phone;
+                                      if (Provider.of<showrecent>(context,
+                                                  listen: false)
+                                              .index ==
+                                          0) {
+                                        SmartDialog.showToast(
+                                            'Please select a location');
+                                      } else {
+                                        if (token != null) {
+                                          SmartDialog.showLoading(
+                                            clickMaskDismiss: false,
+                                            backDismiss: false,
+                                          );
+                                          String phoneget() {
+                                            String value = '';
+                                            if (phonechange == true) {
+                                              value = phone;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .phone;
+                                            }
+                                            return value;
                                           }
-                                          return value;
-                                        }
 
-                                        String addressget() {
-                                          String value = '';
-                                          if (addresschange == true) {
-                                            value = address;
-                                          } else {
-                                            value = Provider.of<checkstate>(
-                                                    context,
-                                                    listen: false)
-                                                .address;
+                                          String addressget() {
+                                            String value = '';
+                                            if (addresschange == true) {
+                                              value = address;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .address;
+                                            }
+                                            return value;
                                           }
-                                          return value;
-                                        }
 
-                                        await context
-                                            .read<checkstate>()
-                                            .changeadress(
-                                                phoneget(),
-                                                items[index],
-                                                addressget().trim());
+                                          await context
+                                              .read<checkstate>()
+                                              .changeadress(
+                                                  phoneget(),
+                                                  items[Provider.of<showrecent>(
+                                                          context,
+                                                          listen: false)
+                                                      .index],
+                                                  addressget().trim());
 
-                                        if (value.success == true) {
+                                          if (value.success == true) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: CustomeSnackbar(
+                                                topic: 'Great!',
+                                                msg: value.msg,
+                                                color1: const Color.fromARGB(
+                                                    255, 25, 107, 52),
+                                                color2: const Color.fromARGB(
+                                                    255, 19, 95, 40),
+                                              ),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              elevation: 0,
+                                            ));
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute<void>(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const homelanding(),
+                                                ),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                          } else if (value.success == false) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: CustomeSnackbar(
+                                                topic: 'Oh Snap!',
+                                                msg: value.msg,
+                                                color1: const Color.fromARGB(
+                                                    255, 171, 51, 42),
+                                                color2: const Color.fromARGB(
+                                                    255, 127, 39, 33),
+                                              ),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              elevation: 0,
+                                            ));
+                                          }
+                                        } else if (token == null) {
+                                          String phoneget() {
+                                            String value = '';
+                                            if (phonechange == true) {
+                                              value = phone;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .notloggednumber;
+                                            }
+                                            return value;
+                                          }
+
+                                          String addressget() {
+                                            String value = '';
+                                            if (addresschange == true) {
+                                              value = address;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .notloggedaddress;
+                                            }
+                                            return value;
+                                          }
+
+                                          String nameget() {
+                                            String value = '';
+                                            if (namechange == true) {
+                                              value = fullname;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .notloggedname;
+                                            }
+                                            return value;
+                                          }
+
+                                          String emailget() {
+                                            String value = '';
+                                            if (emailchange == true) {
+                                              value = email;
+                                            } else {
+                                              value = Provider.of<checkstate>(
+                                                      context,
+                                                      listen: false)
+                                                  .notloggedemail;
+                                            }
+                                            return value;
+                                          }
+
+                                          context
+                                              .read<checkstate>()
+                                              .saveaddress(
+                                                  addressget().trim(),
+                                                  emailget().trim(),
+                                                  phoneget().trim(),
+                                                  nameget().trim(),
+                                                  items[Provider.of<showrecent>(
+                                                          context,
+                                                          listen: false)
+                                                      .index]);
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                             content: CustomeSnackbar(
                                               topic: 'Great!',
-                                              msg: value.msg,
+                                              msg: 'Saved successfully',
                                               color1: const Color.fromARGB(
                                                   255, 25, 107, 52),
                                               color2: const Color.fromARGB(
@@ -525,52 +650,9 @@ class _addAddressperState extends State<addAddressper> {
                                                         const homelanding(),
                                               ),
                                               (Route<dynamic> route) => false);
-                                        } else if (value.success == false) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: CustomeSnackbar(
-                                              topic: 'Oh Snap!',
-                                              msg: value.msg,
-                                              color1: const Color.fromARGB(
-                                                  255, 171, 51, 42),
-                                              color2: const Color.fromARGB(
-                                                  255, 127, 39, 33),
-                                            ),
-                                            behavior: SnackBarBehavior.floating,
-                                            backgroundColor: Colors.transparent,
-                                            elevation: 0,
-                                          ));
                                         }
-                                      } else if (token == null) {
-                                        context.read<checkstate>().saveaddress(
-                                            address.trim(),
-                                            email.trim(),
-                                            phone.trim(),
-                                            fullname.trim(),
-                                            items[index]);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: CustomeSnackbar(
-                                            topic: 'Great!',
-                                            msg: 'Saved successfully',
-                                            color1: const Color.fromARGB(
-                                                255, 25, 107, 52),
-                                            color2: const Color.fromARGB(
-                                                255, 19, 95, 40),
-                                          ),
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: Colors.transparent,
-                                          elevation: 0,
-                                        ));
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute<void>(
-                                              builder: (BuildContext context) =>
-                                                  const homelanding(),
-                                            ),
-                                            (Route<dynamic> route) => false);
+                                        SmartDialog.dismiss();
                                       }
-                                      SmartDialog.dismiss();
                                     }
                                   },
                                   child: Text(

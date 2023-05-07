@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:foodie_ios/linkfile/Model/getsubdetails.dart';
@@ -40,10 +39,10 @@ class subscribed extends ChangeNotifier {
 
       final data = getsubdetailsFromJson(response.body);
       final currentdate = data.currentdate;
-      final date = DateTime.now();
+
 
       final expiredate = data.expiredate;
-      final startdate = data.startdate;
+   
       final newplan = data.newplan;
 
       int daysBetween(DateTime from, DateTime to) {

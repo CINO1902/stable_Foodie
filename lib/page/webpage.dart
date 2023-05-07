@@ -5,32 +5,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/linkfile/Model/requestotp.dart';
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
-import 'package:foodie_ios/page/nonetwork.dart';
+
 import 'package:foodie_ios/page/verifyquickbuy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class webpage extends StatefulWidget {
-  webpage(
-      {super.key,
-      required this.email,
-      required this.price,
-      required this.ID,
-      required this.ref,
-      required this.type});
+  webpage({
+    super.key,
+    required this.email,
+    required this.price,
+    required this.ID,
+    required this.ref,
+    required this.type,
+    required this.ordernum,
+  });
 
   String email;
   String price;
   String ID;
   String ref;
   String type;
+  String ordernum;
   @override
   State<webpage> createState() => _webpageState();
 }
 
 class _webpageState extends State<webpage> {
   WebViewController controller = WebViewController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,6 +63,7 @@ class _webpageState extends State<webpage> {
           onPageStarted: (String url) {},
           onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {
+            print('This is a the error${error.description}');
             SmartDialog.showToast('Something went wrong');
             Navigator.pushNamedAndRemoveUntil(
                 context, '/landingpage', (Route<dynamic> route) => false);
@@ -80,6 +85,7 @@ class _webpageState extends State<webpage> {
                       builder: (context) => verifyquickbuy(
                             price: int.parse(widget.price.toString()),
                             ref: widget.ref,
+                             ordernum: widget.ordernum,
                           )),
                   (Route<dynamic> route) => false);
             }
@@ -121,7 +127,6 @@ class _webpageState extends State<webpage> {
       });
 
       if (success == 'success') {
-        print(msg);
         if (msg == 'paid') {
           if (widget.type == 'subcheckout') {
             Navigator.pushAndRemoveUntil(
@@ -139,6 +144,7 @@ class _webpageState extends State<webpage> {
                     builder: (context) => verifyquickbuy(
                           price: int.parse(widget.price.toString()),
                           ref: widget.ref,
+                           ordernum: widget.ordernum,
                         )),
                 (Route<dynamic> route) => false);
           }
