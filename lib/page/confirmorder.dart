@@ -114,11 +114,9 @@ class _confirmorderState extends State<confirmorder> {
   String note() {
     // String wholeorder = '';
     String pack = '';
-    List amount = [];
+
     for (var i = 0; i < cartresults.length; i++) {
       if (cartresults[i].specialName != null) {
-        amount.add(cartresults[i].amount);
-        amount = amount.reduce((a, b) => a + b);
         setState(() {
           pack = pack + '\n \nPack ${i + 1}';
           pack =

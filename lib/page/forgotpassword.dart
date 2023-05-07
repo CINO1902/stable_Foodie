@@ -150,7 +150,7 @@ class _forgotpasswordState extends State<forgotpassword> {
                   sendinstruction();
                 },
                 child: Text(
-                  'Send Intruction',
+                  'Send Instruction',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
