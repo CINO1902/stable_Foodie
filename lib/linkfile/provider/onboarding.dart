@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:foodie_ios/linkfile/Model/changeaddress.dart';
 
@@ -79,9 +81,39 @@ class checkstate with ChangeNotifier {
         await prefs.setInt("ID", ID);
       } catch (e) {
         print(e);
-      } finally {}
+      } finally {
+        if (tokenregistered == null) {
+          getToken();
+        }
+      }
     }
     notifyListeners();
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      print(token);
+      // getD();
+      sendtoken(token);
+      savetoken(token);
+    });
+  }
+
+  String getD() {
+    String token = '';
+    if (tokenregistered == null) {
+      token = ID.toString();
+    } else {
+      token = email;
+    }
+    print(email);
+    return token;
+  }
+
+  void savetoken(String? token) async {
+    await FirebaseFirestore.instance.collection("user token").doc(getD()).set({
+      'token': token,
+    });
   }
 
   Future<void> getregisterdID() async {
@@ -99,7 +131,7 @@ class checkstate with ChangeNotifier {
         });
 
         final data = jsonDecode(response.body);
-        print(data);
+
         email = data['email'];
 
         firstname = data['firstname'];
@@ -110,7 +142,7 @@ class checkstate with ChangeNotifier {
         phone = data['phone'];
         location = data['location'];
         numberrefer = data['numberrefer'];
-        print(numberrefer);
+
         final subscribe = data['subscribed'];
 
         prefs.setBool('subscribed', subscribe);
@@ -119,8 +151,46 @@ class checkstate with ChangeNotifier {
         //  print(e);
       } finally {
         //   runcode();
+        getToken();
       }
     }
+    notifyListeners();
+  }
+
+  Future<void> sendtoken(token) async {
+    final prefs = await SharedPreferences.getInstance();
+    token1 = prefs.getString("tokenregistered");
+    tokenregistered = token1;
+
+    if (token1 == null) {
+      try {
+        final response = await networkHandler.client.post(
+            networkHandler.builderUrl('/addTokenunregisterd'),
+            body: jsonEncode(
+                <String, String>{'token': token, "id": ID.toString()}),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            });
+      } catch (e) {
+        //  print(e);
+      } finally {
+        //   runcode();
+      }
+    } else {
+      try {
+        final response = await networkHandler.client.post(
+            networkHandler.builderUrl('/addTokenregisterd'),
+            body: jsonEncode(<String, String>{'token': token, "id": email}),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            });
+      } catch (e) {
+        //  print(e);
+      } finally {
+        //   runcode();
+      }
+    }
+
     notifyListeners();
   }
 

@@ -18,6 +18,8 @@ class confirmcart extends ChangeNotifier {
   bool verified = false;
   bool error = false;
   double discount = 0.0;
+
+ 
   Future<void> checkcarts(amount, ref, ordernum) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
@@ -69,7 +71,7 @@ class confirmcart extends ChangeNotifier {
 
       final data = jsonDecode(response.body);
       success = data['status'];
-      print(success);
+    
       notifyListeners();
     } catch (e) {
       print(e);

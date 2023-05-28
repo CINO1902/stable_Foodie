@@ -1,11 +1,12 @@
+import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:foodie_ios/invisible.dart';
-
 import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
 import 'package:foodie_ios/linkfile/provider/addTocart.dart';
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
@@ -29,6 +30,7 @@ import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/linkfile/provider/themeprovider.dart';
 import 'package:foodie_ios/linkfile/services/connectivity_service.dart';
 import 'package:foodie_ios/page/Rollover/frequency.dart';
+import 'package:foodie_ios/page/order.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:foodie_ios/page/cart.dart';
@@ -50,20 +52,44 @@ import 'package:foodie_ios/page/upgrade/sellectday.dart';
 
 import 'package:foodie_ios/survey.dart/bucketsellect.dart';
 import 'package:foodie_ios/survey.dart/page1.dart';
-//import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> _firebasebackgroundhandler(RemoteMessage message) async {
+  Firebase.initializeApp();
+  print("handling message in ${message.messageId}");
+}
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
-
   final value = pref.getBool('showhomeprovider') ?? true;
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebasebackgroundhandler);
+  await FirebaseMessaging.instance
+      .getInitialMessage()
+      .then((RemoteMessage? message) {
+    if (message != null) {
+      Navigator.pushNamed(
+        navigatorKey.currentState!.context,
+        '/${message.data['page']}',
+      );
+    }
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+    print("On message Opened: $message");
 
+    Navigator.pushNamed(
+      navigatorKey.currentState!.context,
+      '/${message.data['page']}',
+    );
+  });
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(myApp(
     logged: value,
@@ -168,6 +194,7 @@ class _myAppState extends State<myApp> {
                     themeMode: context.watch<Themeprovider>().getTheme(),
                     theme: myTheme.lighttheme,
                     darkTheme: myTheme.darktheme,
+                    navigatorKey: navigatorKey,
                     routes: {
                       '/': (context) => hasInternet
                           ? invisible(
@@ -175,7 +202,9 @@ class _myAppState extends State<myApp> {
                             )
                           : nonetwork(),
                       '/home': (context) => const home(),
+                      '/order': (context) => const Order(),
                       '/cart': (context) => const cart(),
+                      '/notification': (context) => notification(),
                       '/nonetwork': (context) => const nonetwork(),
                       '/page1': (context) => const page1(),
                       '/page2': (context) => const page2(),

@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/cli_commands.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +16,7 @@ import 'package:foodie_ios/linkfile/customesnackbar.dart';
 
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
+import 'package:foodie_ios/linkfile/provider/confirmcart.dart';
 import 'package:foodie_ios/linkfile/provider/getItem.dart';
 import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
 
@@ -51,6 +56,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
 
   late StreamSubscription subscription;
   @override
+  late FlutterLocalNotificationsPlugin flutterLocalNotification =
+      FlutterLocalNotificationsPlugin();
   void initState() {
     super.initState();
 
@@ -59,8 +66,136 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     context.read<special_offer>().calloffer();
     context.read<checkstate>().getID();
     getslide();
+    requestpermission();
 
+    initInfo();
     checkregistered();
+
+    if (hasInternet) {
+      if (Platform.isAndroid) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Allow Notification'),
+            content: Text('Our app would like to send you notification'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Don\'t allow',
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Allow',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ))
+            ],
+          ),
+        );
+      } else if (Platform.isIOS) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: Text('Allow Notification'),
+            content: Text('Our app would like to send you notification'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Don\'t allow',
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  )),
+              TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Allow',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ))
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  void requestpermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true);
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  String? mtoken = "";
+
+
+
+
+  initInfo() {
+    var androidInitialise =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var Iosinitialise = DarwinInitializationSettings();
+    var initializationsSettings =
+        InitializationSettings(android: androidInitialise, iOS: Iosinitialise);
+    flutterLocalNotification.initialize(initializationsSettings,
+        onDidReceiveNotificationResponse: (payload) async {
+      try {
+        if (payload.payload != null && payload.payload!.isNotEmpty) {
+        } else {}
+      } catch (e) {}
+
+      return;
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      print("................onMessage........");
+      print(
+          "onMessage: ${message.notification?.title} /${message.notification?.body}");
+      BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
+        message.notification!.body.toString(),
+        htmlFormatBigText: true,
+        contentTitle: message.notification!.title.toString(),
+        htmlFormatContentTitle: true,
+      );
+      AndroidNotificationDetails androidplatformchannelspecifics =
+          AndroidNotificationDetails(
+        "dbfood",
+        "dbfood",
+        importance: Importance.max,
+        styleInformation: bigTextStyleInformation,
+        priority: Priority.max,
+        playSound: true,
+      );
+      NotificationDetails platformChannelSpecifics =
+          NotificationDetails(android: androidplatformchannelspecifics);
+      await flutterLocalNotification.show(0, message.notification?.title,
+          message.notification?.body, platformChannelSpecifics,
+          payload: message.data['body']);
+    });
   }
 
   List<Item> items = [];
@@ -77,7 +212,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
 
     setState(() {
       token = prefs.getString("tokenregistered");
-      print(token);
     });
 
     if (token != null) {
@@ -150,6 +284,12 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     t = Timer(Duration(milliseconds: 100), () {
       changemargin();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
@@ -591,10 +731,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Theme.of(context).primaryColor,
-                                  image: DecorationImage(
+                                  image: const DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: const Svg.Svg(
-                                        'images/svg/Pattern-7.svg',
+                                    image: Svg.Svg('images/svg/Pattern-7.svg',
                                         size: Size(400, 200)),
                                   ),
                                 ),
@@ -776,7 +915,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Theme.of(context).primaryColor,
-                                  image: DecorationImage(
+                                  image: const DecorationImage(
                                     fit: BoxFit.cover,
                                     image: Svg.Svg('images/svg/Pattern-7.svg',
                                         size: Size(400, 200)),

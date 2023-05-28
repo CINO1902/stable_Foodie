@@ -238,7 +238,7 @@ class meal_calculate extends ChangeNotifier {
         image: item_clicked[1],
         foods: mapfood,
         drinks: mapdrink,
-        version: 1,
+        version: 2,
         sides: mapside);
 
     notifyListeners();
