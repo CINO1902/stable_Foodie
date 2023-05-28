@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,7 @@ import 'package:foodie_ios/linkfile/customesnackbar.dart';
 
 import 'package:foodie_ios/linkfile/provider/calculatemael.dart';
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
-import 'package:foodie_ios/linkfile/provider/confirmcart.dart';
+
 import 'package:foodie_ios/linkfile/provider/getItem.dart';
 import 'package:foodie_ios/linkfile/provider/getItemextra.dart';
 
