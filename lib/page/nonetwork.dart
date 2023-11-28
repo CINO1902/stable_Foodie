@@ -1,14 +1,9 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:foodie_ios/invisible.dart';
-import 'package:foodie_ios/linkfile/enum/connectivity_status.dart';
-import 'package:foodie_ios/linkfile/provider/internetchecker.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class nonetwork extends StatefulWidget {
@@ -107,7 +102,7 @@ class _nonetworkState extends State<nonetwork> {
                           : Text(
                               "Retry",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 63, 63, 63),
+                                  color: Color.fromARGB(255, 211, 211, 211),
                                   fontSize: 18),
                             )),
                 ),

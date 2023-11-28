@@ -183,7 +183,7 @@ class meal_calculate extends ChangeNotifier {
     try {
       final dio = Dio();
       var response = await dio.post(
-          'https://foodie1902.herokuapp.com/route/call_extra_offer',
+          'https://foodie-s6d2.onrender.com/route/call_extra_offer',
           data: jsonEncode(<String, String>{'seg': seg}),
           options: Options(
               headers: {'content-Type': 'application/json; charset=UTF-8'}),
@@ -246,7 +246,7 @@ class meal_calculate extends ChangeNotifier {
     try {
       final dio = Dio();
       var response = await dio.post(
-          'https://foodie1902.herokuapp.com/route/addTocart_offer',
+          'https://foodie-s6d2.onrender.com/route/addTocart_offer',
           data: sendextraSpecialofferToJson(send),
           options: Options(
               headers: {'content-Type': 'application/json; charset=UTF-8'}),
@@ -270,7 +270,7 @@ class meal_calculate extends ChangeNotifier {
   }
 
   cancelresquest() {
-    cancelToken.cancel();
-    cancelToken1.cancel();
+    // cancelToken.cancel();
+    // cancelToken1.cancel();
   }
 }

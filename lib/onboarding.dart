@@ -80,7 +80,7 @@ class _onBoardingState extends State<onBoarding> {
               children: const [
                 buildPage2(
                   title: "EAT MORE AND SAVE MORE",
-                  getImage: "images/svg/food.svg",
+                  getImage: "images/svg/food_icon.svg",
                   subText:
                       "Foodie provides you with various reward when you order a meal",
                 ),

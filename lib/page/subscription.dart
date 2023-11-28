@@ -133,7 +133,7 @@ class _subscriptionState extends State<subscription>
   }
 
   Text getdate() {
-    String day = DateFormat('EEEE').format( context.watch<greetings>().time);
+    String day = DateFormat('EEEE').format(context.watch<greetings>().time);
     String date = DateFormat('d').format(context.watch<greetings>().time);
     String month = DateFormat('MMMM').format(context.watch<greetings>().time);
 
@@ -755,7 +755,7 @@ class _subscriptionState extends State<subscription>
                                                             Container(
                                                               padding:
                                                                   const EdgeInsets
-                                                                          .only(
+                                                                      .only(
                                                                       top: 10),
                                                               width: MediaQuery.of(
                                                                           context)
@@ -851,11 +851,8 @@ class _subscriptionState extends State<subscription>
                                                       width: 40,
                                                       decoration: BoxDecoration(
                                                           color: const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  224,
-                                                                  224,
-                                                                  224)
+                                                                  .fromARGB(255,
+                                                                  224, 224, 224)
                                                               .withOpacity(.8),
                                                           borderRadius:
                                                               BorderRadius
@@ -876,7 +873,7 @@ class _subscriptionState extends State<subscription>
                                                   ),
                                                   Container(
                                                     margin: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20),
                                                     width:
                                                         MediaQuery.of(context)
@@ -1029,7 +1026,7 @@ class _subscriptionState extends State<subscription>
                                                               Container(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         top:
                                                                             10),
                                                                 width: MediaQuery.of(
@@ -1112,7 +1109,7 @@ class _subscriptionState extends State<subscription>
                                                         width: 40,
                                                         decoration: BoxDecoration(
                                                             color: const Color
-                                                                        .fromARGB(
+                                                                    .fromARGB(
                                                                     255,
                                                                     224,
                                                                     224,
@@ -1139,7 +1136,7 @@ class _subscriptionState extends State<subscription>
                                                     ),
                                                     Container(
                                                       margin: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 20),
                                                       width:
                                                           MediaQuery.of(context)
@@ -1251,7 +1248,7 @@ class _subscriptionState extends State<subscription>
                                                             Container(
                                                               padding:
                                                                   const EdgeInsets
-                                                                          .only(
+                                                                      .only(
                                                                       top: 10),
                                                               width: MediaQuery.of(
                                                                           context)
@@ -1347,11 +1344,8 @@ class _subscriptionState extends State<subscription>
                                                       width: 40,
                                                       decoration: BoxDecoration(
                                                           color: const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  224,
-                                                                  224,
-                                                                  224)
+                                                                  .fromARGB(255,
+                                                                  224, 224, 224)
                                                               .withOpacity(.8),
                                                           borderRadius:
                                                               BorderRadius
@@ -1372,7 +1366,7 @@ class _subscriptionState extends State<subscription>
                                                   ),
                                                   Container(
                                                     margin: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20),
                                                     width:
                                                         MediaQuery.of(context)

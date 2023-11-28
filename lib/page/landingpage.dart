@@ -32,7 +32,7 @@ class _homelandingState extends State<homelanding> {
 
   static const screens = [
     home(),
-    subcription2(),
+    subscription(),
     Order(),
     Account(),
   ];

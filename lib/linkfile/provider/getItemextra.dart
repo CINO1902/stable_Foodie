@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:foodie_ios/linkfile/Model/Extra_fetch_model.dart';
@@ -56,8 +55,9 @@ class getiItemExtra extends ChangeNotifier {
       final dio = Dio();
       notifyListeners();
       ExtrasModelFetch fetch = ExtrasModelFetch(id: id);
+      print(id);
       var response = await dio.post(
-          'https://foodie1902.herokuapp.com/route/getItemsExtra',
+          'https://foodie-s6d2.onrender.com/route/getItemsExtra',
           data: extrasModelFetchToJson(fetch),
           options: Options(
               headers: {'content-Type': 'application/json; charset=UTF-8'}),

@@ -2,26 +2,19 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_native_splash/cli_commands.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as Svg;
 import 'package:foodie_ios/linkfile/customesnackbar.dart';
-
 import 'package:foodie_ios/linkfile/provider/checkcart.dart';
-
 import 'package:foodie_ios/linkfile/provider/onboarding.dart';
 import 'package:foodie_ios/linkfile/provider/subscribed.dart';
 import 'package:foodie_ios/page/addperaddress.dart';
-
 import 'package:foodie_ios/page/otpverify.dart';
-
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart';
@@ -107,6 +100,7 @@ class _AccountState extends State<Account> {
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.3,
+                                    padding: EdgeInsets.only(left: 10),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -118,7 +112,7 @@ class _AccountState extends State<Account> {
                                           children: [
                                             Text(
                                               'Referal Code: ${context.watch<checkstate>().referal}',
-                                              style: TextStyle(fontSize: 16),
+                                              style: TextStyle(fontSize: 12),
                                             ),
                                             Align(
                                               alignment: Alignment.bottomRight,
@@ -158,7 +152,9 @@ class _AccountState extends State<Account> {
                                           height: 10,
                                         ),
                                         Text(
-                                            'Members Refered: ${context.watch<checkstate>().numberrefer.toString()}')
+                                          'Members Refered: ${context.watch<checkstate>().numberrefer.toString()}',
+                                          style: TextStyle(fontSize: 12),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -215,6 +211,9 @@ class _AccountState extends State<Account> {
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 19),
                                           )),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
                                       context.watch<checkstate>().verified
                                           ? Container(
                                               height: 30,
@@ -305,7 +304,9 @@ class _AccountState extends State<Account> {
                             title: 'Delivery Details',
                             icon: SizedBox(
                                 child: SvgPicture.asset(
-                                    'images/svg/carbon_delivery.svg')),
+                              'images/svg/carbon_delivery.svg',
+                              color: Theme.of(context).primaryColorDark,
+                            )),
                           ),
                         ),
                       ),
@@ -321,7 +322,8 @@ class _AccountState extends State<Account> {
                             title: 'Notifications',
                             icon: SizedBox(
                                 child: SvgPicture.asset(
-                                    'images/svg/Vector-7.svg')),
+                                    'images/svg/Vector-7.svg',
+                                    color: Theme.of(context).primaryColorDark)),
                           ),
                         ),
                       ),
@@ -337,7 +339,8 @@ class _AccountState extends State<Account> {
                             title: 'Theme',
                             icon: SizedBox(
                                 child: SvgPicture.asset(
-                                    'images/svg/arcticons_nightmode.svg')),
+                                    'images/svg/arcticons_nightmode.svg',
+                                    color: Theme.of(context).primaryColorDark)),
                           ),
                         ),
                       ),
@@ -351,7 +354,8 @@ class _AccountState extends State<Account> {
                             title: 'Help Center',
                             icon: SizedBox(
                                 child: SvgPicture.asset(
-                                    'images/svg/Vector-8.svg')),
+                                    'images/svg/Vector-8.svg',
+                                    color: Theme.of(context).primaryColorDark)),
                           ),
                         ),
                       ),
@@ -409,27 +413,30 @@ class _AccountState extends State<Account> {
                                         child: Transform.rotate(
                                             angle: 100 * math.pi / 100,
                                             child: SvgPicture.asset(
-                                              'images/log-out.svg',
-                                              color: Colors.red,
-                                            )),
+                                                'images/log-out.svg',
+                                                color: Theme.of(context)
+                                                    .primaryColorDark)),
                                       ),
                                       const SizedBox(
                                         width: 10,
                                       ),
                                       Container(
-                                        child: const Text(
+                                        child: Text(
                                           'Log Out',
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.red),
+                                              color: Theme.of(context)
+                                                  .primaryColorDark),
                                         ),
                                       ),
                                     ],
                                   ),
                                   SizedBox(
                                       child: SvgPicture.asset(
-                                          'images/svg/Vector-6.svg')),
+                                          'images/svg/Vector-6.svg',
+                                          color: Theme.of(context)
+                                              .primaryColorDark)),
                                 ]),
                           ),
                         ),
@@ -536,7 +543,9 @@ class _AccountState extends State<Account> {
                                   ),
                                   SizedBox(
                                       child: SvgPicture.asset(
-                                          'images/svg/Vector-6.svg')),
+                                          'images/svg/Vector-6.svg',
+                                          color: Theme.of(context)
+                                              .primaryColorDark)),
                                 ]),
                           ),
                         ),
@@ -616,11 +625,9 @@ class _AccountState extends State<Account> {
                           },
                           child: buttonprofile(
                             title: 'Theme',
-                            icon: Icon(
-                              Icons.settings,
-                              size: 30,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                            icon: Icon(Icons.settings,
+                                size: 30,
+                                color: Theme.of(context).primaryColorDark),
                           ),
                         ),
                       ),
@@ -637,7 +644,7 @@ class _AccountState extends State<Account> {
                             icon: Icon(
                               Icons.notifications,
                               size: 30,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).primaryColorDark,
                             ),
                           ),
                         ),
@@ -653,7 +660,7 @@ class _AccountState extends State<Account> {
                             icon: Icon(
                               Icons.question_mark_outlined,
                               size: 30,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).primaryColorDark,
                             ),
                           ),
                         ),
@@ -760,7 +767,9 @@ class buttonprofile extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(child: SvgPicture.asset('images/svg/Vector-6.svg')),
+        SizedBox(
+            child: SvgPicture.asset('images/svg/Vector-6.svg',
+                color: Theme.of(context).primaryColorDark)),
       ]),
     );
   }

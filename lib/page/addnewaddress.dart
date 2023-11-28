@@ -369,7 +369,7 @@ class _addAddressState extends State<addAddress> {
                             decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 1,
-                                    color: Color.fromARGB(255, 101, 101, 101)),
+                                    color: const Color.fromARGB(255, 101, 101, 101)),
                                 borderRadius: BorderRadius.circular(5)),
                             child: Center(
                               child: Padding(
@@ -379,7 +379,7 @@ class _addAddressState extends State<addAddress> {
                                   children: [
                                     Text(
                                       items[context.watch<showrecent>().index],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -388,15 +388,15 @@ class _addAddressState extends State<addAddress> {
                               ),
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Text(
+                      const Text(
                         'Address:',
                         style: TextStyle(
                             fontSize: 19, fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -417,21 +417,21 @@ class _addAddressState extends State<addAddress> {
                             borderSide:
                                 BorderSide(color: Colors.red, width: 1.7),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 70, 70, 70),
                                 width: 1.0),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 70, 70, 70),
                                 width: 1.7),
                           ),
                           hintText: 'A detailed decription of where you live',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       SizedBox(
@@ -465,13 +465,13 @@ class _addAddressState extends State<addAddress> {
                                         context.read<checkcart>().locationa();
                                         Navigator.pop(context);
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Use Defualt',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                             Consumer<checkstate>(
                                 builder: (context, value, child) {
                               return SizedBox(
@@ -553,7 +553,7 @@ class _addAddressState extends State<addAddress> {
                                       }
                                     }
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Save',
                                     style: TextStyle(color: Colors.white),
                                   ),
@@ -626,7 +626,7 @@ class _addAddressState extends State<addAddress> {
         children: [
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Text(

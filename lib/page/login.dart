@@ -297,8 +297,7 @@ class _loginState extends State<login> {
   _sendToServer() async {
     if (_key1.currentState!.validate()) {
       _key1.currentState!.save();
-      print(email);
-      print(pass);
+
       await login();
       if (success == 'false') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

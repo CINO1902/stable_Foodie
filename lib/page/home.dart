@@ -151,9 +151,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
 
   String? mtoken = "";
 
-
-
-
   initInfo() {
     var androidInitialise =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -184,9 +181,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
           AndroidNotificationDetails(
         "dbfood",
         "dbfood",
-        importance: Importance.max,
+        importance: Importance.high,
         styleInformation: bigTextStyleInformation,
-        priority: Priority.max,
+        priority: Priority.high,
         playSound: true,
       );
       NotificationDetails platformChannelSpecifics =
@@ -206,13 +203,10 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
     final prefs = await SharedPreferences.getInstance();
     context.read<checkcart>().checkcarts();
     context.read<checkcart>().checkcartforcart();
-
     context.read<checkstate>().getaddress();
-
     setState(() {
       token = prefs.getString("tokenregistered");
     });
-
     if (token != null) {
       context.read<checkstate>().getregisterdID();
     }
@@ -356,7 +350,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                       ),
                                     ),
                           SizedBox(
-                            height: 10,
+                            height: 3,
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.06,
@@ -366,7 +360,7 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                               child: Text(
                                 'Satisfy your cravings with a few taps - Order now on our food delivery app',
                                 softWrap: true,
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 10),
                               ),
                             ),
                           ),
@@ -716,15 +710,15 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                         builder: (context) => const Review()));
                                 //  Navigator.pushNamed(context, '/review');
                                 context.read<calculatemeal>().itemclick(
-                                    items[index].item,
-                                    items[index].imageUrl,
+                                    value.items[index].item,
+                                    value.items[index].imageUrl,
+                                    int.parse(value.items[index].mincost),
                                     int.parse(items[index].mincost),
-                                    int.parse(items[index].mincost),
-                                    items[index].itemId,
-                                    items[index].maxspoon);
+                                    value.items[index].itemId,
+                                    value.items[index].maxspoon);
                                 context
                                     .read<getiItemExtra>()
-                                    .getItemExtra(items[index].itemId);
+                                    .getItemExtra(value.items[index].itemId);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -884,12 +878,6 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Reviewspecial()));
-
                                 context.read<meal_calculate>().itemclick(
                                     data[index].offerName,
                                     data[index].image,
@@ -906,6 +894,11 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin {
                                     data[index].availability,
                                     data[index].remainingvalue,
                                     data[index].drinktype);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Reviewspecial()));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 20),
